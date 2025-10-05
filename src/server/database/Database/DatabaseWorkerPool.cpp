@@ -38,15 +38,36 @@
 #include <boost/stacktrace.hpp>
 #endif
 
-#define MIN_MYSQL_SERVER_VERSION 50700u
-#define MIN_MYSQL_SERVER_VERSION_STRING "5.7"
-#define MIN_MYSQL_CLIENT_VERSION 50700u
-#define MIN_MYSQL_CLIENT_VERSION_STRING "5.7"
+static consteval uint32 ParseVersionString(std::string_view chars)
+{
+    uint32 result = 0;
+    uint32 partialResult = 0;
+    uint32 multiplier = 10000;
+    for (std::size_t i =  0; i < chars.length(); ++i)
+    {
+        char c = chars[i];
+        if (c == '.')
+        {
+            if (multiplier < 100)
+                throw "Too many . characters in version string";
 
-#define MIN_MARIADB_SERVER_VERSION 100209u
-#define MIN_MARIADB_SERVER_VERSION_STRING "10.2.9"
-#define MIN_MARIADB_CLIENT_VERSION 30003u
-#define MIN_MARIADB_CLIENT_VERSION_STRING "3.0.3"
+            result += partialResult * multiplier;
+            multiplier /= 100;
+            partialResult = 0;
+        }
+        else if (c >= '0' && c <= '9')
+        {
+            partialResult *= 10;
+            partialResult += c - '0';
+        }
+        else
+            throw "Invalid input character";
+    }
+
+    result += partialResult * multiplier;
+
+    return result;
+}
 
 class PingOperation : public SQLOperation
 {
@@ -400,18 +421,9 @@ uint32 DatabaseWorkerPool<T>::OpenConnections(InternalIndex type, uint8 numConne
             _connections[type].clear();
             return error;
         }
-#ifndef LIBMARIADB
-        else if (connection->GetServerVersion() < MIN_MYSQL_SERVER_VERSION)
-#else
-        else if (connection->GetServerVersion() < MIN_MARIADB_SERVER_VERSION)
-#endif
+        else if (uint32 serverVersion = connection->GetServerVersion(); serverVersion < ParseVersionString(TRINITY_REQUIRED_MYSQL_VERSION))
         {
-#ifndef LIBMARIADB
-            TC_LOG_ERROR("sql.driver", "TrinityCore does not support MySQL versions below " MIN_MYSQL_SERVER_VERSION_STRING " (found id {}, need id >= {}), please update your MySQL server", connection->GetServerVersion(), MIN_MYSQL_SERVER_VERSION);
-#else
-            TC_LOG_ERROR("sql.driver", "TrinityCore does not support MariaDB versions below " MIN_MARIADB_SERVER_VERSION_STRING " (found id {}, need id >= {}), please update your MySQL server", connection->GetServerVersion(), MIN_MARIADB_SERVER_VERSION);
-#endif
-
+            TC_LOG_ERROR("sql.driver", "TrinityCore does not support " TRINITY_MYSQL_FLAVOR " versions below " TRINITY_REQUIRED_MYSQL_VERSION " (found id {}, need id >= {}), please update your " TRINITY_MYSQL_FLAVOR " server", serverVersion, ParseVersionString(TRINITY_REQUIRED_MYSQL_VERSION));
             return 1;
         }
         else

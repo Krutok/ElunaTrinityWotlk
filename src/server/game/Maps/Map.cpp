@@ -48,7 +48,6 @@
 #ifdef ELUNA
 #include "LuaEngine.h"
 #include "ElunaConfig.h"
-#include "ElunaLoader.h"
 #endif
 #include "VMapManager2.h"
 #include "Weather.h"
@@ -285,12 +284,12 @@ i_scriptLock(false), _respawnTimes(std::make_unique<RespawnListContainer>()), _r
 {
     m_parentMap = (_parent ? _parent : this);
 #ifdef ELUNA
-    // lua state begins uninitialized
-    eluna = nullptr;
-
     if (sElunaConfig->IsElunaEnabled() && sElunaConfig->ShouldMapLoadEluna(id))
         if (!IsParentMap() || (IsParentMap() && !Instanceable()))
-            eluna = std::make_unique<Eluna>(this);
+        {
+            _elunaInfo = { ElunaInfoKey::MakeKey(GetId(), GetInstanceId()) };
+            sElunaMgr->Create(this, _elunaInfo);
+        }
 #endif
     for (unsigned int idx=0; idx < MAX_NUMBER_OF_GRIDS; ++idx)
     {
@@ -853,7 +852,7 @@ void Map::Update(uint32 t_diff)
 
             // Totems
             for (ObjectGuid const& summonGuid : player->m_SummonSlot)
-                if (summonGuid)
+                if (!summonGuid.IsEmpty())
                     if (Creature* unit = GetCreature(summonGuid))
                         if (unit->GetMapId() == player->GetMapId() && !unit->IsWithinDistInMap(player, GetVisibilityRange(), false))
                             toVisit.push_back(unit);
@@ -3095,7 +3094,9 @@ bool Map::CheckRespawn(RespawnInfo* info)
     }
 
     // next, check linked respawn time
-    ObjectGuid thisGUID = ObjectGuid((info->type == SPAWN_TYPE_GAMEOBJECT) ? HighGuid::GameObject : HighGuid::Unit, info->entry, info->spawnId);
+    ObjectGuid thisGUID = info->type == SPAWN_TYPE_GAMEOBJECT
+        ? ObjectGuid::Create<HighGuid::GameObject>(info->entry, info->spawnId)
+        : ObjectGuid::Create<HighGuid::Unit>(info->entry, info->spawnId);
     if (time_t linkedTime = GetLinkedRespawnTime(thisGUID))
     {
         time_t now = GameTime::GetGameTime();

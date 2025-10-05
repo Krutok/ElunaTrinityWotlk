@@ -15,27 +15,19 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _AUTHCRYPT_H
-#define _AUTHCRYPT_H
+#ifndef TRINITYCORE_WIN32_SERVICE
+#define TRINITYCORE_WIN32_SERVICE
 
-#include "ARC4.h"
-#include "AuthDefines.h"
-#include <array>
+#include "Define.h"
+#include <tchar.h>
 
-class TC_COMMON_API AuthCrypt
+namespace Trinity::Service
 {
-    public:
-        AuthCrypt();
+    TC_COMMON_API void Init(_TCHAR* serviceLongName, _TCHAR* serviceName, _TCHAR* serviceDescription,
+        int(*entryPoint)(int argc, char** argv), int* status);
+    TC_COMMON_API int32 Install();
+    TC_COMMON_API int32 Uninstall();
+    TC_COMMON_API int32 Run();
+}
 
-        void Init(SessionKey const& K);
-        void DecryptRecv(uint8* data, size_t len);
-        void EncryptSend(uint8* data, size_t len);
-
-        bool IsInitialized() const { return _initialized; }
-
-    private:
-        Trinity::Crypto::ARC4 _clientDecrypt;
-        Trinity::Crypto::ARC4 _serverEncrypt;
-        bool _initialized;
-};
-#endif
+#endif                                                      // TRINITYCORE_WIN32_SERVICE
