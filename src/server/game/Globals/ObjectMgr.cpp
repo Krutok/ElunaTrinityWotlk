@@ -1695,15 +1695,15 @@ CreatureModelInfo const* ObjectMgr::GetCreatureModelRandomGender(uint32* display
         return nullptr;
 
     // If a model for another gender exists, 50% chance to use it
-    if (modelInfo->modelid_other_gender != 0 && urand(0, 1) == 0)
+    if (modelInfo->displayId_other_gender != 0 && urand(0, 1) == 0)
     {
-        CreatureModelInfo const* minfo_tmp = GetCreatureModelInfo(modelInfo->modelid_other_gender);
+        CreatureModelInfo const* minfo_tmp = GetCreatureModelInfo(modelInfo->displayId_other_gender);
         if (!minfo_tmp)
-            TC_LOG_ERROR("sql.sql", "Model (Entry: {}) has modelid_other_gender {} not found in table `creature_model_info`. ", *displayID, modelInfo->modelid_other_gender);
+            TC_LOG_ERROR("sql.sql", "Model (Entry: {}) has modelid_other_gender {} not found in table `creature_model_info`. ", *displayID, modelInfo->displayId_other_gender);
         else
         {
-            // Model ID changed
-            *displayID = modelInfo->modelid_other_gender;
+            // DisplayID changed
+            *displayID = modelInfo->displayId_other_gender;
             return minfo_tmp;
         }
     }
@@ -1714,8 +1714,8 @@ CreatureModelInfo const* ObjectMgr::GetCreatureModelRandomGender(uint32* display
 void ObjectMgr::LoadCreatureModelInfo()
 {
     uint32 oldMSTime = getMSTime();
-    //                                                   0             1             2          3               4
-    QueryResult result = WorldDatabase.Query("SELECT DisplayID, BoundingRadius, CombatReach, Gender, DisplayID_Other_Gender FROM creature_model_info");
+    //                                                   0             1             2                  3               4
+    QueryResult result = WorldDatabase.Query("SELECT DisplayID, BoundingRadius, CombatReach, DisplayID_Other_Gender, Gender FROM creature_model_info");
 
     if (!result)
     {
@@ -1730,34 +1730,35 @@ void ObjectMgr::LoadCreatureModelInfo()
     {
         Field* fields = result->Fetch();
 
-        uint32 modelId = fields[0].GetUInt32();
-        CreatureDisplayInfoEntry const* creatureDisplay = sCreatureDisplayInfoStore.LookupEntry(modelId);
+        uint32 displayId = fields[0].GetUInt32();
+
+        CreatureDisplayInfoEntry const* creatureDisplay = sCreatureDisplayInfoStore.LookupEntry(displayId);
         if (!creatureDisplay)
         {
-            TC_LOG_ERROR("sql.sql", "Table `creature_model_info` has model for nonexistent display id ({}).", modelId);
+            TC_LOG_ERROR("sql.sql", "Table `creature_model_info` has a non-existent DisplayID (ID: {}). Skipped.", displayId);
             continue;
         }
 
-        CreatureModelInfo& modelInfo = _creatureModelStore[modelId];
+        CreatureModelInfo& modelInfo = _creatureModelStore[displayId];
 
-        modelInfo.bounding_radius      = fields[1].GetFloat();
-        modelInfo.combat_reach         = fields[2].GetFloat();
-        modelInfo.gender               = fields[3].GetUInt8();
-        modelInfo.modelid_other_gender = fields[4].GetUInt32();
-        modelInfo.is_trigger           = false;
+        modelInfo.bounding_radius        = fields[1].GetFloat();
+        modelInfo.combat_reach           = fields[2].GetFloat();
+        modelInfo.displayId_other_gender = fields[3].GetUInt32();
+        modelInfo.gender                 = fields[4].GetInt8();
+        modelInfo.is_trigger             = false;
 
         // Checks
 
         if (modelInfo.gender > GENDER_NONE)
         {
-            TC_LOG_ERROR("sql.sql", "Table `creature_model_info` has wrong gender ({}) for display id ({}).", uint32(modelInfo.gender), modelId);
+            TC_LOG_ERROR("sql.sql", "Table `creature_model_info` has wrong gender ({}) for display id ({}).", uint32(modelInfo.gender), displayId);
             modelInfo.gender = GENDER_MALE;
         }
 
-        if (modelInfo.modelid_other_gender && !sCreatureDisplayInfoStore.LookupEntry(modelInfo.modelid_other_gender))
+        if (modelInfo.displayId_other_gender && !sCreatureDisplayInfoStore.LookupEntry(modelInfo.displayId_other_gender))
         {
-            TC_LOG_ERROR("sql.sql", "Table `creature_model_info` has nonexistent alt.gender model ({}) for existed display id ({}).", modelInfo.modelid_other_gender, modelId);
-            modelInfo.modelid_other_gender = 0;
+            TC_LOG_ERROR("sql.sql", "Table `creature_model_info` has a non-existent DisplayID_Other_Gender (ID: {}) being used by DisplayID (ID: {}).", modelInfo.displayId_other_gender, displayId);
+            modelInfo.displayId_other_gender = 0;
         }
 
         if (modelInfo.combat_reach < 0.1f)
@@ -3037,13 +3038,13 @@ void ObjectMgr::LoadItemTemplates()
 
         for (uint8 i = 0; i < MAX_ITEM_PROTO_SPELLS; ++i)
         {
-            itemTemplate.Spells[i].SpellId               = fields[66 + i*7  ].GetInt32();
-            itemTemplate.Spells[i].SpellTrigger          = uint32(fields[67 + i*7].GetUInt8());
-            itemTemplate.Spells[i].SpellCharges          = int32(fields[68 + i*7].GetInt16());
-            itemTemplate.Spells[i].SpellPPMRate          = fields[69 + i*7].GetFloat();
-            itemTemplate.Spells[i].SpellCooldown         = fields[70 + i*7].GetInt32();
-            itemTemplate.Spells[i].SpellCategory         = uint32(fields[71 + i*7].GetUInt16());
-            itemTemplate.Spells[i].SpellCategoryCooldown = fields[72 + i*7].GetInt32();
+            itemTemplate.Effects[i].SpellID              = fields[66 + i * 7].GetInt32();
+            itemTemplate.Effects[i].TriggerType          = uint32(fields[67 + i * 7].GetUInt8());
+            itemTemplate.Effects[i].Charges              = int32(fields[68 + i * 7].GetInt16());
+            itemTemplate.Effects[i].SpellPPMRate         = fields[69 + i * 7].GetFloat();
+            itemTemplate.Effects[i].CoolDownMSec         = fields[70 + i * 7].GetInt32();
+            itemTemplate.Effects[i].SpellCategoryID      = uint32(fields[71 + i * 7].GetUInt16());
+            itemTemplate.Effects[i].CategoryCoolDownMSec = fields[72 + i * 7].GetInt32();
         }
 
         itemTemplate.Bonding        = uint32(fields[101].GetUInt8());
@@ -3151,18 +3152,18 @@ void ObjectMgr::LoadItemTemplates()
             itemTemplate.Quality = ITEM_QUALITY_NORMAL;
         }
 
-        if (itemTemplate.Flags2 & ITEM_FLAG2_FACTION_HORDE)
+        if (itemTemplate.HasFlag(ITEM_FLAG2_FACTION_HORDE))
         {
             if (FactionEntry const* faction = sFactionStore.LookupEntry(HORDE))
                 if ((itemTemplate.AllowableRace & faction->ReputationRaceMask[0]) == 0)
                     TC_LOG_ERROR("sql.sql", "Item (Entry: {}) has value ({}) in `AllowableRace` races, not compatible with ITEM_FLAG2_FACTION_HORDE ({}) in Flags field, item cannot be equipped or used by these races.",
                         entry, itemTemplate.AllowableRace, ITEM_FLAG2_FACTION_HORDE);
 
-            if (itemTemplate.Flags2 & ITEM_FLAG2_FACTION_ALLIANCE)
+            if (itemTemplate.HasFlag(ITEM_FLAG2_FACTION_ALLIANCE))
                 TC_LOG_ERROR("sql.sql", "Item (Entry: {}) has value ({}) in `Flags2` flags (ITEM_FLAG2_FACTION_ALLIANCE) and ITEM_FLAG2_FACTION_HORDE ({}) in Flags field, this is a wrong combination.",
                     entry, ITEM_FLAG2_FACTION_ALLIANCE, ITEM_FLAG2_FACTION_HORDE);
         }
-        else if (itemTemplate.Flags2 & ITEM_FLAG2_FACTION_ALLIANCE)
+        else if (itemTemplate.HasFlag(ITEM_FLAG2_FACTION_ALLIANCE))
         {
             if (FactionEntry const* faction = sFactionStore.LookupEntry(ALLIANCE))
                 if ((itemTemplate.AllowableRace & faction->ReputationRaceMask[0]) == 0)
@@ -3194,7 +3195,7 @@ void ObjectMgr::LoadItemTemplates()
             if (!req)
                 for (uint8 j = 0; j < MAX_ITEM_PROTO_SPELLS; ++j)
                 {
-                    if (itemTemplate.Spells[j].SpellId > 0)
+                    if (itemTemplate.Effects[j].SpellID > 0)
                     {
                         req = true;
                         break;
@@ -3286,20 +3287,20 @@ void ObjectMgr::LoadItemTemplates()
 
         for (uint8 j = 0; j < MAX_ITEM_PROTO_SPELLS; ++j)
         {
-            if (itemTemplate.Spells[j].SpellTrigger >= MAX_ITEM_SPELLTRIGGER)
+            if (itemTemplate.Effects[j].TriggerType >= MAX_ITEM_SPELLTRIGGER)
             {
-                TC_LOG_ERROR("sql.sql", "Item (Entry: {}) has wrong item spell trigger value in spelltrigger_{} ({})", entry, j+1, itemTemplate.Spells[j].SpellTrigger);
-                itemTemplate.Spells[j].SpellId = 0;
-                itemTemplate.Spells[j].SpellTrigger = ITEM_SPELLTRIGGER_ON_USE;
+                TC_LOG_ERROR("sql.sql", "Item (Entry: {}) has wrong item spell trigger value in spelltrigger_{} ({})", entry, j+1, itemTemplate.Effects[j].TriggerType);
+                itemTemplate.Effects[j].SpellID = 0;
+                itemTemplate.Effects[j].TriggerType = ITEM_SPELLTRIGGER_ON_USE;
             }
 
-            if (itemTemplate.Spells[j].SpellId > 0)
+            if (itemTemplate.Effects[j].SpellID > 0)
             {
-                SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(itemTemplate.Spells[j].SpellId);
-                if (!spellInfo && !DisableMgr::IsDisabledFor(DISABLE_TYPE_SPELL, itemTemplate.Spells[j].SpellId, nullptr))
+                SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(itemTemplate.Effects[j].SpellID);
+                if (!spellInfo && !DisableMgr::IsDisabledFor(DISABLE_TYPE_SPELL, itemTemplate.Effects[j].SpellID, nullptr))
                 {
-                    TC_LOG_ERROR("sql.sql", "Item (Entry: {}) has wrong (not existing) spell in spellid_{} ({})", entry, j+1, itemTemplate.Spells[j].SpellId);
-                    itemTemplate.Spells[j].SpellId = 0;
+                    TC_LOG_ERROR("sql.sql", "Item (Entry: {}) has wrong (not existing) spell in spellid_{} ({})", entry, j+1, itemTemplate.Effects[j].SpellID);
+                    itemTemplate.Effects[j].SpellID = 0;
                 }
             }
         }
