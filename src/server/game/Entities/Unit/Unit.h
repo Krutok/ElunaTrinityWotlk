@@ -1239,7 +1239,8 @@ class TC_GAME_API Unit : public WorldObject
         bool SetWaterWalking(bool enable);
         bool SetFeatherFall(bool enable);
         bool SetHover(bool enable, bool updateAnimTier = true);
-
+        
+        void ForceRemoveRoot() { SetRooted(false); }
         void SetInFront(WorldObject const* target);
         void SetFacingTo(float ori, bool force = true, uint32 movementId = EVENT_FACE);
         void SetFacingToObject(WorldObject const* object, bool force = true, uint32 movementId = EVENT_FACE);
