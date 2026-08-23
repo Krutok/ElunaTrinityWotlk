@@ -438,11 +438,11 @@ bool Transmogrification::SuitableForTransmogrification(Player* player, ItemTempl
     if (!IsAllowedQuality(proto->Quality)) // (proto->Quality == ITEM_QUALITY_LEGENDARY)
         return false;
 
-    if ((proto->Flags2 & ITEM_FLAG2_FACTION_HORDE) && player->GetTeam() != HORDE)
-        return false;
+    if ((proto->Flags[1] & ITEM_FLAG2_FACTION_HORDE) && player->GetTeam() != HORDE)
+    return false;
 
-    if ((proto->Flags2 & ITEM_FLAG2_FACTION_ALLIANCE) && player->GetTeam() != ALLIANCE)
-        return false;
+    if ((proto->Flags[1] & ITEM_FLAG2_FACTION_ALLIANCE) && player->GetTeam() != ALLIANCE)
+    return false;
 
     if (!IgnoreReqClass && (proto->AllowableClass & player->GetClassMask()) == 0)
         return false;

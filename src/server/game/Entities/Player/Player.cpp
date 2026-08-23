@@ -24802,11 +24802,18 @@ bool Player::CanFlyInZone(uint32 mapid, uint32 zone, SpellInfo const* bySpell) c
         if (!HasSpell(81516)) // 81516= Spieler hat den Spell Thal'Karas Fliegen
             return false;
     if (v_map == 0 && !bySpell->HasAttribute(SPELL_ATTR7_IGNORE_COLD_WEATHER_FLYING))
-        if (!HasSpell(81348)) // 81348 = Ã–stliche KÃ¶nigreiche Fliegen
+        if (!HasSpell(81348)) // 81348 = Östliche Königreiche Fliegen
             return false;
+    // Kalimdor
     if (v_map == 1 && !bySpell->HasAttribute(SPELL_ATTR7_IGNORE_COLD_WEATHER_FLYING))
-        if (!HasSpell(81350)) // 81350 = Kalimdor Fliegen
+    {
+        // Spezifische Zone blockieren
+        if (zone == 616)               // <- Fliegen in Hyjal verbieten
             return false;
+
+        if (!HasSpell(81350))          // Kalimdor-Fliegen
+            return false;
+    }
 
     return true;
 }

@@ -728,6 +728,23 @@ bool SpellArea::IsFitToRequirements(Player const* player, uint32 newZone, uint32
                 return false;
             break;
         }
+        case 81458: // No fly Zone Custom
+        {
+            if (!player)
+                return false;
+
+            uint32 zoneId = player->GetZoneId();
+
+            // Zone 616 als No-Fly-Zone
+            if (zoneId != 616)
+                return false;
+
+            if (!player->HasAuraType(SPELL_AURA_MOD_INCREASE_MOUNTED_FLIGHT_SPEED) &&
+                !player->HasAuraType(SPELL_AURA_FLY))
+                return false;
+
+            break;
+        }
         case 58730: // No fly Zone - Wintergrasp
         {
             if (!player)
@@ -2980,6 +2997,13 @@ void SpellMgr::LoadSpellInfoCorrections()
         });
 
         ApplySpellFix({
+            39284
+            }, [](SpellInfo* spellInfo)
+            {
+                spellInfo->_GetEffect(EFFECT_0).Amplitude = 5 * IN_MILLISECONDS;
+            });
+
+        ApplySpellFix({
             24707, // Food
             26263, // Dim Sum
             29055, // Refreshing Red Apple
@@ -3420,20 +3444,20 @@ void SpellMgr::LoadSpellInfoCorrections()
         80933, // Bunny Mount
 	    80938, // FOX Mount
 	    80943, // HAND Mount
-        80990, // Blue PhÃ¶nix
-        80995, // Orange PhÃ¶nix
+        80990, // Blue Phönix
+        80995, // Orange Phönix
         81000, // Katzenmount
         81183, // Palamount Blau
         81184, // Palamount Purple
         81185, // Palamount Rot
         81186, // Palamount Gelb
-        81187, // JÃ¤germount Blau
-        81188, // JÃ¤germount GrÃ¼n
-        81189, // JÃ¤germount Orange
+        81187, // Jägermount Blau
+        81188, // Jägermount Grün
+        81189, // Jägermount Orange
         81190, // Priestermount Diszi
         81191, // Priestermount Holy
         81192, // Priestermount Shatten
-        81201, // Hexenmeistermount GrÃ¼n
+        81201, // Hexenmeistermount Grün
         81202, // Hexenmeistermount Rot
         81203, // Hexenmeistermount Shatten
         74856, // Blazing Hippogryph

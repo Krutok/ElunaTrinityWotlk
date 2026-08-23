@@ -291,7 +291,7 @@ public:
                     {
                         if (Unit* unit = ObjectAccessor::GetUnit(*me, uiPlayerGUID))
                         {
-                            if (GameObject* go = unit->FindNearestGameObject(GO_CARCASS, 10))
+                            if (GameObject* go = unit->FindNearestGameObject(GO_CARCASS, 500.0f))
                             {
                                 me->GetMotionMaster()->MoveIdle();
                                 me->StopMoving();
@@ -305,17 +305,20 @@ public:
                     {
                         DoCast(me, SPELL_JUST_EATEN);
                         Talk(SAY_JUST_EATEN);
+                        me->HandleEmoteCommand(EMOTE_ONESHOT_ATTACK_UNARMED);
 
                         if (Player* player = ObjectAccessor::GetPlayer(*me, uiPlayerGUID))
                         {
                             player->KilledMonsterCredit(NPC_EVENT_PINGER);
 
-                            if (GameObject* go = player->FindNearestGameObject(GO_CARCASS, 10))
+                            if (GameObject* go = player->FindNearestGameObject(GO_CARCASS, 20.0f))
                                 go->Delete();
                         }
 
                         Reset();
                         me->GetMotionMaster()->Clear();
+                        if (uint32 pathId = me->GetWaypointPath())
+                            me->GetMotionMaster()->MovePath(pathId, true);
                     }
                 }
                 else

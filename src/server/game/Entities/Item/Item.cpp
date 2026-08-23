@@ -366,9 +366,8 @@ void Item::SaveToDB(CharacterDatabaseTransaction trans)
             stmt->setUInt16(++index, GetUInt32Value(ITEM_FIELD_DURABILITY));
             stmt->setUInt32(++index, GetUInt32Value(ITEM_FIELD_CREATE_PLAYED_TIME));
             stmt->setString(++index, m_text);
-            stmt->setUInt32(++index, GetGUID().GetCounter());
             stmt->setUInt32(++index, transmog);
-            stmt->setUInt32(++index, guid);
+            stmt->setUInt32(++index, GetGUID().GetCounter());
 
             trans->Append(stmt);
 

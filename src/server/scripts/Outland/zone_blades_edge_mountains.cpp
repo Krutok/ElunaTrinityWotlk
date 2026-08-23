@@ -947,9 +947,9 @@ public:
             else
             {
                 // Spell 37392 does not exist in dbc, manually spawning
-                me->SummonCreature(NPC_OSCILLATING_FREQUENCY_SCANNER_TOP_BUNNY, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ() + 0.5f, me->GetOrientation(), TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 50s);
-                me->SummonGameObject(GO_OSCILLATING_FREQUENCY_SCANNER, *me, QuaternionData(), 50s);
-                me->DespawnOrUnsummon(50s);
+                me->SummonCreature(NPC_OSCILLATING_FREQUENCY_SCANNER_TOP_BUNNY, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ() + 0.5f, me->GetOrientation(), TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 210s);
+                me->SummonGameObject(GO_OSCILLATING_FREQUENCY_SCANNER, *me, QuaternionData(), 210s);
+                me->DespawnOrUnsummon(210s);
             }
 
             timer = 500;
@@ -998,7 +998,7 @@ class spell_oscillating_field : public SpellScriptLoader
             void HandleEffect(SpellEffIndex /*effIndex*/)
             {
                 if (Player* player = GetHitPlayer())
-                    if (player->GetAuraCount(SPELL_OSCILLATION_FIELD) == 5 && player->GetQuestStatus(QUEST_GAUGING_THE_RESONANT_FREQUENCY) == QUEST_STATUS_INCOMPLETE)
+                    if (player->GetAuraCount(SPELL_OSCILLATION_FIELD) == 4 && player->GetQuestStatus(QUEST_GAUGING_THE_RESONANT_FREQUENCY) == QUEST_STATUS_INCOMPLETE)
                         player->CompleteQuest(QUEST_GAUGING_THE_RESONANT_FREQUENCY);
             }
 
