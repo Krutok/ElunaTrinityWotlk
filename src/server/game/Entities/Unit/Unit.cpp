@@ -799,26 +799,26 @@ bool Unit::HasBreakableByDamageCrowdControlAura(Unit* excludeCasterChannel) cons
     }
 
     // Rage from Damage made (only from direct weapon damage)
-    if (attacker && cleanDamage && damagetype == DIRECT_DAMAGE && attacker != victim && attacker->GetPowerType() == POWER_RAGE)
+    if (attacker && cleanDamage && damagetype == DIRECT_DAMAGE && attacker != victim && attacker->GetPowerType() == POWER_RAGE && !attacker->HasAura(81525))
     {
         uint32 weaponSpeedHitFactor;
 
         switch (cleanDamage->attackType)
         {
-            case BASE_ATTACK:
-            case OFF_ATTACK:
-            {
-                weaponSpeedHitFactor = uint32(attacker->GetAttackTime(cleanDamage->attackType) / 1000.0f * (cleanDamage->attackType == BASE_ATTACK ? 3.5f : 1.75f));
-                if (cleanDamage->hitOutCome == MELEE_HIT_CRIT)
-                    weaponSpeedHitFactor *= 2;
+        case BASE_ATTACK:
+        case OFF_ATTACK:
+        {
+            weaponSpeedHitFactor = uint32(attacker->GetAttackTime(cleanDamage->attackType) / 1000.0f *
+                (cleanDamage->attackType == BASE_ATTACK ? 3.5f : 1.75f));
 
-                attacker->RewardRage(rage_damage, weaponSpeedHitFactor, true);
-                break;
-            }
-            case RANGED_ATTACK:
-                break;
-            default:
-                break;
+            if (cleanDamage->hitOutCome == MELEE_HIT_CRIT)
+                weaponSpeedHitFactor *= 2;
+
+            attacker->RewardRage(rage_damage, weaponSpeedHitFactor, true);
+            break;
+        }
+        default:
+            break;
         }
     }
 
@@ -927,7 +927,7 @@ bool Unit::HasBreakableByDamageCrowdControlAura(Unit* excludeCasterChannel) cons
         }
 
         // Rage from damage received
-        if (attacker != victim && victim->GetPowerType() == POWER_RAGE)
+        if (attacker != victim && victim->GetPowerType() == POWER_RAGE && !victim->HasAura(81525))
         {
             rage_damage = damage + (cleanDamage ? cleanDamage->absorbed_damage : 0);
             victim->RewardRage(rage_damage, 0, false);
@@ -12623,6 +12623,10 @@ void Unit::JumpTo(WorldObject* obj, float speedZ, bool withOrientation)
 
 void Unit::HandleSpellClick(Unit* clicker, int8 seatId /*= -1*/)
 {
+    if (Creature* creature = ToCreature())
+        if (creature->IsAIEnabled())
+            if (!creature->AI()->BeforeSpellClick(clicker))
+                return;
     bool spellClickHandled = false;
     uint32 spellClickEntry = GetVehicleKit() ? GetVehicleKit()->GetCreatureEntry() : GetEntry();
     TriggerCastFlags const flags = GetVehicleKit() ? TRIGGERED_IGNORE_CASTER_MOUNTED_OR_ON_VEHICLE : TRIGGERED_NONE;

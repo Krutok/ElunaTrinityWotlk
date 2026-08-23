@@ -237,6 +237,8 @@ class TC_GAME_API CreatureAI : public UnitAI
 
         virtual void PassengerBoarded(Unit* /*passenger*/, int8 /*seatId*/, bool /*apply*/) { }
 
+        virtual bool BeforeSpellClick(Unit* /*clicker*/) { return true; }
+
         virtual void OnSpellClick(Unit* /*clicker*/, bool /*spellClickHandled*/) { }
 
         virtual bool CanSeeAlways(WorldObject const* /*obj*/) { return false; }
