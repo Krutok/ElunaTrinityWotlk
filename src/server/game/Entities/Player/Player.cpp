@@ -1591,8 +1591,11 @@ bool Player::TeleportTo(uint32 mapid, float x, float y, float z, float orientati
         TC_LOG_DEBUG("maps", "Player {} ({}) is being teleported to map (MapID: {})", GetName(), GetGUID().ToString(), mapid);
 
     if (m_vehicle)
-        ExitVehicle();
-
+    {
+        Position teleport = Position(x, y, z, orientation);
+        _ExitVehicle(&teleport);
+    }
+    
     // reset movement flags at teleport, because player will continue move with these flags after teleport
     SetUnitMovementFlags(GetUnitMovementFlags() & MOVEMENTFLAG_MASK_HAS_PLAYER_STATUS_OPCODE);
     DisableSpline();
@@ -24802,7 +24805,7 @@ bool Player::CanFlyInZone(uint32 mapid, uint32 zone, SpellInfo const* bySpell) c
         if (!HasSpell(81516)) // 81516= Spieler hat den Spell Thal'Karas Fliegen
             return false;
     if (v_map == 0 && !bySpell->HasAttribute(SPELL_ATTR7_IGNORE_COLD_WEATHER_FLYING))
-        if (!HasSpell(81348)) // 81348 = Östliche Königreiche Fliegen
+        if (!HasSpell(81348)) // 81348 = Ã–stliche KÃ¶nigreiche Fliegen
             return false;
     // Kalimdor
     if (v_map == 1 && !bySpell->HasAttribute(SPELL_ATTR7_IGNORE_COLD_WEATHER_FLYING))
