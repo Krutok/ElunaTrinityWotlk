@@ -2730,6 +2730,10 @@ UnitScript::UnitScript(char const* name)
     ScriptRegistry<UnitScript>::Instance()->AddScript(this);
 }
 
+void UnitScript::OnBeforeHeal(Unit* /*healer*/, Unit* /*reciever*/, uint32& /*gain*/)
+{
+}
+
 void UnitScript::OnHeal(Unit* /*healer*/, Unit* /*reciever*/, uint32& /*gain*/)
 {
 }
