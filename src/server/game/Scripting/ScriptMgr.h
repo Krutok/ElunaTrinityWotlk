@@ -390,6 +390,8 @@ class TC_GAME_API UnitScript : public ScriptObject
         explicit UnitScript(char const* name);
 
     public:
+        // Called before a unit deals healing to another unit
+        virtual void OnBeforeHeal(Unit* healer, Unit* reciever, uint32& gain);
         // Called when a unit deals healing to another unit
         virtual void OnHeal(Unit* healer, Unit* reciever, uint32& gain);
 
@@ -1090,6 +1092,7 @@ class TC_GAME_API ScriptMgr
 
     public: /* UnitScript */
 
+        void OnBeforeHeal(Unit* healer, Unit* reciever, uint32& gain);
         void OnHeal(Unit* healer, Unit* reciever, uint32& gain);
         void OnDamage(Unit* attacker, Unit* victim, uint32& damage);
         void ModifyPeriodicDamageAurasTick(Unit* target, Unit* attacker, uint32& damage);
