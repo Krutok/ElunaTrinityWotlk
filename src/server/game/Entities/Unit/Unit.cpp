@@ -6113,6 +6113,10 @@ void Unit::SetCharm(Unit* charm, bool apply)
     Unit* victim = healInfo.GetTarget();
     uint32 addhealth = healInfo.GetHeal();
 
+    sScriptMgr->OnBeforeHeal(healer, victim, addhealth);
+    if (addhealth < healInfo.GetHeal())
+        healInfo.AbsorbHeal(healInfo.GetHeal() - addhealth);
+
     if (UnitAI* victimAI = victim->GetAI())
         victimAI->HealReceived(healer, addhealth);
 
