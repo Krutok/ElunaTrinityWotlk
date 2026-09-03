@@ -3589,6 +3589,9 @@ void Map::AddObjectToRemoveList(WorldObject* obj)
     }
 #endif
 
+    if (obj->isActiveObject()) // Remove the ICC Crash after the Saurfang Camp Event
+        obj->setActive(false);
+
     obj->CleanupsBeforeDelete(false);                            // remove or simplify at least cross referenced links
 
     i_objectsToRemove.insert(obj);
