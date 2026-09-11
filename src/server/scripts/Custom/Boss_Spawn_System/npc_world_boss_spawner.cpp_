@@ -1,0 +1,353 @@
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Winvalid-source-encoding"
+#include "DatabaseEnv.h"
+#include "ScriptedGossip.h"
+#include "WorldSession.h"
+#include "ObjectMgr.h"
+#include "GameObject.h"
+
+constexpr uint32 textId = 66000;
+constexpr uint32 portalCreature = 36737;
+
+enum class GossipOptions : uint32
+{
+    OptionSummon,
+    OptionCloseMenu,
+};
+
+std::unordered_map<uint32, ObjectGuid> SpawnedBossByPlayer;
+std::unordered_map<uint32 /*quest*/, std::pair<uint32 /*boss*/, std::string /*name*/>> BossInfoByQuest;
+std::unordered_map<uint32, std::pair<std::string /*bossWarning*/, uint32/*chestID*/>> bossInfo;
+
+void LoadQuestBossData()
+{
+    BossInfoByQuest.clear();
+    bossInfo.clear();
+    auto result = WorldDatabase.Query("SELECT quest_id, boss_id, boss_name, boss_info, boss_loot_chest FROM z_boss_spawning_system");
+    if (!result)
+        return;
+    do
+    {
+        auto data = result->Fetch();
+        BossInfoByQuest.insert({ data[0].GetUInt32(), std::make_pair(data[1].GetUInt32(), data[2].GetString()) });
+        bossInfo.insert({ data[1].GetUInt32(), std::make_pair(data[3].GetString(), data[4].GetUInt32()) });
+    } while (result->NextRow());
+}
+
+enum Events
+{
+    EVENT_DESPAWN_AND_CLEAR = 1,
+    EVENT_SUMMON_BOSS,
+    EVENT_DESPAWN_PORTAL
+};
+
+enum MovePoints
+{
+    WALK_POINT = 1,
+};
+
+class DespawnChest : public BasicEvent
+{
+public:
+    DespawnChest(Player* plr, ObjectGuid guid) : BasicEvent(), spawner(plr), chest(guid) { }
+
+    bool Execute(uint64 /*time_t*/, uint32 /*time_e*/) override
+    {
+        if (auto gob = ObjectAccessor::GetGameObject(*spawner, chest))
+            if (gob->IsInWorld())
+                gob->DespawnOrUnsummon();
+
+        return true;
+    }
+
+private:
+    Player* spawner;
+    ObjectGuid chest;
+};
+
+void spawnGobHelper(Player* spawner, uint32 objectId, Position pos)
+{
+    GameObject* go = new GameObject();
+    auto rot = QuaternionData::fromEulerAnglesZYX(0.f, 0.f, 0.f);
+    auto map = spawner->GetMap();
+    if (!go->Create(map->GenerateLowGuid<HighGuid::GameObject>(), objectId, map, PHASEMASK_NORMAL, pos, rot, 255, GO_STATE_READY))
+    {
+        delete go;
+        return;
+    }
+    map->AddToMap(go);
+    auto guid = go->GetSpawnId();
+    GameObjectData& data = sObjectMgr->NewOrExistGameObjectData(guid);
+    data.spawnId = guid;
+    data.id = objectId;
+    data.dbData = false;
+    data.spawntimesecs = 0;
+    data.spawnGroupData = sObjectMgr->GetLegacySpawnGroup();
+    go->m_Events.AddEvent(new DespawnChest(spawner, go->GetGUID()), go->m_Events.CalculateTime(Milliseconds(2 * MINUTE * IN_MILLISECONDS)));
+
+    sObjectMgr->AddGameobjectToGrid(guid, &data);
+}
+
+struct npc_world_boss_spawner : public ScriptedAI
+{
+public:
+    npc_world_boss_spawner(Creature* creature) : ScriptedAI(creature)
+    {
+        summonedBoss = nullptr;
+        m_timer = 0;
+    }
+
+    void UpdateAI(uint32 diff) override
+    {
+        events.Update(diff);
+
+        while (auto eventId = events.ExecuteEvent())
+        {
+            switch (eventId)
+            {
+            case EVENT_DESPAWN_AND_CLEAR:
+            {
+                if (auto creature = ObjectAccessor::GetCreature(*me, SpawnedBossByPlayer[plrSummoner->GetGUID().GetCounter()]))
+                {
+                    if (creature->IsInWorld())
+                        creature->DespawnOrUnsummon();
+                }
+
+                bossId = 0;
+                SpawnedBossByPlayer.erase(plrSummoner->GetGUID().GetCounter());
+                events.Reset();
+            }
+            break;
+
+            case EVENT_SUMMON_BOSS:
+            {
+                summonedBoss = me->GetMap()->SummonCreature(bossId, spawnPosition, nullptr, 6 * MINUTE * IN_MILLISECONDS);
+                summonedBoss->SetTempSummonType(TEMPSUMMON_CORPSE_TIMED_DESPAWN);
+                summonedBoss->Yell("Ihr wagt es mich zu rufen? Das werdet ihr bitter bereuen.", Language::LANG_UNIVERSAL);
+                summonedBoss->SetWalk(true);
+                summonedBoss->GetMotionMaster()->MovePoint(WALK_POINT, walkPosition);
+                SpawnedBossByPlayer[plrSummoner->GetGUID().GetCounter()] = summonedBoss->GetGUID();
+            }
+            break;
+
+            case EVENT_DESPAWN_PORTAL:
+            {
+                portal->DespawnOrUnsummon();
+            }
+            break;
+            }
+        }
+    }
+
+    bool OnGossipHello(Player* player) override
+    {
+        if (SpawnedBossByPlayer.find(player->GetGUID().GetCounter()) != SpawnedBossByPlayer.end())
+        {
+            player->GetSession()->SendNotification("Du hast bereits einen Boss beschworen");
+            CloseGossipMenuFor(player);
+            return true;
+        }
+
+        if (SpawnedBossByPlayer.size() >= 1)
+        {
+            player->GetSession()->SendNotification("Ein Kampf ist bereits im gange, daher gedulde dich ein wenig.");
+            CloseGossipMenuFor(player);
+            return true;
+
+
+        }
+
+        player->PrepareQuestMenu(me->GetGUID());
+        ClearGossipMenuFor(player);
+        for (const auto& info : BossInfoByQuest)
+        {
+            for (uint16 i = 0; i < MAX_QUEST_LOG_SIZE; ++i)
+                if (player->GetQuestSlotQuestId(i) == info.first)
+                {
+                    auto pProto = sObjectMgr->GetQuestTemplate(info.first);
+                    if (!pProto)
+                        continue;
+                    if (player->CanRewardQuest(pProto, false))
+                        continue;
+
+                    AddGossipItemFor(player, GossipOptionIcon(0), info.second.second, info.second.first, static_cast<uint32>(GossipOptions::OptionSummon));
+                }
+        }
+        AddGossipItemFor(player, GossipOptionIcon(0), "Zurück", GOSSIP_SENDER_MAIN, static_cast<uint32>(GossipOptions::OptionCloseMenu));
+        SendGossipMenuFor(player, textId, me->GetGUID());
+        return true;
+    }
+
+    bool OnGossipSelect(Player* player, uint32 /*send*/, uint32 gossipActionInfo) override
+    {
+        if (!SpawnedBossByPlayer.empty())
+    {
+        CloseGossipMenuFor(player);
+        return false;
+    }
+
+        auto action = player->PlayerTalkClass->GetGossipOptionAction(gossipActionInfo);
+        auto bossEntry = player->PlayerTalkClass->GetGossipOptionSender(gossipActionInfo);
+        auto sourcedEnum = static_cast<GossipOptions>(action);
+
+        switch (sourcedEnum)
+        {
+        case GossipOptions::OptionSummon:
+        {
+            auto visualPortal = me->GetMap()->SummonCreature(portalCreature, spawnPosition, nullptr, 6 * MINUTE * IN_MILLISECONDS);
+            visualPortal->SetObjectScale(0.3f);
+            visualPortal->CastSpell(visualPortal, 51807);
+            events.ScheduleEvent(EVENT_DESPAWN_PORTAL, 20s);
+            plrSummoner = player;
+
+            bossId = bossEntry;
+            events.ScheduleEvent(EVENT_SUMMON_BOSS, 5s);
+
+            SpawnedBossByPlayer.insert({ plrSummoner->GetGUID().GetCounter(), player->GetGUID() });
+
+            me->TextEmote(bossInfo[bossEntry].first, player, true);
+            events.ScheduleEvent(EVENT_DESPAWN_AND_CLEAR, 25min);
+
+            portal = visualPortal;
+            CloseGossipMenuFor(player);
+        }
+        break;
+
+        case GossipOptions::OptionCloseMenu:
+            CloseGossipMenuFor(player);
+            break;
+        }
+        return true;
+    }
+
+private:
+    // This is the location where the boss spawns
+    Position spawnPosition{ 5762.110840f /*pos_x*/ , -2959.337646f /*pos_y*/ , 274.023773f /*pos_z*/ , 5.165698f /*orient*/ };
+    // This is the location of the portal, and the location to which the boss will walk after spawning
+    Position walkPosition{ 5765.526367f /*pos_x*/ , -2966.348389f /*pos_y*/ , 273.985626f /*pos_z*/ , 5.146064f /*orient*/ };
+    EventMap events;
+    TempSummon* summonedBoss;
+    uint32 bossId;
+    TempSummon* portal;
+    Player* plrSummoner;
+    uint32 m_timer;
+};
+
+class SpawnLoot : public BasicEvent
+{
+public:
+    SpawnLoot(Player* plr, Position pos, uint32 chest) : BasicEvent(), player(plr), position(pos), chestId(chest) {}
+
+    bool Execute(uint64 /*time_t*/, uint32 /*time_e*/) override
+    {
+        spawnGobHelper(player, chestId, position);
+        return true;
+    }
+
+protected:
+    Player* player;
+    Position position;
+    uint32 chestId;
+};
+
+class TimedDespawn : public BasicEvent
+{
+public:
+    TimedDespawn(Creature* cr, Player* plr, bool spawn = false) : BasicEvent(), boss(cr), summoner(plr), spawned(spawn) {}
+
+    bool Execute(uint64 /*t*/, uint32 /*e*/) override
+    {
+        if (boss && boss->IsInWorld())
+        boss->DespawnOrUnsummon();
+        SpawnedBossByPlayer.erase(summoner->GetGUID().GetCounter());
+        spawned = false;
+        return true;
+    }
+
+private:
+    Creature* boss;
+    Player* summoner;
+    bool spawned;
+};
+class ps_boss_loot : public PlayerScript
+{
+public:
+    ps_boss_loot() : PlayerScript("ps_boss_loot") {}
+
+    void OnCreatureKill(Player* player, Creature* creature) override
+    {
+        if (SpawnedBossByPlayer.find(player->GetGUID()) != SpawnedBossByPlayer.end())
+        {
+            if (creature->GetGUID() != SpawnedBossByPlayer[player->GetGUID().GetCounter()])
+                return;
+
+            for (const auto& data : BossInfoByQuest)
+            {
+                if (creature->GetEntry() == data.second.first)
+                {
+                    player->CompleteQuest(data.first);
+                    player->RewardQuest(sObjectMgr->GetQuestTemplate(data.first), 0, nullptr, true);
+
+                    auto chest = bossInfo[data.second.first].second;
+                    player->m_Events.AddEvent(new SpawnLoot(player, chestSpawn, chest),
+                    player->m_Events.CalculateTime(Milliseconds(5 * IN_MILLISECONDS)));
+
+                    player->GetSession()->SendAreaTriggerMessage("Herzlichen Glückwunsch, Sie haben diesen Boss besiegt. Eine Truhe mit Ihrer Beute wird in 5 Sekunden erscheinen.");
+
+                }
+            }
+        }
+    }
+
+    void OnQuestStatusChange(Player* player, uint32 /*quest*/) override
+    {
+        auto guid = player->GetGUID().GetCounter();
+        if (SpawnedBossByPlayer.find(guid) != SpawnedBossByPlayer.end())
+        {
+            for (const auto& data : BossInfoByQuest)
+            {
+                bool found = false;
+                for (uint16 i = 0; i < MAX_QUEST_LOG_SIZE; ++i)
+                {
+                    if (player->GetQuestSlotQuestId(i) == data.first)
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                if (found)
+                {
+                    if (auto boss = ObjectAccessor::GetCreature(*player, SpawnedBossByPlayer[guid]))
+                    {
+                        boss->m_Events.AddEvent(new TimedDespawn(boss, player), boss->m_Events.CalculateTime(Milliseconds(5 * IN_MILLISECONDS)));
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+private:
+    // Chest spawn location
+    Position chestSpawn{ 5771.977539f/*pos_x*/ , -2979.055664f /*pos_y*/ , 273.080444f /*pos_z*/ , 5.177478f /*orient*/ };
+};
+
+class ws_boss_spawner_loader : public WorldScript
+{
+public:
+    ws_boss_spawner_loader() : WorldScript("ws_boss_spawner_loader") {}
+
+    void OnConfigLoad(bool /*reload*/) override
+    {
+        LoadQuestBossData();
+    }
+};
+
+void AddSC_world_boss_spawner()
+{
+    RegisterCreatureAI(npc_world_boss_spawner);
+    new ws_boss_spawner_loader();
+    new ps_boss_loot();
+}
+

@@ -1,0 +1,32 @@
+/*
+ * The Dreamland
+ * Author: r4dish (Discord: r4dish#0692)
+ */
+
+#include "InstanceScript.h"
+#include "the_dreamland.h"
+
+class instance_the_dreamland : public InstanceMapScript
+{
+public:
+    instance_the_dreamland() : InstanceMapScript(TheDreamlandScriptName, 731) { }
+
+    struct instance_the_dreamland_InstanceScript : public InstanceScript
+    {
+        instance_the_dreamland_InstanceScript(InstanceMap* map) : InstanceScript(map)
+        {
+            SetHeaders(DataHeader);
+            SetBossNumber(EncounterCount);
+        }
+    };
+
+    InstanceScript* GetInstanceScript(InstanceMap* map) const override
+    {
+        return new instance_the_dreamland_InstanceScript(map);
+    }
+};
+
+void AddSC_instance_the_dreamland()
+{
+    new instance_the_dreamland();
+}

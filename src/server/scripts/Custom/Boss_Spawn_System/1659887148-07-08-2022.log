@@ -1,0 +1,1375 @@
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+[New Thread 0x7ffff49ff700 (LWP 166662)]
+[New Thread 0x7ffff41fe700 (LWP 166663)]
+[New Thread 0x7ffff39fd700 (LWP 166664)]
+[New Thread 0x7ffff31fc700 (LWP 166665)]
+TrinityCore rev. bac3eda13574+ 2022-08-03 09:24:05 +0200 (3.3.5 branch) (Unix, RelWithDebInfo, Static) (worldserver-daemon)
+<Ctrl-C> to stop.
+
+ ______                       __
+/\__  _\       __          __/\ \__
+\/_/\ \/ _ __ /\_\    ___ /\_\ \, _\  __  __
+   \ \ \/\`'__\/\ \ /' _ `\/\ \ \ \/ /\ \/\ \
+    \ \ \ \ \/ \ \ \/\ \/\ \ \ \ \ \_\ \ \_\ \
+     \ \_\ \_\  \ \_\ \_\ \_\ \_\ \__\\/`____ \
+      \/_/\/_/   \/_/\/_/\/_/\/_/\/__/ `/___/> \
+                                 C O R E  /\___/
+http://TrinityCore.org                    \/__/
+
+Using configuration file /var/www/vhosts/clangaming.eu/wow/etc/worldserver.conf.
+Using SSL version: OpenSSL 1.1.1n  15 Mar 2022 (library: OpenSSL 1.1.1n  15 Mar 2022)
+Using Boost version: 1.74.0
+Opening DatabasePool 'auth'. Asynchronous connections: 1, synchronous connections: 1.
+DatabasePool 'auth' opened successfully. 2 total connections running.
+Opening DatabasePool 'characters'. Asynchronous connections: 1, synchronous connections: 2.
+DatabasePool 'characters' opened successfully. 3 total connections running.
+Opening DatabasePool 'world'. Asynchronous connections: 1, synchronous connections: 1.
+DatabasePool 'world' opened successfully. 2 total connections running.
+Updating Auth database...
+>> Auth database is up-to-date! Containing 1 new and 100 archived updates.
+Updating Character database...
+>> Character database is up-to-date! Containing 1 new and 74 archived updates.
+Updating World database...
+>> World database is up-to-date! Containing 32 new and 6196 archived updates.
+Realm running as realm ID 1
+Using World DB: TDB 335.22061
+Will clear `logs` table of entries older than 1209600 seconds every 10 minutes.
+Client cache version set to: 22061
+Using DataDir /var/www/vhosts/clangaming.eu/wow/bin/
+WORLD: MMap data directory is: /var/www/vhosts/clangaming.eu/wow/bin/mmaps
+VMap support included. LineOfSight: 1, getHeight: 1, indoorCheck: 1
+VMap data directory is: /var/www/vhosts/clangaming.eu/wow/bin/vmaps
+Loading Trinity strings...
+>> Loaded 1023 trinity strings in 1 ms
+Initialize data stores...
+>> Initialized 115 data stores in 442 ms
+Using deDE DBC Locale as default. All available DBC locales: deDE 
+>> Loading Cinematic Camera files
+>> Loaded 14 cinematic waypoint sets in 1 ms
+Loading IP Location Database...
+Initializing PlayerDump tables...
+>> Initialized tables for PlayerDump in 15 ms.
+Loading SpellInfo store...
+>> Loaded SpellInfo store in 55 ms
+Loading SpellInfo corrections...
+>> Loaded SpellInfo corrections in 9 ms
+Loading SkillLineAbilityMultiMap Data...
+>> Loaded 10219 SkillLineAbility MultiMap Data in 3 ms
+Loading SpellInfo custom attributes...
+>> Loaded 272 spell custom attributes from DB in 0 ms
+>> Loaded SpellInfo custom attributes in 24 ms
+Loading SpellInfo diminishing infos...
+>> Loaded SpellInfo diminishing infos in 6 ms
+Loading SpellInfo immunity infos...
+>> Loaded SpellInfo immunity infos in 8 ms
+Loading Player Totem models...
+>> Loaded 20 player totem model records in 1 ms
+Loading GameObject models...
+>> Loaded 2324 GameObject models in 0 ms
+Loading Script Names...
+>> Loaded 3154 ScriptNames in 260 ms
+Loading Instance Template...
+>> Loaded 86 instance templates in 1 ms
+Loading instances...
+>> Loaded instances in 3 ms
+Loading character cache store...
+Loaded character infos for 3 characters in 0 ms
+Loading Broadcast texts...
+>> Loaded 73048 broadcast texts in 99 ms
+>> Loaded 73048 broadcast text locales in 529 ms
+Loading Localization strings...
+>> Loaded 27252 creature locale strings in 150 ms
+>> Loaded 20372 gameobject_template_locale strings in 112 ms
+>> Loaded 38409 Item locale strings in 197 ms
+>> Loaded 2481 Item set name locale strings in 8 ms
+>> Loaded 9464 Quest locale strings in 147 ms
+>> Loaded 8476 Quest Offer Reward locale strings in 49 ms
+>> Loaded 6413 Quest Request Items locale strings in 32 ms
+>> Loaded 208 NpcText locale strings in 1 ms
+>> Loaded 1946 PageText locale strings in 15 ms
+>> Loaded 2 gossip_menu_option locale strings in 1 ms
+>> Loaded 453 points_of_interest locale strings in 1 ms
+>> Loaded 84 quest greeting locale strings in 1 ms
+>> Localization strings loaded in 714 ms
+Loading Account Roles and Permissions...
+>> Loaded 705 permission definitions, 687 linked permissions and 4 default permissions in 1 ms
+Loading Page Texts...
+>> Loaded 1951 page texts in 2 ms
+Loading Game Object Templates...
+>> Loaded 21576 game object templates in 63 ms
+Loading Game Object template addons...
+>> Loaded 21501 game object template addons in 16 ms
+Loading Transport templates...
+>> Loaded 30 transport templates in 9 ms
+Loading Transport animations and rotations...
+Loading Spell Rank Data...
+>> Loaded 3465 spell rank records in 2 ms
+Loading Spell Required Data...
+>> Loaded 41 spell required records in 0 ms
+Loading Spell Group types...
+>> Loaded 549 spell group definitions in 1 ms
+Loading Spell Learn Skills...
+>> Loaded 103 Spell Learn Skills from DBC in 2 ms
+Loading SpellInfo SpellSpecific and AuraState...
+>> Loaded SpellInfo SpellSpecific and AuraState in 5 ms
+Loading Spell Learn Spells...
+>> Loaded 8 spell learn spells + 574 found in DBC in 2 ms
+Loading Spell Proc conditions and data...
+>> Loaded 846 spell proc conditions and data in 1 ms
+Generating spell proc data from SpellMap...
+>> Generated spell proc data for 1386 spells in 3 ms
+Loading Spell Bonus Data...
+>> Loaded 216 extra spell bonus data in 1 ms
+Loading Aggro Spells Definitions...
+>> Loaded 106 SpellThreatEntries in 0 ms
+Loading Spell Group Stack Rules...
+>> Loaded 65 spell group stack rules in 0 ms
+>> Parsing SPELL_GROUP_STACK_RULE_EXCLUSIVE_SAME_EFFECT stack rules...
+>> Parsed 14 SPELL_GROUP_STACK_RULE_EXCLUSIVE_SAME_EFFECT stack rules in 0 ms
+Loading NPC Texts...
+>> Loaded 8680 npc texts in 62 ms
+Loading Enchant Spells Proc datas...
+>> Loaded 42 enchant proc data definitions in 1 ms
+Loading Item Random Enchantments Table...
+>> Loaded 28607 Item Enchantment definitions in 14 ms
+Loading Disables
+Pathfinding disabled for instance map 650.
+Pathfinding disabled for instance map 649.
+>> Loaded 874 disables in 1 ms
+Loading Items...
+>> Loaded 38622 item templates in 374 ms
+Loading Item set names...
+>> Loaded 2481 item set names in 2 ms
+Loading Creature Model Based Info Data...
+>> Loaded 24143 creature model based info in 19 ms
+Loading Creature templates...
+>> Loaded 1606 creature template resistances in 1 ms
+>> Loaded 9635 creature template spells in 5 ms
+>> Loaded 30303 creature definitions in 236 ms
+Loading Equipment templates...
+>> Loaded 11180 equipment templates in 8 ms
+Loading Creature template addons...
+>> Loaded 15611 creature template addons in 14 ms
+Loading Reputation Reward Rates...
+>> Loaded 16 reputation_reward_rate in 1 ms
+Loading Creature Reputation OnKill Data...
+>> Loaded 2008 creature award reputation definitions in 2 ms
+Loading Reputation Spillover Data...
+>> Loaded 26 reputation_spillover_template in 0 ms
+Loading Points Of Interest Data...
+>> Loaded 456 Points of Interest definitions in 1 ms
+Loading Creature Base Stats...
+>> Loaded 1000 creature base stats in 4 ms
+Loading Spawn Group Templates...
+>> Loaded 69 spawn group templates in 0 ms
+Loading instance spawn groups...
+>> Loaded 55 instance spawn groups in 0 ms
+Loading Creature Data...
+>> Loaded 151497 creatures in 1214 ms
+Loading Temporary Summon Data...
+>> Loaded 1096 temp summons in 2 ms
+Loading pet levelup spells...
+>> Loaded 993 pet levelup and default spells for 39 families in 4 ms
+Loading pet default spells additional to levelup spells...
+>> Loaded addition spells for 111 pet spell data entries in 3 ms
+Loading summonable creature templates...
+>> Loaded 462 summonable creature templates in 4 ms
+Loading Creature Addon Data...
+>> Loaded 32774 creature addons in 27 ms
+Loading Creature Movement Overrides...
+>> Loaded 10 movement overrides in 1 ms
+Loading Gameobject Data...
+>> Loaded 92722 gameobjects in 697 ms
+Loading Spawn Group Data...
+>> Loaded 97218 spawn group members in 46 ms
+Loading GameObject Addon Data...
+>> Loaded 59783 gameobject addons in 72 ms
+Loading GameObject faction and flags overrides...
+>> Loaded 20 gameobject faction and flags overrides in 0 ms
+Loading GameObject Quest Items...
+>> Loaded 857 gameobject quest items in 1 ms
+Loading Creature Quest Items...
+>> Loaded 4391 creature quest items in 3 ms
+Loading Creature Linked Respawn...
+>> Loaded 4763 linked respawns in 3 ms
+Loading Weather Data...
+>> Loaded 35 weather definitions in 0 ms
+Loading Quests...
+>> Loaded 9468 quests definitions in 121 ms
+Checking Quest Disables
+>> Checked 702 quest disables in 0 ms
+Loading Quest POI
+>> Loaded 8955 quest POI definitions in 39 ms
+Loading Quests Starters and Enders...
+Loading GO Start Quest Data...
+>> Loaded 446 quest relations from gameobject_queststarter in 1 ms
+Loading GO End Quest Data...
+>> Loaded 457 quest relations from gameobject_questender in 0 ms
+Loading Creature Start Quest Data...
+>> Loaded 7425 quest relations from creature_queststarter in 4 ms
+Loading Creature End Quest Data...
+>> Loaded 7863 quest relations from creature_questender in 4 ms
+Loading Quests Greetings...
+>> Loaded 178 quest_greeting in 1 ms
+Loading Objects Pooling Data...
+>> Loaded 3544 objects pools in 1 ms
+Loading Creatures Pooling Data...
+>> Loaded 1448 creatures in pools in 5 ms
+Loading Gameobject Pooling Data...
+>> Loaded 26127 gameobject in pools in 20 ms
+Loading Mother Pooling Data...
+>> Loaded 2589 pools in mother pools in 9 ms
+Starting objects pooling system...
+Loading Quest Pooling Data...
+>> Loaded 35 daily, 7 weekly and 0 monthly quest pools in 1 ms
+Loading Game Event Data...
+>> Loaded 156 holiday dates in 0 ms
+>> Loaded 84 game events in 0 ms.
+Loading Game Event Saves Data...
+>> Loaded 0 game event saves in game events. DB table `game_event_save` is empty.
+Loading Game Event Prerequisite Data...
+>> Loaded 0 game event prerequisites in game events. DB table `game_event_prerequisite` is empty.
+Loading Game Event Creature Data...
+>> Loaded 9846 creatures in game events in 4 ms.
+Loading Game Event GO Data...
+>> Loaded 31249 gameobjects in game events in 14 ms.
+Loading Game Event Model/Equipment Change Data...
+>> Loaded 9 model/equipment changes in game events in 1 ms.
+Loading Game Event Quest Data...
+>> Loaded 228 quests additions in game events in 0 ms.
+Loading Game Event GO Quest Data...
+>> Loaded 78 quests additions in game events in 0 ms.
+Loading Game Event Quest Condition Data...
+>> Loaded 0 quest event conditions in game events. DB table `game_event_quest_condition` is empty.
+Loading Game Event Condition Data...
+>> Loaded 0 conditions in game events. DB table `game_event_condition` is empty.
+Loading Game Event Condition Save Data...
+>> Loaded 0 condition saves in game events. DB table `game_event_condition_save` is empty.
+Loading Game Event NPCflag Data...
+>> Loaded 5 npcflags in game events in 0 ms.
+Loading Game Event Seasonal Quest Relations...
+>> Loaded 690 quests additions in game events in 1 ms.
+Loading Game Event Vendor Additions Data...
+>> Loaded 14 vendor additions in game events in 0 ms.
+Loading Game Event Battleground Holiday Data...
+>> Loaded 6 battleground holidays in game events in 0 ms.
+Loading Game Event Pool Data...
+>> Loaded 9 pools for game events in 0 ms.
+Loading UNIT_NPC_FLAG_SPELLCLICK Data...
+>> Loaded 325 spellclick definitions in 3 ms
+Loading Vehicle Templates...
+>> Loaded 0 vehicle template. DB table `vehicle_template` is empty.
+Loading Vehicle Template Accessories...
+>> Loaded 198 Vehicle Template Accessories in 0 ms
+Loading Vehicle Accessories...
+>> Loaded 0 Vehicle Accessories in 0 ms
+Loading Vehicle Seat Addon Data...
+>> Loaded 17 Vehicle Seat Addon entries in 0 ms
+Loading SpellArea Data...
+>> Loaded 769 spell area requirements in 1 ms
+Loading AreaTrigger definitions...
+>> Loaded 276 area trigger teleport definitions in 1 ms
+Loading Access Requirements...
+>> Loaded 121 access requirement definitions in 0 ms
+Loading Quest Area Triggers...
+>> Loaded 59 quest trigger points in 0 ms
+Loading Tavern Area Triggers...
+>> Loaded 114 tavern triggers in 0 ms
+Loading AreaTrigger script names...
+>> Loaded 208 areatrigger scripts in 1 ms
+Loading LFG entrance positions...
+>> Loaded 20 lfg entrance positions in 0 ms
+Loading Dungeon boss data...
+>> Loaded 612 instance encounters in 0 ms
+Loading LFG rewards...
+>> Loaded 15 lfg dungeon rewards in 1 ms
+Loading Graveyard-zone links...
+>> Loaded 700 graveyard-zone links in 0 ms
+Loading spell pet auras...
+>> Loaded 47 spell pet auras in 0 ms
+Loading Spell target coordinates...
+>> Loaded 597 spell teleport coordinates in 2 ms
+Loading enchant custom attributes...
+>> Loaded 32 custom enchant attributes in 0 ms
+Loading linked spells...
+>> Loaded 415 linked spells in 1 ms
+Loading Player Create Data...
+>> Loaded 62 player create definitions in 0 ms
+Loading Player Create Items Data...
+>> Loaded 1 custom player create items in 0 ms
+Loading Player Create Skill Data...
+>> Loaded 1094 player create skills in 0 ms
+Loading Player Create Spell Data...
+>> Loaded 2680 custom player create spells in 1 ms
+Loading Player Create Cast Spell Data...
+>> Loaded 19 player create cast spells in 0 ms
+Loading Player Create Action Data...
+>> Loaded 325 player create actions in 0 ms
+Loading Player Create Level HP/Mana Data...
+>> Loaded 800 level health/mana definitions in 0 ms
+Loading Player Create Level Stats Data...
+>> Loaded 4960 level stats definitions in 3 ms
+Loading Player Create XP Data...
+>> Loaded 79 xp for level definitions in 0 ms
+Loading Exploration BaseXP Data...
+>> Loaded 80 BaseXP definitions in 0 ms
+Loading Pet Name Parts...
+>> Loaded 313 pet name parts in 0 ms
+Cleaning character database...
+>> Cleaned character database in 1 ms
+Loading the max pet number...
+>> Loaded the max pet number: 3 in 0 ms
+Loading pet level stats...
+>> Loaded 2560 level pet stats definitions in 2 ms
+Loading Player level dependent mail rewards...
+>> Loaded 25 level dependent mail rewards in 0 ms
+Loading creature loot templates...
+>> Loaded 316541 creature loot templates in 307 ms
+Loading fishing loot templates...
+>> Loaded 281 fishing loot templates in 1 ms
+Loading gameobject loot templates...
+>> Loaded 16758 gameobject loot templates in 18 ms
+Loading item loot templates...
+>> Loaded 5121 item loot templates in 8 ms
+Loading mail loot templates...
+>> Loaded 117 mail loot templates in 1 ms
+Loading milling loot templates...
+>> Loaded 45 milling loot templates in 1 ms
+Loading pickpocketing loot templates...
+>> Loaded 11046 pickpocketing loot templates in 14 ms
+Loading skinning loot templates...
+>> Loaded 1152 skinning loot templates in 3 ms
+Loading disenchanting loot templates...
+>> Loaded 124 disenchanting loot templates in 5 ms
+Loading prospecting loot templates...
+>> Loaded 36 prospecting loot templates in 1 ms
+Loading spell loot templates...
+>> Loaded 166 spell loot templates in 2 ms
+Loading reference loot templates...
+>> Loaded reference loot templates in 24 ms
+Loading Skill Discovery Table...
+>> Loaded 347 skill discovery definitions in 2 ms.
+Loading Skill Extra Item Table...
+>> Loaded 225 spell specialization definitions in 0 ms
+Loading Skill Perfection Data Table...
+>> Loaded 72 spell perfection definitions in 1 ms.
+Loading Skill Fishing base level requirements...
+>> Loaded 113 areas for fishing base skill level in 0 ms
+Loading Achievements...
+>> Loaded 43 achievement references in 0 ms.
+Loading Achievement Criteria Lists...
+>> Loaded 7494 achievement criteria in 1 ms.
+Loading Achievement Criteria Data...
+>> Loaded 2695 additional achievement criteria data in 2 ms
+Loading Achievement Rewards...
+>> Loaded 112 achievement rewards in 1 ms.
+Loading Achievement Reward Locales...
+>> Loaded 32 achievement reward locale strings in 0 ms.
+Loading Completed Achievements...
+>> Loaded 43 realm first completed achievements in 0 ms.
+Loading Item Auctions...
+>> Loaded 25353 auction items in 128 ms
+Loading Auctions...
+>> Loaded 25353 auctions with 0 bidders in 76 ms
+Loading Guilds...
+Loading guilds definitions...
+>> Loaded 1 guild definitions in 0 ms
+Loading guild ranks...
+>> Loaded 5 guild ranks in 0 ms
+Loading guild members...
+>> Loaded 1 guild members in 1 ms
+Loading bank tab rights...
+>> Loaded 30 bank tab rights in 0 ms
+Loading guild event logs...
+>> Loaded 1 guild event logs in 0 ms
+Loading guild bank event logs...
+>> Loaded 19 guild bank event logs in 1 ms
+Loading guild bank tabs...
+>> Loaded 6 guild bank tabs in 0 ms
+Filling bank tabs with items...
+>> Loaded 3 guild bank[New Thread 0x7fffb6fff700 (LWP 166666)]
+ tab items in 0 ms
+Validating data of loaded guilds...
+>> Validated data of loaded guilds in 0 ms
+Loading ArenaTeams...
+>> Loaded 0 arena teams. DB table `arena_team` is empty!
+Loading Groups...
+>> Loaded 0 group definitions. DB table `groups` is empty!
+Loading ReservedNames...
+>> Loaded 0 reserved player names. DB table `reserved_name` is empty!
+Loading GameObjects for quests...
+>> Loaded 1795 GameObjects for quests in 2 ms
+Loading BattleMasters...
+>> Loaded 157 battlemaster entries in 2 ms
+Loading GameTeleports...
+>> Loaded 1497 GameTeleports in 4 ms
+Loading Trainers...
+>> Loaded 126 Trainers in 5 ms
+Loading Creature default trainers...
+>> Loaded 806 default trainers in 1 ms
+Loading Gossip menu...
+>> Loaded 6085 gossip_menu IDs in 3 ms
+Loading Gossip menu options...
+>> Loaded 4394 gossip_menu_option entries in 19 ms
+Loading Vendors...
+>> Loaded 37601 Vendors in 25 ms
+Loading Waypoints...
+>> Loaded 134528 waypoints in 315 ms
+Loading SmartAI Waypoints...
+>> Loaded 841 SmartAI waypoint paths (total 11197 waypoints) in 9 ms
+Loading Creature Formations...
+>> Loaded 2084 creatures in formations in 3 ms
+Loading World States...
+>> Loaded 138 world states in 0 ms
+Loading Conditions...
+>> Loaded 14759 conditions in 25 ms
+Loading faction change achievement pairs...
+>> Loaded 125 faction change achievement pairs in 0 ms
+Loading faction change spell pairs...
+>> Loaded 111 faction change spell pairs in 0 ms
+Loading faction change quest pairs...
+>> Loaded 290 faction change quest pairs in 0 ms
+Loading faction change item pairs...
+>> Loaded 1355 faction change item pairs in 1 ms
+Loading faction change reputation pairs...
+>> Loaded 16 faction change reputation pairs in 0 ms
+Loading faction change title pairs...
+>> Loaded 22 faction change title pairs in 1 ms
+Loading GM tickets...
+>> Loaded 0 GM tickets. DB table `gm_ticket` is empty!
+Loading GM surveys...
+>> Loaded GM Survey count from database in 0 ms
+Loading client addons...
+>> Loaded 23 known addons in 0 ms
+Returning old mails...
+Returning mails current time: hour: 13, minute: 27, second: 50 
+>> No expired mails found.
+Loading Autobroadcasts...
+>> Loaded 0 autobroadcasts definitions. DB table `autobroadcast` is empty for this realm!
+Loading spell_scripts...
+>> Loaded 94 script definitions in 0 ms
+Loading event_scripts...
+>> Loaded 534 script definitions in 1 ms
+Loading waypoint_scripts...
+>> Loaded 709 script definitions in 1 ms
+Loading spell script names...
+>> Loaded 2501 spell script names in 4 ms
+Loading Creature Texts...
+>> Loaded 17094 creature texts for 3833 creatures in 27 ms
+Loading Creature Text Locales...
+>> Loaded 2 creature localized texts in 1 ms
+Initializing Scripts...
+Loading Script Waypoints for 43 creature(s)...
+>> Loaded 930 Script Waypoint nodes in 2 ms
+>> Loaded spline chain data for 124 chains, consisting of 325 splines with 1684 waypoints in 3 ms
+Loading C++ scripts
+>> Loaded 3201 C++ scripts in 42 ms
+Validating spell scripts...
+>> Validated 3093 scripts in 3 ms
+Loading SmartAI scripts...
+>> Loaded SmartAIMgr Helpers in 7 ms
+>> Loaded 13583 SmartAI scripts in 152 ms
+Loading Calendar data...
+>> Loaded 0 calendar events in 1 ms
+>> Loaded 0 calendar invites in 0 ms
+Loading Petitions...
+>> Loaded 0 petitions.
+Loading Signatures...
+>> Loaded 0 Petition signs!
+Loading Item loot...
+>> Loaded 15 stored item loots in 0 ms
+>> Loaded 0 stored item money
+Initialize query data...
+>> Query data caching is disabled. Skipped initialization.
+Initialize commands...
+Initialize game time and timers
+Mail timer set to: 540, mail return is called every 1440 minutes
+Starting Map System
+Re-Loading Spell Proc conditions...
+>> Loaded 846 spell proc conditions and data in 2 ms
+Generating spell proc data from SpellMap...
+>> Generated spell proc data for 1386 spells in 3 ms
+Starting NpcBot system...
+>> Bot appearance data loaded
+>> Bot race data loaded
+>> Loaded 60 bot data entries
+Creature: loading npcbot Kerra (id: 70038)
+Creature: loading npcbot Malosh (id: 70005)
+Creature: loading npcbot Angela (id: 70025)
+Creature: loading npcbot Jesthenis (id: 70062)
+Creature: loading npcbot Cyssa (id[New Thread 0x7fffa17fe700 (LWP 166667)]
+: 70072)
+Creature: loading npcbot Pyreanor (id: 70073)
+Creature: loading npcbot Kary (id: 70105)
+Creature: loading npcbot Sian'dur (id: 70114)
+Creature: loading npcbot Ormak (id: 70112)
+Creature: loading npcbot Elara (id: 70180)
+Creature: loading npcbot Carolyn (id: 70169)
+Creature: loading npcbot Shenthul (id: 70163)
+Creature: loading npcbot Derek (id: 70336)
+Creature: loading npcbot Enyo (id: 70319)
+Creature: loading npcbot Teli'Larien (id: 70372)
+Creature: loading npcbot Kaal (id: 70363)
+Creature: loading npcbot Luther (id: 70364)
+Creature: loading npcbot Harene (id: 70417)
+Creature: loading npcbot Gart (id: 70404)
+Creature: loading npcbot Gennia (id: 70405)
+Creature: loading npcbot Tai'jin (id: 70213)
+Creature: loading npcbot Belestra (id: 70236)
+Creature: loading npcbot Lankester (id: 70218)
+Creature: loading npcbot Mynx (id: 70454)
+Creature: loading npcbot Crok (id: 70462)
+Creature: loading npcbot Uzo (id: 70460)
+Creature: loading npcbot Siln (id: 70252)
+Creature: loading npcbot Sian'tsu (id: 70260)
+Creature: loading npcbot Swart (id: 70258)
+Creature: loading npcbot Narinth (id: 70330)
+Creature: loading npcbot Frahun (id: 70164)
+Creature: loading npcbot Bilban (id: 70028)
+Creature: loading npcbot Mardant (id: 70406)
+Creature: loading npcbot Shalannius (id: 70418)
+Creature: loading npcbot Maldryn (id: 70413)
+Creature: loading npcbot Fallat (id: 70240)
+Creature: loading npcbot Toldren (id: 70222)
+Creature: loading npcbot Jandria (id: 70216)
+Creature: loading npcbot Bati (id: 70335)
+Creature: loading npcbot Dink (id: 70323)
+Creature: loading npcbot Juli (id: 70314)
+Creature: loading npcbot Keilnei (id: 70132)
+Creature: loading npcbot Jocaste (id: 70119)
+Creature: loading npcbot Acteon (id: 70137)
+Creature: loading npcbot Arthur (id: 70059)
+Creature: loading npcbot Jol (id: 70071)
+Creature: loading npcbot Tullas (id: 70070)
+Creature: loading npcbot Arly (id: 70458)
+Creature: loading npcbot Siouxsie (id: 70451)
+Creature: loading npcbot Zalduun (id: 70233)
+Creature: loading npcbot Fenthwick (id: 70174)
+Creature: loading npcbot Tony (id: 70176)
+Creature: loading npcbot Kazi (id: 70037)
+Creature: loading npcbot Wu (id: 70029)
+Creature: loading npcbot Sulaa (id: 70265)
+Creature: loading npcbot Umbrua (id: 70267)
+Creature: loading npcbot Javad (id: 70268)
+Creature: loading npcbot Babagaya (id: 70377)
+Creature: loading npcbot Ursula (id: 70369)
+Creature: loading npcbot Sandahl (id: 70370)
+>> Spawned 60 npcbot(s) within 3 grid(s) in 136 ms
+Starting Game Event system...
+GameEvent 16 "Gurubashi Arena Booty Run" started.
+GameEvent 29 "Edge of Madness, Renataki" started.
+GameEvent 44 "Brew of the Month August" started.
+GameEvent 54 "Call to Arms: Isle of Conquest!" started.
+GameEvent 78 "Summer seasonal fish" started.
+GameEvent 84 "AT ValKyr invasion" started.
+Next game event check in 124 seconds.
+Player::DeleteOldCharacters: Deleting all characters which have been deleted 30 days before...
+Initialize AuctionHouseBot...
+AuctionHouseBot BUYER is disabled!
+Initializing chat channels...
+>> Loaded 0 custom chat channels. DB table `channels` is empty.
+Initializing Opcodes...
+Starting Arena Season...
+GameEvent 60 "Arena Season 8" started.
+Seasonal quests reset for all characters.
+Arena Season 8 started...
+Starting Battleground System
+>> Loaded 11 battlegrounds in 0 ms
+Starting Outdoor PvP System
+>> Loaded 6 outdoor PvP definitions in 0 ms
+Starting Battlefield System
+Setting up battlefield with TypeId 1 succeeded.
+>> Loaded 1 battlefields in 73 ms
+Loading Transports...
+>> Spawned 20 continent transports in 68 ms
+Loading Warden Checks...
+>> Loaded 791 warden checks in 1 ms
+Loading Warden Action Overrides...
+>> Loaded 0 Warden action overrides. DB table `warden_action` is empty!
+Deleting expired bans...
+Initializing quest reset times...
+Calculate random battleground reset time...
+Calculate deletion of old calendar events time...
+Calculate guild limitation(s) reset time...
+World initialized in 0 minutes 7 seconds
+Starting up anti-freeze thread (60 seconds max stuck time)...
+TrinityCore rev. bac3eda13574+ 2022-08-03 09:24:05 +0200 (3.3.5 branch) (Unix, RelWithDebInfo, Static) (worldserver-daemon) ready...
+Loading custom_npc_tele_category, custom_npc_tele_destination and custom_npc_tele_association...
+ 
+Loaded 55 npc_teleport.
+[New Thread 0x7fffa09ff700 (LWP 166668)]
+[?2004hTC> Loading GUID Full: 0x0000000000000002 Type: Player Low: 2 from account 1.
+Loading GUID Full: 0x0000000000000003 Type: Player Low: 3 from account 1.
+Account: 1 (IP: 217.247.9.76) Login Character:[Lana] GUID Full: 0x0000000000000003 Type: Player Low: 3 Level: 80, XP: 0/0 (0 left)
+Player GUID Full: 0x0000000000000003 Type: Player Low: 3 abandoned quest 1447
+Player GUID Full: 0x0000000000000003 Type: Player Low: 3 abandoned quest 1447
+GameEvent 84 "AT ValKyr invasion" removed.
+Next game event check in 600 seconds.
+Account: 1 (IP: 217.247.9.76) Logout Character:[Lana] GUID Full: 0x0000000000000003 Type: Player Low: 3 Level: 80, XP: 0/0 (0 left)
+Loading GUID Full: 0x0000000000000002 Type: Player Low: 2 from account 1.
+Loading GUID Full: 0x0000000000000003 Type: Player Low: 3 from account 1.
+GameEvent 33 "Dalaran: Minigob" started.
+Seasonal quests reset for all characters.
+GameEvent 67 "AT Event Trigger (Tirion Speech)" started.
+Seasonal quests reset for all characters.
+Next game event check in 300 seconds.
+GameEvent 33 "Dalaran: Minigob" removed.
+Next game event check in 300 seconds.
+GameEvent 46 "L70 ETC Shattrath Announce" started.
+Seasonal quests reset for all characters.
+GameEvent 67 "AT Event Trigger (Tirion Speech)" removed.
+Next game event check in 300 seconds.
+GameEvent 68 "AT Event Trigger (Horde Event)" started.
+Seasonal quests reset for all characters.
+Next game event check in 300 seconds.
+GameEvent 47 "L70 ETC Shattrath" started.
+Seasonal quests reset for all characters.
+GameEvent 73 "Hourly Bells" started.
+Seasonal quests reset for all characters.
+GameEvent 74 "Dalaran: Argent Tournament heralds Horde" started.
+Seasonal quests reset for all characters.
+GameEvent 75 "Dalaran: Argent Tournament heralds Alliance" started.
+Seasonal quests reset for all characters.
+GameEvent 79 "Diurnal fishing event" started.
+Seasonal quests reset for all characters.
+GameEvent 83 "Warsong Hold Invasion" started.
+Seasonal quests reset for all characters.
+GameEvent 85 "Honor Hold Hellfire" started.
+Seasonal quests reset for all characters.
+Next game event check in 60 seconds.
+GameEvent 73 "Hourly Bells" removed.
+GameEvent 85 "Honor Hold Hellfire" removed.
+Next game event check in 240 seconds.
+GameEvent 68 "AT Event Trigger (Horde Event)" removed.
+GameEvent 74 "Dalaran: Argent Tournament heralds Horde" removed.
+GameEvent 75 "Dalaran: Argent Tournament heralds Alliance" removed.
+Next game event check in 60 seconds.
+GameEvent 46 "L70 ETC Shattrath Announce" removed.
+GameEvent 47 "L70 ETC Shattrath" removed.
+Next game event check in 240 seconds.
+GameEvent 33 "Dalaran: Minigob" started.
+Seasonal quests reset for all characters.
+GameEvent 69 "AT Event Trigger (Alliance Event)" started.
+Seasonal quests reset for all characters.
+Next game event check in 300 seconds.
+GameEvent 33 "Dalaran: Minigob" removed.
+GameEvent 83 "Warsong Hold Invasion" removed.
+Next game event check in 300 seconds.
+GameEvent 84 "AT ValKyr invasion" started.
+Seasonal quests reset for all characters.
+GameEvent 69 "AT Event Trigger (Alliance Event)" removed.
+Next game event check in 600 seconds.
+GameEvent 84 "AT ValKyr invasion" removed.
+Next game event check in 600 seconds.
+GameEvent 33 "Dalaran: Minigob" started.
+Seasonal quests reset for all characters.
+GameEvent 67 "AT Event Trigger (Tirion Speech)" started.
+Seasonal quests reset for all characters.
+Next game event check in 300 seconds.
+GameEvent 33 "Dalaran: Minigob" removed.
+Next game event check in 300 seconds.
+GameEvent 67 "AT Event Trigger (Tirion Speech)" removed.
+Next game event check in 300 seconds.
+GameEvent 68 "AT Event Trigger (Horde Event)" started.
+Seasonal quests reset for all characters.
+Next game event check in 300 seconds.
+GameEvent 73 "Hourly Bells" started.
+Seasonal quests reset for all characters.
+GameEvent 74 "Dalaran: Argent Tournament heralds Horde" started.
+Seasonal quests reset for all characters.
+GameEvent 75 "Dalaran: Argent Tournament heralds Alliance" started.
+Seasonal quests reset for all characters.
+GameEvent 83 "Warsong Hold Invasion" started.
+Seasonal quests reset for all characters.
+GameEvent 85 "Honor Hold Hellfire" started.
+Seasonal quests reset for all characters.
+GameEvent 16 "Gurubashi Arena Booty Run" removed.
+Next game event check in 60 seconds.
+GameEvent 73 "Hourly Bells" removed.
+GameEvent 85 "Honor Hold Hellfire" removed.
+Next game event check in 240 seconds.
+GameEvent 68 "AT Event Trigger (Horde Event)" removed.
+GameEvent 74 "Dalaran: Argent Tournament heralds Horde" removed.
+GameEvent 75 "Dalaran: Argent Tournament heralds Alliance" removed.
+Next game event check in 300 seconds.
+GameEvent 33 "Dalaran: Minigob" started.
+Seasonal quests reset for all characters.
+GameEvent 69 "AT Event Trigger (Alliance Event)" started.
+Seasonal quests reset for all characters.
+Next game event check in 300 seconds.
+GameEvent 33 "Dalaran: Minigob" removed.
+GameEvent 83 "Warsong Hold Invasion" removed.
+Next game event check in 300 seconds.
+GameEvent 84 "AT ValKyr invasion" started.
+Seasonal quests reset for all characters.
+GameEvent 69 "AT Event Trigger (Alliance Event)" removed.
+Next game event check in 600 seconds.
+GameEvent 84 "AT ValKyr invasion" removed.
+Next game event check in 600 seconds.
+GameEvent 33 "Dalaran: Minigob" started.
+Seasonal quests reset for all characters.
+GameEvent 67 "AT Event Trigger (Tirion Speech)" started.
+Seasonal quests reset for all characters.
+Next game event check in 300 seconds.
+GameEvent 33 "Dalaran: Minigob" removed.
+Next game event check in 300 seconds.
+GameEvent 67 "AT Event Trigger (Tirion Speech)" removed.
+Next game event check in 300 seconds.
+GameEvent 68 "AT Event Trigger (Horde Event)" started.
+Seasonal quests reset for all characters.
+Next game event check in 300 seconds.
+GameEvent 15 "Stranglethorn Fishing Extravaganza Fishing Pools" started.
+Seasonal quests reset for all characters.
+GameEvent 16 "Gurubashi Arena Booty Run" started.
+Seasonal quests reset for all characters.
+GameEvent 62 "Stranglethorn Fishing Extravaganza Turn-ins" started.
+Seasonal quests reset for all characters.
+GameEvent 73 "Hourly Bells" started.
+Seasonal quests reset for all characters.
+GameEvent 74 "Dalaran: Argent Tournament heralds Horde" started.
+Seasonal quests reset for all characters.
+GameEvent 75 "Dalaran: Argent Tournament heralds Alliance" started.
+Seasonal quests reset for all characters.
+GameEvent 83 "Warsong Hold Invasion" started.
+Seasonal quests reset for all characters.
+GameEvent 85 "Honor Hold Hellfire" started.
+Seasonal quests reset for all characters.
+Next game event check in 60 seconds.
+GameEvent 73 "Hourly Bells" removed.
+GameEvent 85 "Honor Hold Hellfire" removed.
+Next game event check in 240 seconds.
+GameEvent 68 "AT Event Trigger (Horde Event)" removed.
+GameEvent 74 "Dalaran: Argent Tournament heralds Horde" removed.
+GameEvent 75 "Dalaran: Argent Tournament heralds Alliance" removed.
+Next game event check in 300 seconds.
+GameEvent 33 "Dalaran: Minigob" started.
+Seasonal quests reset for all characters.
+GameEvent 69 "AT Event Trigger (Alliance Event)" started.
+Seasonal quests reset for all characters.
+Next game event check in 300 seconds.
+GameEvent 33 "Dalaran: Minigob" removed.
+GameEvent 83 "Warsong Hold Invasion" removed.
+Next game event check in 300 seconds.
+GameEvent 84 "AT ValKyr invasion" started.
+Seasonal quests reset for all characters.
+GameEvent 69 "AT Event Trigger (Alliance Event)" removed.
+Next game event check in 600 seconds.
+GameEvent 84 "AT ValKyr invasion" removed.
+Next game event check in 600 seconds.
+GameEvent 33 "Dalaran: Minigob" started.
+Seasonal quests reset for all characters.
+GameEvent 67 "AT Event Trigger (Tirion Speech)" started.
+Seasonal quests reset for all characters.
+Next game event check in 300 seconds.
+GameEvent 33 "Dalaran: Minigob" removed.
+Next game event check in 300 seconds.
+GameEvent 46 "L70 ETC Shattrath Announce" started.
+Seasonal quests reset for all characters.
+GameEvent 67 "AT Event Trigger (Tirion Speech)" removed.
+Next game event check in 300 seconds.
+GameEvent 65 "Perry Gatner" started.
+Seasonal quests reset for all characters.
+GameEvent 68 "AT Event Trigger (Horde Event)" started.
+Seasonal quests reset for all characters.
+Next game event check in 300 seconds.
+GameEvent 47 "L70 ETC Shattrath" started.
+Seasonal quests reset for all characters.
+GameEvent 73 "Hourly Bells" started.
+Seasonal quests reset for all characters.
+GameEvent 74 "Dalaran: Argent Tournament heralds Horde" started.
+Seasonal quests reset for all characters.
+GameEvent 75 "Dalaran: Argent Tournament heralds Alliance" started.
+Seasonal quests reset for all characters.
+GameEvent 83 "Warsong Hold Invasion" started.
+Seasonal quests reset for all characters.
+GameEvent 85 "Honor Hold Hellfire" started.
+Seasonal quests reset for all characters.
+Next game event check in 60 seconds.
+GameEvent 73 "Hourly Bells" removed.
+GameEvent 85 "Honor Hold Hellfire" removed.
+Next game event check in 240 seconds.
+GameEvent 68 "AT Event Trigger (Horde Event)" removed.
+GameEvent 74 "Dalaran: Argent Tournament heralds Horde" removed.
+GameEvent 75 "Dalaran: Argent Tournament heralds Alliance" removed.
+Next game event check in 60 seconds.
+GameEvent 46 "L70 ETC Shattrath Announce" removed.
+GameEvent 47 "L70 ETC Shattrath" removed.
+Next game event check in 240 seconds.
+GameEvent 33 "Dalaran: Minigob" started.
+Seasonal quests reset for all characters.
+GameEvent 69 "AT Event Trigger (Alliance Event)" started.
+Seasonal quests reset for all characters.
+GameEvent 65 "Perry Gatner" removed.
+Next game event check in 300 seconds.
+GameEvent 33 "Dalaran: Minigob" removed.
+GameEvent 83 "Warsong Hold Invasion" removed.
+Next game event check in 300 seconds.
+GameEvent 84 "AT ValKyr invasion" started.
+Seasonal quests reset for all characters.
+GameEvent 69 "AT Event Trigger (Alliance Event)" removed.
+Next game event check in 600 seconds.
+Loading GUID Full: 0x0000000000000002 Type: Player Low: 2 from account 1.
+Loading GUID Full: 0x0000000000000003 Type: Player Low: 3 from account 1.
+Account: 1 (IP: 217.247.9.76) Login Character:[Lana] GUID Full: 0x0000000000000003 Type: Player Low: 3 Level: 80, XP: 0/0 (0 left)
+Command: tele zul'drak [Player: Lana (GUID Full: 0x0000000000000003 Type: Player Low: 3) (Account: 1) X: -8720.938477 Y: 444.159302 Z: 97.139183 Map: 0 (Östliche Königreiche) Area: 1519 (Sturmwind) Zone: Unknown Selected:  (GUID Full: 0x0000000000000000 Type: None Low: 0)]
+Player GUID Full: 0x0000000000000003 Type: Player Low: 3 abandoned quest 302000
+Command: repair [Player: Lana (GUID Full: 0x0000000000000003 Type: Player Low: 3) (Account: 1) X: 5796.904297 Y: -3017.994629 Z: 286.303741 Map: 571 (Nordend) Area: 4320 (Amphitheater der Agonie) Zone: Zul'Drak Selected:  (GUID Full: 0x0000000000000000 Type: None Low: 0)]
+Command: cheat god [Player: Lana (GUID Full: 0x0000000000000003 Type: Player Low: 3) (Account: 1) X: 5790.834473 Y: -2991.086182 Z: 273.432312 Map: 571 (Nordend) Area: 4320 (Amphitheater der Agonie) Zone: Zul'Drak Selected:  (GUID Full: 0x0000000000000000 Type: None Low: 0)]
+Command: gm on [Player: Lana (GUID Full: 0x0000000000000003 Type: Player Low: 3) (Account: 1) X: 5784.801758 Y: -2985.957275 Z: 273.282227 Map: 571 (Nordend) Area: 4320 (Amphitheater der Agonie) Zone: Zul'Drak Selected: Myra (GUID Full: 0xf1300186a100060b Type: Creature Entry: 100001  Low: 1547)]
+Command: gm off [Player: Lana (GUID Full: 0x0000000000000003 Type: Player Low: 3) (Account: 1) X: 5798.143066 Y: -3008.185303 Z: 273.474884 Map: 571 (Nordend) Area: 4320 (Amphitheater der Agonie) Zone: Zul'Drak Selected:  (GUID Full: 0x0000000000000000 Type: None Low: 0)]
+GameEvent 84 "AT ValKyr invasion" removed.
+Next game event check in 600 seconds.
+Command: gm on [Player: Lana (GUID Full: 0x0000000000000003 Type: Player Low: 3) (Account: 1) X: 5797.421387 Y: -3018.889648 Z: 286.302460 Map: 571 (Nordend) Area: 4320 (Amphitheater der Agonie) Zone: Zul'Drak Selected: Myra (GUID Full: 0xf1300186a1000882 Type: Creature Entry: 100001  Low: 2178)]
+Command: gm off [Player: Lana (GUID Full: 0x0000000000000003 Type: Player Low: 3) (Account: 1) X: 5797.421387 Y: -3018.889648 Z: 286.302460 Map: 571 (Nordend) Area: 4320 (Amphitheater der Agonie) Zone: Zul'Drak Selected: Myra (GUID Full: 0xf1300186a1000882 Type: Creature Entry: 100001  Low: 2178)]
+Thread 6 "worldserver" received signal SIGSEGV, Segmentation fault.
+[Switching to Thread 0x7fffb6fff700 (LWP 166666)]
+0x0000000000c97d82 in WorldObject::AddObjectToRemoveList (this=<optimized out>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/server/game/Entities/Object/Object.cpp:1857
+1857	    ASSERT(m_uint32Values);
+
+CRASHLOG BEGIN
+
+	Using the running image of child Thread 0x7fffb6fff700 (LWP 166666).
+Program stopped at 0xc97d82.
+It stopped with signal SIGSEGV, Segmentation fault.
+
+BACKTRACE
+
+#0  0x0000000000c97d82 in WorldObject::AddObjectToRemoveList (this=<optimized out>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/server/game/Entities/Object/Object.cpp:1857
+#1  0x0000000000c4a47e in Creature::ForcedDespawn (this=<error reading variable: Unhandled dwarf expression opcode 0xff>, timeMSToDespawn=<optimized out>, forceRespawnTimer=<error reading variable: Unhandled dwarf expression opcode 0xff>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/server/game/Entities/Creature/Creature.cpp:2277
+#2  0x00000000004bd1c4 in npc_world_boss_spawner::UpdateAI (this=<error reading variable: Unhandled dwarf expression opcode 0xff>, diff=<optimized out>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/server/scripts/Custom/Boss_Spawn_System/npc_world_boss_spawner.cpp:91
+#3  0x0000000000e1e4bd in Unit::AIUpdateTick (this=<error reading variable: Unhandled dwarf expression opcode 0xff>, diff=<optimized out>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/server/game/Entities/Unit/Unit.cpp:9803
+#4  0x00007fffdcde5140 in ?? ()
+#5  0x00007fffb6ffd3e8 in ?? ()
+#6  0x0000000003480000 in ?? ()
+#7  0x0000000000000003 in ?? ()
+#8  0x000000000109287c in __gthread_mutex_unlock (__mutex=<error reading variable: Unhandled dwarf expression opcode 0x0>) at /usr/bin/../lib/gcc/x86_64-linux-gnu/10/../../../../include/x86_64-linux-gnu/c++/10/bits/gthr-default.h:779
+#9  std::mutex::unlock (this=<error reading variable: Unhandled dwarf expression opcode 0xff>) at /usr/bin/../lib/gcc/x86_64-linux-gnu/10/../../../../include/c++/10/bits/std_mutex.h:118
+#10 std::lock_guard<std::mutex>::~lock_guard (this=<optimized out>) at /usr/bin/../lib/gcc/x86_64-linux-gnu/10/../../../../include/c++/10/bits/std_mutex.h:165
+#11 Map::EnsureGridCreated (this=<optimized out>, p=...) at /var/www/vhosts/clangaming.eu/TrinityCore/src/server/game/Maps/Map.cpp:491
+#12 Map::EnsureGridLoaded (this=<error reading variable: Unhandled dwarf expression opcode 0xff>, cell=<error reading variable: Unhandled dwarf expression opcode 0x0>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/server/game/Maps/Map.cpp:537
+#13 0x0000000001094691 in Map::Visit<Trinity::ObjectUpdater, TypeMapContainer<TypeList<GameObject, TypeList<Creature, TypeList<DynamicObject, TypeList<Corpse, TypeNull> > > > > > (this=<error reading variable: DWARF-2 expression error: `DW_OP_implicit_pointer' operations must be used either alone or in conjunction with DW_OP_piece or DW_OP_bit_piece.>, cell=<error reading variable: Unhandled dwarf expression opcode 0xab>, visitor=<error reading variable: Asked for position 0 of stack, stack only has 0 elements on it.>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/server/game/Maps/Map.h:991
+#14 Map::VisitNearbyCellsOf (this=<optimized out>, obj=<error reading variable: Unhandled dwarf expression opcode 0xff>, gridVisitor=<error reading variable: Unhandled dwarf expression opcode 0xff>, worldVisitor=<error reading variable: Unhandled dwarf expression opcode 0xff>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/server/game/Maps/Map.cpp:742
+#15 0x00007fffdcde5140 in ?? ()
+#16 0x00000000010866aa in __gnu_cxx::new_allocator<char>::deallocate (this=<error reading variable: Unhandled dwarf expression opcode 0xb0>, __p=<error reading variable: DWARF-2 expression error: `DW_OP_reg' operations must be used either alone or in conjunction with DW_OP_piece or DW_OP_bit_piece.>, __t=<optimized out>) at /usr/bin/../lib/gcc/x86_64-linux-gnu/10/../../../../include/c++/10/ext/new_allocator.h:133
+#17 std::allocator_traits<std::allocator<char> >::deallocate (__a=<error reading variable: Unhandled dwarf expression opcode 0xff>, __p=<error reading variable: Unhandled dwarf expression opcode 0x0>, __n=<optimized out>) at /usr/bin/../lib/gcc/x86_64-linux-gnu/10/../../../../include/c++/10/bits/alloc_traits.h:492
+#18 std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_destroy (this=<error reading variable: Unhandled dwarf expression opcode 0xff>, __size=<optimized out>) at /usr/bin/../lib/gcc/x86_64-linux-gnu/10/../../../../include/c++/10/bits/basic_string.h:237
+#19 std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_dispose (this=<error reading variable: Unhandled dwarf expression opcode 0xff>) at /usr/bin/../lib/gcc/x86_64-linux-gnu/10/../../../../include/c++/10/bits/basic_string.h:232
+#20 std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string (this=<error reading variable: Unhandled dwarf expression opcode 0xff>) at /usr/bin/../lib/gcc/x86_64-linux-gnu/10/../../../../include/c++/10/bits/basic_string.h:658
+#21 Trinity::StringFormat<char const (&) [60], char const*, unsigned int&, unsigned int const&> (fmt=..., args=<optimized out>, args=<optimized out>, args=<optimized out>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/common/Utilities/StringFormat.h:35
+#22 0x0000000000000000 in ?? ()
+
+BACKTRACE FULL
+
+#0  0x0000000000c97d82 in WorldObject::AddObjectToRemoveList (this=<optimized out>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/server/game/Entities/Object/Object.cpp:1857
+        map = <error reading variable map (Unhandled dwarf expression opcode 0xff)>
+#1  0x0000000000c4a47e in Creature::ForcedDespawn (this=<error reading variable: Unhandled dwarf expression opcode 0xff>, timeMSToDespawn=<optimized out>, forceRespawnTimer=<error reading variable: Unhandled dwarf expression opcode 0xff>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/server/game/Entities/Creature/Creature.cpp:2277
+No locals.
+#2  0x00000000004bd1c4 in npc_world_boss_spawner::UpdateAI (this=<error reading variable: Unhandled dwarf expression opcode 0xff>, diff=<optimized out>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/server/scripts/Custom/Boss_Spawn_System/npc_world_boss_spawner.cpp:91
+        eventId = <error reading variable eventId (Unhandled dwarf expression opcode 0xff)>
+#3  0x0000000000e1e4bd in Unit::AIUpdateTick (this=<error reading variable: Unhandled dwarf expression opcode 0xff>, diff=<optimized out>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/server/game/Entities/Unit/Unit.cpp:9803
+        ai = <error reading variable ai (Unhandled dwarf expression opcode 0xff)>
+#4  0x00007fffdcde5140 in ?? ()
+No symbol table info available.
+#5  0x00007fffb6ffd3e8 in ?? ()
+No symbol table info available.
+#6  0x0000000003480000 in ?? ()
+No symbol table info available.
+#7  0x0000000000000003 in ?? ()
+No symbol table info available.
+#8  0x000000000109287c in __gthread_mutex_unlock (__mutex=<error reading variable: Unhandled dwarf expression opcode 0x0>) at /usr/bin/../lib/gcc/x86_64-linux-gnu/10/../../../../include/x86_64-linux-gnu/c++/10/bits/gthr-default.h:779
+No locals.
+#9  std::mutex::unlock (this=<error reading variable: Unhandled dwarf expression opcode 0xff>) at /usr/bin/../lib/gcc/x86_64-linux-gnu/10/../../../../include/c++/10/bits/std_mutex.h:118
+No locals.
+#10 std::lock_guard<std::mutex>::~lock_guard (this=<optimized out>) at /usr/bin/../lib/gcc/x86_64-linux-gnu/10/../../../../include/c++/10/bits/std_mutex.h:165
+No locals.
+#11 Map::EnsureGridCreated (this=<optimized out>, p=...) at /var/www/vhosts/clangaming.eu/TrinityCore/src/server/game/Maps/Map.cpp:491
+        lock = <error reading variable lock (Unhandled dwarf expression opcode 0xff)>
+#12 Map::EnsureGridLoaded (this=<error reading variable: Unhandled dwarf expression opcode 0xff>, cell=<error reading variable: Unhandled dwarf expression opcode 0x0>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/server/game/Maps/Map.cpp:537
+        grid = <optimized out>
+#13 0x0000000001094691 in Map::Visit<Trinity::ObjectUpdater, TypeMapContainer<TypeList<GameObject, TypeList<Creature, TypeList<DynamicObject, TypeList<Corpse, TypeNull> > > > > > (this=<error reading variable: DWARF-2 expression error: `DW_OP_implicit_pointer' operations must be used either alone or in conjunction with DW_OP_piece or DW_OP_bit_piece.>, cell=<error reading variable: Unhandled dwarf expression opcode 0xab>, visitor=<error reading variable: Asked for position 0 of stack, stack only has 0 elements on it.>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/server/game/Maps/Map.h:991
+        x = <optimized out>
+        cell_y = <error reading variable cell_y (Unhandled dwarf expression opcode 0xab)>
+        cell_x = <error reading variable cell_x (Unhandled dwarf expression opcode 0xab)>
+        y = <error reading variable y (Unhandled dwarf expression opcode 0xab)>
+#14 Map::VisitNearbyCellsOf (this=<optimized out>, obj=<error reading variable: Unhandled dwarf expression opcode 0xff>, gridVisitor=<error reading variable: Unhandled dwarf expression opcode 0xff>, worldVisitor=<error reading variable: Unhandled dwarf expression opcode 0xff>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/server/game/Maps/Map.cpp:742
+        cell = {data = {Part = {grid_x = 42, grid_y = 26, cell_x = 6, cell_y = 2, nocreate = 1, reserved = 0}, All = 17327786}}
+        pair = {x_coord = <optimized out>, y_coord = <optimized out>}
+        cell_id = <optimized out>
+        y = <optimized out>
+        x = <optimized out>
+        area = {low_bound = {x_coord = <optimized out>, y_coord = <optimized out>}, high_bound = {x_coord = <optimized out>, y_coord = <optimized out>}}
+#15 0x00007fffdcde5140 in ?? ()
+No symbol table info available.
+#16 0x00000000010866aa in __gnu_cxx::new_allocator<char>::deallocate (this=<error reading variable: Unhandled dwarf expression opcode 0xb0>, __p=<error reading variable: DWARF-2 expression error: `DW_OP_reg' operations must be used either alone or in conjunction with DW_OP_piece or DW_OP_bit_piece.>, __t=<optimized out>) at /usr/bin/../lib/gcc/x86_64-linux-gnu/10/../../../../include/c++/10/ext/new_allocator.h:133
+No locals.
+#17 std::allocator_traits<std::allocator<char> >::deallocate (__a=<error reading variable: Unhandled dwarf expression opcode 0xff>, __p=<error reading variable: Unhandled dwarf expression opcode 0x0>, __n=<optimized out>) at /usr/bin/../lib/gcc/x86_64-linux-gnu/10/../../../../include/c++/10/bits/alloc_traits.h:492
+No locals.
+#18 std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_destroy (this=<error reading variable: Unhandled dwarf expression opcode 0xff>, __size=<optimized out>) at /usr/bin/../lib/gcc/x86_64-linux-gnu/10/../../../../include/c++/10/bits/basic_string.h:237
+No locals.
+#19 std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_dispose (this=<error reading variable: Unhandled dwarf expression opcode 0xff>) at /usr/bin/../lib/gcc/x86_64-linux-gnu/10/../../../../include/c++/10/bits/basic_string.h:232
+No locals.
+#20 std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string (this=<error reading variable: Unhandled dwarf expression opcode 0xff>) at /usr/bin/../lib/gcc/x86_64-linux-gnu/10/../../../../include/c++/10/bits/basic_string.h:658
+No locals.
+#21 Trinity::StringFormat<char const (&) [60], char const*, unsigned int&, unsigned int const&> (fmt=..., args=<optimized out>, args=<optimized out>, args=<optimized out>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/common/Utilities/StringFormat.h:35
+        error = <incomplete type>
+        formatError = <error reading variable formatError (Unhandled dwarf expression opcode 0xff)>
+#22 0x0000000000000000 in ?? ()
+No symbol table info available.
+
+THREADS
+
+  Id   Target Id                                        Frame 
+  1    Thread 0x7ffff530efc0 (LWP 166658) "worldserver" futex_wait_cancelable (private=0, expected=0, futex_word=0x1ef3410 <MapManager::instance()::instance+448>) at ../sysdeps/nptl/futex-internal.h:186
+  2    Thread 0x7ffff49ff700 (LWP 166662) "worldserver" 0x00007ffff7533116 in epoll_wait (epfd=7, events=0x7ffff49fce70, maxevents=128, timeout=-1) at ../sysdeps/unix/sysv/linux/epoll_wait.c:30
+  3    Thread 0x7ffff41fe700 (LWP 166663) "worldserver" futex_wait_cancelable (private=0, expected=0, futex_word=0x7ffff4e62464) at ../sysdeps/nptl/futex-internal.h:186
+  4    Thread 0x7ffff39fd700 (LWP 166664) "worldserver" futex_wait_cancelable (private=0, expected=0, futex_word=0x7ffff4e623a0) at ../sysdeps/nptl/futex-internal.h:186
+  5    Thread 0x7ffff31fc700 (LWP 166665) "worldserver" futex_wait_cancelable (private=0, expected=0, futex_word=0x7ffff4e622e4) at ../sysdeps/nptl/futex-internal.h:186
+* 6    Thread 0x7fffb6fff700 (LWP 166666) "worldserver" 0x0000000000c97d82 in WorldObject::AddObjectToRemoveList (this=<optimized out>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/server/game/Entities/Object/Object.cpp:1857
+  7    Thread 0x7fffa17fe700 (LWP 166667) "worldserver" 0x00007ffff7533116 in epoll_wait (epfd=23, events=0x7fffa17fbda0, maxevents=128, timeout=-1) at ../sysdeps/unix/sysv/linux/epoll_wait.c:30
+  8    Thread 0x7fffa09ff700 (LWP 166668) "worldserver" 0x00007ffff752a8b3 in __GI___select (nfds=1, readfds=0x7fffa09fd440, writefds=0x0, exceptfds=0x7fffa09fd4c0, timeout=0x7fffa09fd430) at ../sysdeps/unix/sysv/linux/select.c:41
+
+THREADS BACKTRACE
+
+
+Thread 8 (Thread 0x7fffa09ff700 (LWP 166668) "worldserver"):
+#0  0x00007ffff752a8b3 in __GI___select (nfds=1, readfds=0x7fffa09fd440, writefds=0x0, exceptfds=0x7fffa09fd4c0, timeout=0x7fffa09fd430) at ../sysdeps/unix/sysv/linux/select.c:41
+        resultvar = 18446744073709551102
+        sc_cancel_oldtype = 0
+        sc_ret = <optimized out>
+#1  0x00007ffff795a670 in ?? () from /lib/x86_64-linux-gnu/libreadline.so.8
+No symbol table info available.
+#2  0x00007ffff795a92d in rl_read_key () from /lib/x86_64-linux-gnu/libreadline.so.8
+No symbol table info available.
+#3  0x00007ffff793d9bf in readline_internal_char () from /lib/x86_64-linux-gnu/libreadline.so.8
+No symbol table info available.
+#4  0x00007ffff793e3ad in readline () from /lib/x86_64-linux-gnu/libreadline.so.8
+No symbol table info available.
+#5  0x00000000004839f7 in CliThread () at /var/www/vhosts/clangaming.eu/TrinityCore/src/server/worldserver/CommandLine/CliRunnable.cpp:153
+        command = <incomplete type>
+        command_str = <optimized out>
+        BLANK = 0 '\000'
+#6  0x00007ffff7826ed0 in ?? () from /usr/lib/x86_64-linux-gnu/libstdc++.so.6
+No symbol table info available.
+#7  0x00007ffff79a9ea7 in start_thread (arg=<optimized out>) at pthread_create.c:477
+        ret = <optimized out>
+        pd = <optimized out>
+        unwind_buf = {cancel_jmp_buf = {{jmp_buf = {140735888226048, 1908770013962513458, 140737488346382, 140737488346383, 140735888217920, 8396800, -1908944560136442830, -1908753269010912206}, mask_was_saved = 0}}, priv = {pad = {0x0, 0x0, 0x0, 0x0}, data = {prev = 0x0, cleanup = 0x0, canceltype = 0}}}
+        not_first_call = 0
+#8  0x00007ffff7532def in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:95
+No locals.
+
+Thread 7 (Thread 0x7fffa17fe700 (LWP 166667) "worldserver"):
+#0  0x00007ffff7533116 in epoll_wait (epfd=23, events=0x7fffa17fbda0, maxevents=128, timeout=-1) at ../sysdeps/unix/sysv/linux/epoll_wait.c:30
+No locals.
+#1  0x000000000046a4cb in boost::asio::detail::epoll_reactor::run (this=<optimized out>, usec=<error reading variable: Unhandled dwarf expression opcode 0xff>, ops=<error reading variable: Unhandled dwarf expression opcode 0xff>) at /usr/include/boost/asio/detail/impl/epoll_reactor.ipp:471
+        events = {{events = 0, data = {ptr = 0x2c00000000, fd = 0, u32 = 0, u64 = 188978561024}}, {events = 0, data = {ptr = 0x0, fd = 0, u32 = 0, u64 = 0}}, {events = 24006127, data = {ptr = 0x0, fd = 0, u32 = 0, u64 = 0}}, {events = 0, data = {ptr = 0x11000, fd = 69632, u32 = 69632, u64 = 69632}}, {events = 2709504112, data = {ptr = 0x1000100007fff, fd = 32767, u32 = 32767, u64 = 281479271710719}}, {events = 0, data = {ptr = 0x12000, fd = 73728, u32 = 73728, u64 = 73728}}, {events = 2709507784, data = {ptr = 0xa0c008c000007fff, fd = 32767, u32 = 32767, u64 = 11583267862323691519}}, {events = 32767, data = {ptr = 0x7fffa0c031e8, fd = -1598017048, u32 = 2696950248, u64 = 140735890338280}}, {events = 65536, data = {ptr = 0xa0c0b68000000000, fd = 0, u32 = 0, u64 = 11583458902468984832}}, {events = 32767, data = {ptr = 0x7fffa17fce98, fd = -1585459560, u32 = 2709507736, u64 = 140735902895768}}, {events = 0, data = {ptr = 0x0, fd = 0, u32 = 0, u64 = 0}}, {events = 0, data = {ptr = 0x0, fd = 0, u32 = 0, u64 = 0}}, {events = 0, data = {ptr = 0xa17fc07000000000, fd = 0, u32 = 0, u64 = 11637231549417521152}}, {events = 32767, data = {ptr = 0x7fffa17fcec8, fd = -1585459512, u32 = 2709507784, u64 = 140735902895816}}, {events = 2696984192, data = {ptr = 0xa0c008c000007fff, fd = 32767, u32 = 32767, u64 = 11583267862323691519}}, {events = 32767, data = {ptr = 0x7fffa17fc070, fd = -1585463184, u32 = 2709504112, u64 = 140735902892144}}, {events = 2709507736, data = {ptr = 0xa0c0587800007fff, fd = 32767, u32 = 32767, u64 = 11583355514016268287}}, {events = 32767, data = {ptr = 0x7fffa0c058b8, fd = -1598007112, u32 = 2696960184, u64 = 140735890348216}}, {events = 24009409, data = {ptr = 0x0, fd = 0, u32 = 0, u64 = 0}}, {events = 0, data = {ptr = 0x0, fd = 0, u32 = 0, u64 = 0}}, {events = 2696984192, data = {ptr = 0x16e5afe00007fff, fd = 32767, u32 = 32767, u64 = 103119888444325887}}, {events = 0, data = {ptr = 0x9fa8c480, fd = -1616329600, u32 = 2678637696, u64 = 2678637696}}, {events = 2709507784, data = {ptr = 0xa17fc07000007fff, fd = 32767, u32 = 32767, u64 = 11637231549417553919}}, {events = 32767, data = {ptr = 0x7fffa0c0a800, fd = -1597986816, u32 = 2696980480, u64 = 140735890368512}}, {events = 34644960, data = {ptr = 0xbf5052a800000000, fd = 0, u32 = 0, u64 = 13785609340889071616}}, {events = 32767, data = {ptr = 0x4130, fd = 16688, u32 = 16688, u64 = 16688}}, {events = 444984403, data = {ptr = 0xd50dcc13c4ceb9fe, fd = -993084930, u32 = 3301882366, u64 = 15352151090054216190}}, {events = 0, data = {ptr = 0x7fffa0c0a800, fd = -1597986816, u32 = 2696980480, u64 = 140735890368512}}, {events = 34644960, data = {ptr = 0xbf5052a800000000, fd = 0, u32 = 0, u64 = 13785609340889071616}}, {events = 32767, data = {ptr = 0x4130, fd = 16688, u32 = 16688, u64 = 16688}}, {events = 444984403, data = {ptr = 0xd50dcc13c4ceb9fe, fd = -993084930, u32 = 3301882366, u64 = 15352151090054216190}}, {events = 0, data = {ptr = 0x16e8e6a <extent_lock_from_addr+330>, fd = 24022634, u32 = 24022634, u64 = 24022634}}, {events = 4294963200, data = {ptr = 0xa0c0a80000000001, fd = 1, u32 = 1, u64 = 11583442959550382081}}, {events = 32767, data = {ptr = 0x1, fd = 1, u32 = 1, u64 = 1}}, {events = 0, data = {ptr = 0xa0c0b68000000000, fd = 0, u32 = 0, u64 = 11583458902468984832}}, {events = 32767, data = {ptr = 0x7fffa17fce98, fd = -1585459560, u32 = 2709507736, u64 = 140735902895768}}, {events = 0, data = {ptr = 0x16e8b5800000000, fd = 0, u32 = 0, u64 = 103173051549483008}}, {events = 0, data = {ptr = 0x7fffa0c072d8, fd = -1598000424, u32 = 2696966872, u64 = 140735890354904}}, {events = 2696950184, data = {ptr = 0xa0c008c000007fff, fd = 32767, u32 = 32767, u64 = 11583267862323691519}}, {events = 32767, data = {ptr = 0x7fffa17fc1e8, fd = -1585462808, u32 = 2709504488, u64 = 140735902892520}}, {events = 2709507784, data = {ptr = 0xa0c0b68000007fff, fd = 32767, u32 = 32767, u64 = 11583458902469017599}}, {events = 32767, data = {ptr = 0x7fffa0c008c0, fd = -1598027584, u32 = 2696939712, u64 = 140735890327744}}, {events = 2709504488, data = {ptr = 0xa17fce9800007fff, fd = 32767, u32 = 32767, u64 = 11637247114379034623}}, {events = 32767, data = {ptr = 0x7fffa0c031a8, fd = -1598017112, u32 = 2696950184, u64 = 140735890338216}}, {events = 0, data = {ptr = 0x16e5a7600000000, fd = 0, u32 = 0, u64 = 103119304328740864}}, {events = 0, data = {ptr = 0x7fffa17fbfe3, fd = -1585463325, u32 = 2709503971, u64 = 140735902892003}}, {events = 0, data = {ptr = 0xa0c0b68000000000, fd = 0, u32 = 0, u64 = 11583458902468984832}}, {events = 32767, data = {ptr = 0x16e5afe <extent_record+382>, fd = 24009470, u32 = 24009470, u64 = 24009470}}, {events = 8375960, data = {ptr = 0xa17fcec800000000, fd = 0, u32 = 0, u64 = 11637247320537432064}}, {events = 32767, data = {ptr = 0x7fffa0c031e8, fd = -1598017048, u32 = 2696950248, u64 = 140735890338280}}, {events = 64, data = {ptr = 0x0, fd = 0, u32 = 0, u64 = 0}}, {events = 32767, data = {ptr = 0x7fff0000002c, fd = 44, u32 = 44, u64 = 140733193388076}}, {events = 2709504191, data = {ptr = 0xa17fc06700007fff, fd = 32767, u32 = 32767, u64 = 11637231510762848255}}, {events = 32767, data = {ptr = 0x7fff00000000, fd = 0, u32 = 0, u64 = 140733193388032}}, {events = 23933392, data = {ptr = 0x100000000000, fd = 0, u32 = 0, u64 = 17592186044416}}, {events = 0, data = {ptr = 0x40, fd = 64, u32 = 64, u64 = 64}}, {events = 0, data = {ptr = 0x2c00000000, fd = 0, u32 = 0, u64 = 188978561024}}, {events = 0, data = {ptr = 0x7fffa17fc0bf, fd = -1585463105, u32 = 2709504191, u64 = 140735902892223}}, {events = 2709504103, data = {ptr = 0x7fff, fd = 32767, u32 = 32767, u64 = 32767}}, {events = 16777216, data = {ptr = 0x40, fd = 64, u32 = 64, u64 = 64}}, {events = 27104512, data = {ptr = 0x2c00000000, fd = 0, u32 = 0, u64 = 188978561024}}, {events = 0, data = {ptr = 0x10000, fd = 65536, u32 = 65536, u64 = 65536}}, {events = 2696939712, data = {ptr = 0xa17fce9800007fff, fd = 32767, u32 = 32767, u64 = 11637247114379034623}}, {events = 32767, data = {ptr = 0x40, fd = 64, u32 = 64, u64 = 64}}, {events = 2709505024, data = {ptr = 0x16c829e00007fff, fd = 32767, u32 = 32767, u64 = 102600506639155199}}, {events = 0, data = {ptr = 0x0, fd = 0, u32 = 0, u64 = 0}}, {events = 2709507736, data = {ptr = 0xa0c06c6000007fff, fd = 32767, u32 = 32767, u64 = 11583377401169608703}}, {events = 44, data = {ptr = 0x2c, fd = 44, u32 = 44, u64 = 44}}, {events = 2709508232, data = {ptr = 0x7fff, fd = 32767, u32 = 32767, u64 = 32767}}, {events = 0, data = {ptr = 0x10000, fd = 65536, u32 = 65536, u64 = 65536}}, {events = 2709507736, data = {ptr = 0xa17fc49000007fff, fd = 32767, u32 = 32767, u64 = 11637236084903018495}}, {events = 32767, data = {ptr = 0x16badba <je_malloc_default+810>, fd = 23834042, u32 = 23834042, u64 = 23834042}}, {events = 0, data = {ptr = 0x16d769400000000, fd = 0, u32 = 0, u64 = 102868744526626816}}, {events = 0, data = {ptr = 0x0, fd = 0, u32 = 0, u64 = 0}}, {events = 0, data = {ptr = 0x1dcd650000000000, fd = 0, u32 = 0, u64 = 2147483648000000000}}, {events = 0, data = {ptr = 0x7fffa17fce98, fd = -1585459560, u32 = 2709507736, u64 = 140735902895768}}, {events = 2696965088, data = {ptr = 0xa0c008c000007fff, fd = 32767, u32 = 32767, u64 = 11583267862323691519}}, {events = 32767, data = {ptr = 0x7fffa0c031a8, fd = -1598017112, u32 = 2696950184, u64 = 140735890338216}}, {events = 2696965152, data = {ptr = 0xa0c008c000007fff, fd = 32767, u32 = 32767, u64 = 11583267862323691519}}, {events = 32767, data = {ptr = 0x7fffa17fce98, fd = -1585459560, u32 = 2709507736, u64 = 140735902895768}}, {events = 2696966872, data = {ptr = 0xa0c008c000007fff, fd = 32767, u32 = 32767, u64 = 11583267862323691519}}, {events = 32767, data = {ptr = 0x7fffa0c04510, fd = -1598012144, u32 = 2696955152, u64 = 140735890343184}}, {events = 2696939712, data = {ptr = 0x9f0034c000007fff, fd = 32767, u32 = 32767, u64 = 11457215451268939775}}, {events = 32767, data = {ptr = 0x7fffa17fc244, fd = -1585462716, u32 = 2709504580, u64 = 140735902892612}}, {events = 2709507736, data = {ptr = 0xa0c031a800007fff, fd = 32767, u32 = 32767, u64 = 11583312839221215231}}, {events = 32767, data = {ptr = 0x7fffa17fc401, fd = -1585462271, u32 = 2709505025, u64 = 140735902893057}}, {events = 23933041, data = {ptr = 0xa0c0b68000000000, fd = 0, u32 = 0, u64 = 11583458902468984832}}, {events = 32767, data = {ptr = 0x7fff9f0034c0, fd = -1627376448, u32 = 2667590848, u64 = 140735860978880}}, {events = 2709504580, data = {ptr = 0xa0c008c000007fff, fd = 32767, u32 = 32767, u64 = 11583267862323691519}}, {events = 32767, data = {ptr = 0x7fffa17fce98, fd = -1585459560, u32 = 2709507736, u64 = 140735902895768}}, {events = 23893912, data = {ptr = 0x9f0034c000000000, fd = 0, u32 = 0, u64 = 11457215451268907008}}, {events = 32767, data = {ptr = 0x19d9500 <je_extent_hooks_default>, fd = 27104512, u32 = 27104512, u64 = 27104512}}, {events = 2709504760, data = {ptr = 0x9f00345000007fff, fd = 32767, u32 = 32767, u64 = 11457214970232602623}}, {events = 32767, data = {ptr = 0x7fffa17fc220, fd = -1585462752, u32 = 2709504544, u64 = 140735902892576}}, {events = 18412737, data = {ptr = 0x0, fd = 0, u32 = 0, u64 = 0}}, {events = 0, data = {ptr = 0x0, fd = 0, u32 = 0, u64 = 0}}, {events = 2695023808, data = {ptr = 0xa0a3ccc000007fff, fd = 32767, u32 = 32767, u64 = 11575320592278126591}}, {events = 32767, data = {ptr = 0x7fffa0a3ccc0, fd = -1599877952, u32 = 2695089344, u64 = 140735888477376}}, {events = 4657829, data = {ptr = 0x495c900000000, fd = 0, u32 = 0, u64 = 1290590427807744}}, {events = 0, data = {ptr = 0x470007 <boost::asio::ip::basic_resolver_entry<boost::asio::ip::tcp>::basic_resolver_entry(boost::asio::ip::basic_endpoint<boost::asio::ip::tcp> const&, std::basic_string_view<char, std::char_traits<char> >, std::basic_string_view<char, std::char_traits<char> >)+151>, fd = 4653063, u32 = 4653063, u64 = 4653063}}, {events = 2709454856, data = {ptr = 0x7e600007fff, fd = 32767, u32 = 32767, u64 = 8684423905279}}, {events = 0, data = {ptr = 0x7fff00258897, fd = 2459799, u32 = 2459799, u64 = 140733195847831}}, {events = 1659887137, data = {ptr = 0x62efde2100000000, fd = 0, u32 = 0, u64 = 7129160968466071552}}, {events = 0, data = {ptr = 0x7fff9f003348, fd = -1627376824, u32 = 2667590472, u64 = 140735860978504}}, {events = 2667590560, data = {ptr = 0xa17fc2f800007fff, fd = 32767, u32 = 32767, u64 = 11637234332556361727}}, {events = 32767, data = {ptr = 0x7fffa0a01010, fd = -1600122864, u32 = 2694844432, u64 = 140735888232464}}, {events = 1, data = {ptr = 0xa934488800000000, fd = 0, u32 = 0, u64 = 12192449840151527424}}, {events = 32767, data = {ptr = 0x7fffa17fc480, fd = -1585462144, u32 = 2709505152, u64 = 140735902893184}}, {events = 2709505168, data = {ptr = 0x11a05a600007fff, fd = 32767, u32 = 32767, u64 = 79382153955147775}}, {events = 0, data = {ptr = 0x7ffffffffffffffe, fd = -2, u32 = 4294967294, u64 = 9223372036854775806}}, {events = 4688794, data = {ptr = 0xa96896f800000000, fd = 0, u32 = 0, u64 = 12207172781883785216}}, {events = 32767, data = {ptr = 0x7fffa9344888, fd = -1456191352, u32 = 2838775944, u64 = 140736032163976}}, {events = 2694844448, data = {ptr = 0x11a037b00007fff, fd = 32767, u32 = 32767, u64 = 79379770248298495}}, {events = 0, data = {ptr = 0x0, fd = 0, u32 = 0, u64 = 0}}, {events = 2667590288, data = {ptr = 0x9f00328000007fff, fd = 32767, u32 = 32767, u64 = 11457212977367777279}}, {events = 32767, data = {ptr = 0x7fffa9344888, fd = -1456191352, u32 = 2838775944, u64 = 140736032163976}}, {events = 2709505168, data = {ptr = 0x11a057000007fff, fd = 32767, u32 = 32767, u64 = 79381922026913791}}, {events = 0, data = {ptr = 0x7fffa93448b8, fd = -1456191304, u32 = 2838775992, u64 = 140736032164024}}, {events = 2838775944, data = {ptr = 0xa934488800007fff, fd = 32767, u32 = 32767, u64 = 12192449840151560191}}, {events = 32767, data = {ptr = 0x7fff9f0000c0, fd = -1627389760, u32 = 2667577536, u64 = 140735860965568}}, {events = 0, data = {ptr = 0xa0a0102000000000, fd = 0, u32 = 0, u64 = 11574268771967172608}}, {events = 32767, data = {ptr = 0x7fffa17fc480, fd = -1585462144, u32 = 2709505152, u64 = 140735902893184}}, {events = 18481735, data = {ptr = 0xa0a0102000000000, fd = 0, u32 = 0, u64 = 11574268771967172608}}, {events = 32767, data = {ptr = 0x7fffa9344888, fd = -1456191352, u32 = 2838775944, u64 = 140736032163976}}, {events = 2667577536, data = {ptr = 0x7fff, fd = 32767, u32 = 32767, u64 = 32767}}, {events = 0, data = {ptr = 0x7fffa93448a0, fd = -1456191328, u32 = 2838775968, u64 = 140736032164000}}, {events = 2709505152, data = {ptr = 0xa17fc49000007fff, fd = 32767, u32 = 32767, u64 = 11637236084903018495}}, {events = 32767, data = {ptr = 0x119fad1 <NetworkThread<WorldSocket>::Update()+113>, fd = 18479825, u32 = 18479825, u64 = 18479825}}}
+        timeout = <optimized out>
+        num_events = <optimized out>
+        check_timers = <error reading variable check_timers (Unhandled dwarf expression opcode 0xff)>
+#2  0x000000000046a130 in boost::asio::detail::scheduler::do_run_one (this=<error reading variable: Unhandled dwarf expression opcode 0xff>, lock=<error reading variable: Unhandled dwarf expression opcode 0xff>, this_thread=..., ec=<error reading variable: Unhandled dwarf expression opcode 0xff>) at /usr/include/boost/asio/detail/impl/scheduler.ipp:465
+        on_exit = {scheduler_ = <optimized out>, lock_ = <optimized out>, this_thread_ = <optimized out>}
+        o = <optimized out>
+        more_handlers = <optimized out>
+#3  0x0000000000469d41 in boost::asio::detail::scheduler::run (this=<optimized out>, ec=...) at /usr/include/boost/asio/detail/impl/scheduler.ipp:204
+        this_thread = {<boost::asio::detail::thread_info_base> = {<boost::asio::detail::noncopyable> = {<No data fields>}, reusable_memory_ = {0x0, 0x0, 0x0}, has_pending_exception_ = 0, pending_exception_ = {_M_exception_object = 0x0}}, private_op_queue = {<boost::asio::detail::noncopyable> = {<No data fields>}, front_ = 0x0, back_ = 0x0}, private_outstanding_work = 0}
+        ctx = {<boost::asio::detail::noncopyable> = {<No data fields>}, key_ = 0x7fffaa5d4500, value_ = 0x7fffa17fc490, next_ = 0x0}
+        lock = {<boost::asio::detail::noncopyable> = {<No data fields>}, mutex_ = @0x7fffaa5d4530, locked_ = false}
+        n = <optimized out>
+#4  0x0000000000476a48 in boost::asio::io_context::run (this=<optimized out>) at /usr/include/boost/asio/impl/io_context.ipp:63
+        ec = {val_ = 0, failed_ = false, cat_ = 0x16fae50 <boost::system::detail::cat_holder<void>::system_category_instance>}
+        s = <error reading variable s (Unhandled dwarf expression opcode 0xff)>
+#5  Trinity::Asio::IoContext::run (this=<optimized out>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/common/Asio/IoContext.h:37
+No locals.
+#6  0x000000000119f466 in NetworkThread<WorldSocket>::Run (this=<optimized out>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/server/shared/Networking/NetworkThread.h:127
+No locals.
+#7  0x00007ffff7826ed0 in ?? () from /usr/lib/x86_64-linux-gnu/libstdc++.so.6
+No symbol table info available.
+#8  0x00007ffff79a9ea7 in start_thread (arg=<optimized out>) at pthread_create.c:477
+        ret = <optimized out>
+        pd = <optimized out>
+        unwind_buf = {cancel_jmp_buf = {{jmp_buf = {140735902902016, 1908770013962513458, 140737488345886, 140737488345887, 140735902893888, 8396800, -1908942635454223310, -1908753269010912206}, mask_was_saved = 0}}, priv = {pad = {0x0, 0x0, 0x0, 0x0}, data = {prev = 0x0, cleanup = 0x0, canceltype = 0}}}
+        not_first_call = 0
+#9  0x00007ffff7532def in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:95
+No locals.
+
+Thread 6 (Thread 0x7fffb6fff700 (LWP 166666) "worldserver"):
+#0  0x0000000000c97d82 in WorldObject::AddObjectToRemoveList (this=<optimized out>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/server/game/Entities/Object/Object.cpp:1857
+        map = <error reading variable map (Unhandled dwarf expression opcode 0xff)>
+#1  0x0000000000c4a47e in Creature::ForcedDespawn (this=<error reading variable: Unhandled dwarf expression opcode 0xff>, timeMSToDespawn=<optimized out>, forceRespawnTimer=<error reading variable: Unhandled dwarf expression opcode 0xff>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/server/game/Entities/Creature/Creature.cpp:2277
+No locals.
+#2  0x00000000004bd1c4 in npc_world_boss_spawner::UpdateAI (this=<error reading variable: Unhandled dwarf expression opcode 0xff>, diff=<optimized out>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/server/scripts/Custom/Boss_Spawn_System/npc_world_boss_spawner.cpp:91
+        eventId = <error reading variable eventId (Unhandled dwarf expression opcode 0xff)>
+#3  0x0000000000e1e4bd in Unit::AIUpdateTick (this=<error reading variable: Unhandled dwarf expression opcode 0xff>, diff=<optimized out>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/server/game/Entities/Unit/Unit.cpp:9803
+        ai = <error reading variable ai (Unhandled dwarf expression opcode 0xff)>
+#4  0x00007fffdcde5140 in ?? ()
+No symbol table info available.
+#5  0x00007fffb6ffd3e8 in ?? ()
+No symbol table info available.
+#6  0x0000000003480000 in ?? ()
+No symbol table info available.
+#7  0x0000000000000003 in ?? ()
+No symbol table info available.
+#8  0x000000000109287c in __gthread_mutex_unlock (__mutex=<error reading variable: Unhandled dwarf expression opcode 0x0>) at /usr/bin/../lib/gcc/x86_64-linux-gnu/10/../../../../include/x86_64-linux-gnu/c++/10/bits/gthr-default.h:779
+No locals.
+#9  std::mutex::unlock (this=<error reading variable: Unhandled dwarf expression opcode 0xff>) at /usr/bin/../lib/gcc/x86_64-linux-gnu/10/../../../../include/c++/10/bits/std_mutex.h:118
+No locals.
+#10 std::lock_guard<std::mutex>::~lock_guard (this=<optimized out>) at /usr/bin/../lib/gcc/x86_64-linux-gnu/10/../../../../include/c++/10/bits/std_mutex.h:165
+No locals.
+#11 Map::EnsureGridCreated (this=<optimized out>, p=...) at /var/www/vhosts/clangaming.eu/TrinityCore/src/server/game/Maps/Map.cpp:491
+        lock = <error reading variable lock (Unhandled dwarf expression opcode 0xff)>
+#12 Map::EnsureGridLoaded (this=<error reading variable: Unhandled dwarf expression opcode 0xff>, cell=<error reading variable: Unhandled dwarf expression opcode 0x0>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/server/game/Maps/Map.cpp:537
+        grid = <optimized out>
+#13 0x0000000001094691 in Map::Visit<Trinity::ObjectUpdater, TypeMapContainer<TypeList<GameObject, TypeList<Creature, TypeList<DynamicObject, TypeList<Corpse, TypeNull> > > > > > (this=<error reading variable: DWARF-2 expression error: `DW_OP_implicit_pointer' operations must be used either alone or in conjunction with DW_OP_piece or DW_OP_bit_piece.>, cell=<error reading variable: Unhandled dwarf expression opcode 0xab>, visitor=<error reading variable: Asked for position 0 of stack, stack only has 0 elements on it.>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/server/game/Maps/Map.h:991
+        x = <optimized out>
+        cell_y = <error reading variable cell_y (Unhandled dwarf expression opcode 0xab)>
+        cell_x = <error reading variable cell_x (Unhandled dwarf expression opcode 0xab)>
+        y = <error reading variable y (Unhandled dwarf expression opcode 0xab)>
+#14 Map::VisitNearbyCellsOf (this=<optimized out>, obj=<error reading variable: Unhandled dwarf expression opcode 0xff>, gridVisitor=<error reading variable: Unhandled dwarf expression opcode 0xff>, worldVisitor=<error reading variable: Unhandled dwarf expression opcode 0xff>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/server/game/Maps/Map.cpp:742
+        cell = {data = {Part = {grid_x = 42, grid_y = 26, cell_x = 6, cell_y = 2, nocreate = 1, reserved = 0}, All = 17327786}}
+        pair = {x_coord = <optimized out>, y_coord = <optimized out>}
+        cell_id = <optimized out>
+        y = <optimized out>
+        x = <optimized out>
+        area = {low_bound = {x_coord = <optimized out>, y_coord = <optimized out>}, high_bound = {x_coord = <optimized out>, y_coord = <optimized out>}}
+#15 0x00007fffdcde5140 in ?? ()
+No symbol table info available.
+#16 0x00000000010866aa in __gnu_cxx::new_allocator<char>::deallocate (this=<error reading variable: Unhandled dwarf expression opcode 0xb0>, __p=<error reading variable: DWARF-2 expression error: `DW_OP_reg' operations must be used either alone or in conjunction with DW_OP_piece or DW_OP_bit_piece.>, __t=<optimized out>) at /usr/bin/../lib/gcc/x86_64-linux-gnu/10/../../../../include/c++/10/ext/new_allocator.h:133
+No locals.
+#17 std::allocator_traits<std::allocator<char> >::deallocate (__a=<error reading variable: Unhandled dwarf expression opcode 0xff>, __p=<error reading variable: Unhandled dwarf expression opcode 0x0>, __n=<optimized out>) at /usr/bin/../lib/gcc/x86_64-linux-gnu/10/../../../../include/c++/10/bits/alloc_traits.h:492
+No locals.
+#18 std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_destroy (this=<error reading variable: Unhandled dwarf expression opcode 0xff>, __size=<optimized out>) at /usr/bin/../lib/gcc/x86_64-linux-gnu/10/../../../../include/c++/10/bits/basic_string.h:237
+No locals.
+#19 std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_dispose (this=<error reading variable: Unhandled dwarf expression opcode 0xff>) at /usr/bin/../lib/gcc/x86_64-linux-gnu/10/../../../../include/c++/10/bits/basic_string.h:232
+No locals.
+#20 std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string (this=<error reading variable: Unhandled dwarf expression opcode 0xff>) at /usr/bin/../lib/gcc/x86_64-linux-gnu/10/../../../../include/c++/10/bits/basic_string.h:658
+No locals.
+#21 Trinity::StringFormat<char const (&) [60], char const*, unsigned int&, unsigned int const&> (fmt=..., args=<optimized out>, args=<optimized out>, args=<optimized out>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/common/Utilities/StringFormat.h:35
+        error = <incomplete type>
+        formatError = <error reading variable formatError (Unhandled dwarf expression opcode 0xff)>
+#22 0x0000000000000000 in ?? ()
+No symbol table info available.
+
+Thread 5 (Thread 0x7ffff31fc700 (LWP 166665) "worldserver"):
+#0  futex_wait_cancelable (private=0, expected=0, futex_word=0x7ffff4e622e4) at ../sysdeps/nptl/futex-internal.h:186
+        __ret = -512
+        oldtype = 0
+        err = <optimized out>
+        oldtype = <optimized out>
+        err = <optimized out>
+        __ret = <optimized out>
+        resultvar = <optimized out>
+        __arg4 = <optimized out>
+        __arg3 = <optimized out>
+        __arg2 = <optimized out>
+        __arg1 = <optimized out>
+        _a4 = <optimized out>
+        _a3 = <optimized out>
+        _a2 = <optimized out>
+        _a1 = <optimized out>
+#1  __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x7ffff4e62240, cond=0x7ffff4e622b8) at pthread_cond_wait.c:508
+        spin = 0
+        buffer = {__routine = 0x7ffff79b0540 <__condvar_cleanup_waiting>, __arg = 0x7ffff31fa580, __canceltype = 0, __prev = 0x0}
+        cbuffer = {wseq = 19, cond = 0x7ffff4e622b8, mutex = 0x7ffff4e62240, private = 0}
+        err = <optimized out>
+        g = 4078937440
+        flags = <optimized out>
+        g1_start = <optimized out>
+        maxspin = 0
+        signals = <optimized out>
+        result = 0
+        wseq = 19
+        seq = 9
+        private = 0
+        maxspin = <optimized out>
+        err = <optimized out>
+        result = <optimized out>
+        wseq = <optimized out>
+        g = <optimized out>
+        seq = <optimized out>
+        flags = <optimized out>
+        private = <optimized out>
+        signals = <optimized out>
+        done = <optimized out>
+        g1_start = <optimized out>
+        spin = <optimized out>
+        buffer = {__routine = <optimized out>, __arg = <optimized out>, __canceltype = <optimized out>, __prev = <optimized out>}
+        cbuffer = {wseq = <optimized out>, cond = <optimized out>, mutex = <optimized out>, private = <optimized out>}
+        s = <optimized out>
+#2  __pthread_cond_wait (cond=0x7ffff4e622b8, mutex=0x7ffff4e62240) at pthread_cond_wait.c:638
+No locals.
+#3  0x00007ffff782190c in std::condition_variable::wait(std::unique_lock<std::mutex>&) () from /usr/lib/x86_64-linux-gnu/libstdc++.so.6
+No symbol table info available.
+#4  0x00000000015d0666 in ProducerConsumerQueue<SQLOperation*>::WaitAndPop (this=<error reading variable: Unhandled dwarf expression opcode 0xff>, value=<error reading variable: Unhandled dwarf expression opcode 0xff>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/common/Threading/ProducerConsumerQueue.h:81
+        lock = {_M_device = 0x7ffff4e62240, _M_owns = true}
+#5  0x00000000015d0586 in DatabaseWorker::WorkerThread (this=<optimized out>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/server/database/Database/DatabaseWorker.cpp:48
+        operation = <optimized out>
+#6  0x00007ffff7826ed0 in ?? () from /usr/lib/x86_64-linux-gnu/libstdc++.so.6
+No symbol table info available.
+#7  0x00007ffff79a9ea7 in start_thread (arg=<optimized out>) at pthread_create.c:477
+        ret = <optimized out>
+        pd = <optimized out>
+        unwind_buf = {cancel_jmp_buf = {{jmp_buf = {140737272334080, 1908770013962513458, 140737488344814, 140737488344815, 140737272325952, 8396800, -1908763139107247054, -1908753269010912206}, mask_was_saved = 0}}, priv = {pad = {0x0, 0x0, 0x0, 0x0}, data = {prev = 0x0, cleanup = 0x0, canceltype = 0}}}
+        not_first_call = 0
+#8  0x00007ffff7532def in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:95
+No locals.
+
+Thread 4 (Thread 0x7ffff39fd700 (LWP 166664) "worldserver"):
+#0  futex_wait_cancelable (private=0, expected=0, futex_word=0x7ffff4e623a0) at ../sysdeps/nptl/futex-internal.h:186
+        __ret = -512
+        oldtype = 0
+        err = <optimized out>
+        oldtype = <optimized out>
+        err = <optimized out>
+        __ret = <optimized out>
+        resultvar = <optimized out>
+        __arg4 = <optimized out>
+        __arg3 = <optimized out>
+        __arg2 = <optimized out>
+        __arg1 = <optimized out>
+        _a4 = <optimized out>
+        _a3 = <optimized out>
+        _a2 = <optimized out>
+        _a1 = <optimized out>
+#1  __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x7ffff4e62300, cond=0x7ffff4e62378) at pthread_cond_wait.c:508
+        spin = 0
+        buffer = {__routine = 0x7ffff79b0540 <__condvar_cleanup_waiting>, __arg = 0x7ffff39fb580, __canceltype = -1218651600, __prev = 0x0}
+        cbuffer = {wseq = 2112, cond = 0x7ffff4e62378, mutex = 0x7ffff4e62300, private = 0}
+        err = <optimized out>
+        g = 4087330144
+        flags = <optimized out>
+        g1_start = <optimized out>
+        maxspin = 0
+        signals = <optimized out>
+        result = 0
+        wseq = 2112
+        seq = 1056
+        private = 0
+        maxspin = <optimized out>
+        err = <optimized out>
+        result = <optimized out>
+        wseq = <optimized out>
+        g = <optimized out>
+        seq = <optimized out>
+        flags = <optimized out>
+        private = <optimized out>
+        signals = <optimized out>
+        done = <optimized out>
+        g1_start = <optimized out>
+        spin = <optimized out>
+        buffer = {__routine = <optimized out>, __arg = <optimized out>, __canceltype = <optimized out>, __prev = <optimized out>}
+        cbuffer = {wseq = <optimized out>, cond = <optimized out>, mutex = <optimized out>, private = <optimized out>}
+        s = <optimized out>
+#2  __pthread_cond_wait (cond=0x7ffff4e62378, mutex=0x7ffff4e62300) at pthread_cond_wait.c:638
+No locals.
+#3  0x00007ffff782190c in std::condition_variable::wait(std::unique_lock<std::mutex>&) () from /usr/lib/x86_64-linux-gnu/libstdc++.so.6
+No symbol table info available.
+#4  0x00000000015d0666 in ProducerConsumerQueue<SQLOperation*>::WaitAndPop (this=<error reading variable: Unhandled dwarf expression opcode 0xff>, value=<error reading variable: Unhandled dwarf expression opcode 0xff>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/common/Threading/ProducerConsumerQueue.h:81
+        lock = {_M_device = 0x7ffff4e62300, _M_owns = true}
+#5  0x00000000015d0586 in DatabaseWorker::WorkerThread (this=<optimized out>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/server/database/Database/DatabaseWorker.cpp:48
+        operation = <optimized out>
+#6  0x00007ffff7826ed0 in ?? () from /usr/lib/x86_64-linux-gnu/libstdc++.so.6
+No symbol table info available.
+#7  0x00007ffff79a9ea7 in start_thread (arg=<optimized out>) at pthread_create.c:477
+        ret = <optimized out>
+        pd = <optimized out>
+        unwind_buf = {cancel_jmp_buf = {{jmp_buf = {140737280726784, 1908770013962513458, 140737488344814, 140737488344815, 140737280718656, 8396800, -1908762040132490190, -1908753269010912206}, mask_was_saved = 0}}, priv = {pad = {0x0, 0x0, 0x0, 0x0}, data = {prev = 0x0, cleanup = 0x0, canceltype = 0}}}
+        not_first_call = 0
+#8  0x00007ffff7532def in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:95
+No locals.
+
+Thread 3 (Thread 0x7ffff41fe700 (LWP 166663) "worldserver"):
+#0  futex_wait_cancelable (private=0, expected=0, futex_word=0x7ffff4e62464) at ../sysdeps/nptl/futex-internal.h:186
+        __ret = -512
+        oldtype = 0
+        err = <optimized out>
+        oldtype = <optimized out>
+        err = <optimized out>
+        __ret = <optimized out>
+        resultvar = <optimized out>
+        __arg4 = <optimized out>
+        __arg3 = <optimized out>
+        __arg2 = <optimized out>
+        __arg1 = <optimized out>
+        _a4 = <optimized out>
+        _a3 = <optimized out>
+        _a2 = <optimized out>
+        _a1 = <optimized out>
+#1  __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x7ffff4e623c0, cond=0x7ffff4e62438) at pthread_cond_wait.c:508
+        spin = 0
+        buffer = {__routine = 0x7ffff79b0540 <__condvar_cleanup_waiting>, __arg = 0x7ffff41fc580, __canceltype = -199244433, __prev = 0x0}
+        cbuffer = {wseq = 83, cond = 0x7ffff4e62438, mutex = 0x7ffff4e623c0, private = 0}
+        err = <optimized out>
+        g = 4095722848
+        flags = <optimized out>
+        g1_start = <optimized out>
+        maxspin = 0
+        signals = <optimized out>
+        result = 0
+        wseq = 83
+        seq = 41
+        private = 0
+        maxspin = <optimized out>
+        err = <optimized out>
+        result = <optimized out>
+        wseq = <optimized out>
+        g = <optimized out>
+        seq = <optimized out>
+        flags = <optimized out>
+        private = <optimized out>
+        signals = <optimized out>
+        done = <optimized out>
+        g1_start = <optimized out>
+        spin = <optimized out>
+        buffer = {__routine = <optimized out>, __arg = <optimized out>, __canceltype = <optimized out>, __prev = <optimized out>}
+        cbuffer = {wseq = <optimized out>, cond = <optimized out>, mutex = <optimized out>, private = <optimized out>}
+        s = <optimized out>
+#2  __pthread_cond_wait (cond=0x7ffff4e62438, mutex=0x7ffff4e623c0) at pthread_cond_wait.c:638
+No locals.
+#3  0x00007ffff782190c in std::condition_variable::wait(std::unique_lock<std::mutex>&) () from /usr/lib/x86_64-linux-gnu/libstdc++.so.6
+No symbol table info available.
+#4  0x00000000015d0666 in ProducerConsumerQueue<SQLOperation*>::WaitAndPop (this=<error reading variable: Unhandled dwarf expression opcode 0xff>, value=<error reading variable: Unhandled dwarf expression opcode 0xff>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/common/Threading/ProducerConsumerQueue.h:81
+        lock = {_M_device = 0x7ffff4e623c0, _M_owns = true}
+#5  0x00000000015d0586 in DatabaseWorker::WorkerThread (this=<optimized out>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/server/database/Database/DatabaseWorker.cpp:48
+        operation = <optimized out>
+#6  0x00007ffff7826ed0 in ?? () from /usr/lib/x86_64-linux-gnu/libstdc++.so.6
+No symbol table info available.
+#7  0x00007ffff79a9ea7 in start_thread (arg=<optimized out>) at pthread_create.c:477
+        ret = <optimized out>
+        pd = <optimized out>
+        unwind_buf = {cancel_jmp_buf = {{jmp_buf = {140737289119488, 1908770013962513458, 140737488344814, 140737488344815, 140737289111360, 8396800, -1908760941157733326, -1908753269010912206}, mask_was_saved = 0}}, priv = {pad = {0x0, 0x0, 0x0, 0x0}, data = {prev = 0x0, cleanup = 0x0, canceltype = 0}}}
+        not_first_call = 0
+#8  0x00007ffff7532def in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:95
+No locals.
+
+Thread 2 (Thread 0x7ffff49ff700 (LWP 166662) "worldserver"):
+#0  0x00007ffff7533116 in epoll_wait (epfd=7, events=0x7ffff49fce70, maxevents=128, timeout=-1) at ../sysdeps/unix/sysv/linux/epoll_wait.c:30
+No locals.
+#1  0x000000000046a4cb in boost::asio::detail::epoll_reactor::run (this=<optimized out>, usec=<error reading variable: Unhandled dwarf expression opcode 0xff>, ops=<error reading variable: Unhandled dwarf expression opcode 0xff>) at /usr/include/boost/asio/detail/impl/epoll_reactor.ipp:471
+        events = {{events = 1, data = {ptr = 0x7ffff4e56774, fd = -186292364, u32 = 4108674932, u64 = 140737302062964}}, {events = 0, data = {ptr = 0xd9, fd = 217, u32 = 217, u64 = 217}}, {events = 247, data = {ptr = 0x900000000, fd = 0, u32 = 0, u64 = 38654705664}}, {events = 0, data = {ptr = 0x4c, fd = 76, u32 = 76, u64 = 76}}, {events = 3668232035, data = {ptr = 0x4cd7e3219dc21c8f, fd = -1648223089, u32 = 2646744207, u64 = 5537144000395484303}}, {events = 1848044922, data = {ptr = 0x9dc21c8fdaa4c763, fd = -626735261, u32 = 3668232035, u64 = 11367679813610686307}}, {events = 1289216801, data = {ptr = 0x15b29c046f26ed7a, fd = 1864822138, u32 = 1864822138, u64 = 1563483563509607802}}, {events = 3202103500, data = {ptr = 0xfe4a2c136db73ba5, fd = 1840724901, u32 = 1840724901, u64 = 18323506495867009957}}, {events = 2084160314, data = {ptr = 0xdb15be9186474478, fd = -2042149768, u32 = 2252817528, u64 = 15786733601049494648}}, {events = 1970478862, data = {ptr = 0x9ccad388fc65faf, fd = -1882824785, u32 = 2412142511, u64 = 706129700032241583}}, {events = 3753130355, data = {ptr = 0xf8029deec1233675, fd = -1054656907, u32 = 3240310389, u64 = 17871019920127637109}}, {events = 1884814668, data = {ptr = 0x4, fd = 4, u32 = 4, u64 = 4}}, {events = 2667578112, data = {ptr = 0x9f00339b00007fff, fd = 32767, u32 = 32767, u64 = 11457214192843522047}}, {events = 32767, data = {ptr = 0x7fff9f00339b, fd = -1627376741, u32 = 2667590555, u64 = 140735860978587}}, {events = 4104114068, data = {ptr = 0x400007fff, fd = 32767, u32 = 32767, u64 = 17179901951}}, {events = 0, data = {ptr = 0x7ffff7550363 <__GI_inet_ntop+195>, fd = -145423517, u32 = 4149543779, u64 = 140737342931811}}, {events = 1, data = {ptr = 0xf49fd04000007fff, fd = 32767, u32 = 32767, u64 = 17627036439847927807}}, {events = 32767, data = {ptr = 0x10, fd = 16, u32 = 16, u64 = 16}}, {events = 0, data = {ptr = 0x9f01b00000000000, fd = 0, u32 = 0, u64 = 11457632441053741056}}, {events = 32767, data = {ptr = 0x7fff9f01b0f8, fd = -1627279112, u32 = 2667688184, u64 = 140735861076216}}, {events = 2667590559, data = {ptr = 0xf7b7d36200007fff, fd = 32767, u32 = 32767, u64 = 17849968065966538751}}, {events = 32767, data = {ptr = 0x0, fd = 0, u32 = 0, u64 = 0}}, {events = 4156019670, data = {ptr = 0x2e37313200007fff, fd = 32767, u32 = 32767, u64 = 3330184540281929727}}, {events = 775369778, data = {ptr = 0x36372e39, fd = 909585977, u32 = 909585977, u64 = 909585977}}, {events = 32, data = {ptr = 0x352090000000004, fd = 4, u32 = 4, u64 = 239263625808707588}}, {events = 116615369, data = {ptr = 0x7fff9f023150, fd = -1627246256, u32 = 2667721040, u64 = 140735861109072}}, {events = 23887577, data = {ptr = 0xf49fd03000000000, fd = 0, u32 = 0, u64 = 17627036371128418304}}, {events = 32767, data = {ptr = 0x1599a67 <QueryCallback::WithChainingPreparedCallback(std::function<void (QueryCallback&, std::shared_ptr<PreparedResultSet>)>&&)+103>, fd = 22649447, u32 = 22649447, u64 = 22649447}}, {events = 2667733184, data = {ptr = 0x15839ca00007fff, fd = 32767, u32 = 32767, u64 = 96890931734675455}}, {events = 0, data = {ptr = 0x0, fd = 0, u32 = 0, u64 = 0}}, {events = 23887577, data = {ptr = 0xf49fd01000000000, fd = 0, u32 = 0, u64 = 17627036233689464832}}, {events = 32767, data = {ptr = 0x11968f3 <std::_Function_handler<void (std::shared_ptr<PreparedResultSet>), std::_Bind<void (WorldSocket::*(WorldSocket*, std::_Placeholder<1>))(std::shared_ptr<PreparedResultSet>)> >::_M_manager(std::_Any_data&, std::_Any_data const&, std::_Manager_operation)+51>, fd = 18442483, u32 = 18442483, u64 = 18442483}}, {events = 4104114376, data = {ptr = 0x159940000007fff, fd = 32767, u32 = 32767, u64 = 97271594686119935}}, {events = 0, data = {ptr = 0x7fff9f023270, fd = -1627245968, u32 = 2667721328, u64 = 140735861109360}}, {events = 0, data = {ptr = 0x0, fd = 0, u32 = 0, u64 = 0}}, {events = 0, data = {ptr = 0x0, fd = 0, u32 = 0, u64 = 0}}, {events = 2667721328, data = {ptr = 0xde25e800007fff, fd = 32767, u32 = 32767, u64 = 62529123192438783}}, {events = 0, data = {ptr = 0x0, fd = 0, u32 = 0, u64 = 0}}, {events = 2667721280, data = {ptr = 0x9f0034c000007fff, fd = 32767, u32 = 32767, u64 = 11457215451268939775}}, {events = 32767, data = {ptr = 0x7fff9f0034c0, fd = -1627376448, u32 = 2667590848, u64 = 140735860978880}}, {events = 2838776072, data = {ptr = 0x119691600007fff, fd = 32767, u32 = 32767, u64 = 79210011665924095}}, {events = 0, data = {ptr = 0x7fff9f0034c0, fd = -1627376448, u32 = 2667590848, u64 = 140735860978880}}, {events = 2667721040, data = {ptr = 0xceee7fe800007fff, fd = 32767, u32 = 32767, u64 = 14910996050679463935}}, {events = 32767, data = {ptr = 0x118ea7b <WorldSocket::Start()+299>, fd = 18410107, u32 = 18410107, u64 = 18410107}}, {events = 4104114400, data = {ptr = 0xa934490800007fff, fd = 32767, u32 = 32767, u64 = 12192450389907374079}}, {events = 32767, data = {ptr = 0x1ef4ab0 <WorldSocketMgr::Instance()::instance>, fd = 32459440, u32 = 32459440, u64 = 32459440}}, {events = 2667590288, data = {ptr = 0xf49fd16800007fff, fd = 32767, u32 = 32767, u64 = 17627037711158247423}}, {events = 32767, data = {ptr = 0x119ddb6 <WorldSocketThread::SocketAdded(std::shared_ptr<WorldSocket>)+102>, fd = 18472374, u32 = 18472374, u64 = 18472374}}, {events = 12, data = {ptr = 0x9f00329000000000, fd = 0, u32 = 0, u64 = 11457213046087221248}}, {events = 32767, data = {ptr = 0x7fff9f003280, fd = -1627377024, u32 = 2667590272, u64 = 140735860978304}}, {events = 2838775944, data = {ptr = 0xa93448b800007fff, fd = 32767, u32 = 32767, u64 = 12192450046309990399}}, {events = 32767, data = {ptr = 0x119dcb4 <NetworkThread<WorldSocket>::AddSocket(std::shared_ptr<WorldSocket>)+308>, fd = 18472116, u32 = 18472116, u64 = 18472116}}, {events = 2667590288, data = {ptr = 0x9f00328000007fff, fd = 32767, u32 = 32767, u64 = 11457212977367777279}}, {events = 32767, data = {ptr = 0x1ef4ab0 <WorldSocketMgr::Instance()::instance>, fd = 32459440, u32 = 32459440, u64 = 32459440}}, {events = 0, data = {ptr = 0xceee7fe800000000, fd = 0, u32 = 0, u64 = 14910996050679431168}}, {events = 32767, data = {ptr = 0x7ffff79b41d3 <__libc_accept+99>, fd = -140820013, u32 = 4154147283, u64 = 140737347535315}}, {events = 2669676736, data = {ptr = 0xf49fde9800007fff, fd = 32767, u32 = 32767, u64 = 17627052210967838719}}, {events = 4294967295, data = {ptr = 0x0, fd = 0, u32 = 0, u64 = 0}}, {events = 0, data = {ptr = 0x500000000, fd = 0, u32 = 0, u64 = 21474836480}}, {events = 1, data = {ptr = 0x47cae6 <boost::asio::detail::socket_ops::accept(int, sockaddr*, unsigned long*, boost::system::error_code&)+230>, fd = 4704998, u32 = 4704998, u64 = 4704998}}, {events = 0, data = {ptr = 0x400000000a, fd = 10, u32 = 10, u64 = 274877906954}}, {events = 0, data = {ptr = 0x1, fd = 1, u32 = 1, u64 = 1}}, {events = 0, data = {ptr = 0xceee7f9800000000, fd = 0, u32 = 0, u64 = 14910995707082047488}}, {events = 32767, data = {ptr = 0x15, fd = 21, u32 = 21, u64 = 21}}, {events = 2858238992, data = {ptr = 0x47c94100007fff, fd = 32767, u32 = 32767, u64 = 20206004356546559}}, {events = 0, data = {ptr = 0x7fff9f208758, fd = -1625258152, u32 = 2669709144, u64 = 140735863097176}}, {events = 4104118664, data = {ptr = 0xceee7f8000127fff, fd = 1212415, u32 = 1212415, u64 = 14910995604004044799}}, {events = 32767, data = {ptr = 0x19, fd = 25, u32 = 25, u64 = 25}}, {events = 2838776072, data = {ptr = 0xf49fd21000007fff, fd = 32767, u32 = 32767, u64 = 17627038432712753151}}, {events = 32767, data = {ptr = 0x7ffff49fd2a0, fd = -190852448, u32 = 4104114848, u64 = 140737297502880}}, {events = 4104114720, data = {ptr = 0xf49fd2b000007fff, fd = 32767, u32 = 32767, u64 = 17627039119907520511}}, {events = 32767, data = {ptr = 0x7ffff49fd2a0, fd = -190852448, u32 = 4104114848, u64 = 140737297502880}}, {events = 0, data = {ptr = 0x62efde2000000000, fd = 0, u32 = 0, u64 = 7129160964171104256}}, {events = 0, data = {ptr = 0x7fffa7a83720, fd = -1482148064, u32 = 2812819232, u64 = 140736006207264}}, {events = 471407, data = {ptr = 0x11e1a30000000000, fd = 0, u32 = 0, u64 = 1288490188800000000}}, {events = 0, data = {ptr = 0x7ffff74f0ccd <__tz_convert+173>, fd = -145814323, u32 = 4149152973, u64 = 140737342541005}}, {events = 4063966016, data = {ptr = 0xf74f0ccd00007fff, fd = 32767, u32 = 32767, u64 = 17820476325136203775}}, {events = 0, data = {ptr = 0x0, fd = 0, u32 = 0, u64 = 0}}, {events = 55707904, data = {ptr = 0x47135006f368c9, fd = 116615369, u32 = 116615369, u64 = 20005957781383369}}, {events = 0, data = {ptr = 0x0, fd = 0, u32 = 0, u64 = 0}}, {events = 2842203992, data = {ptr = 0x47135a00007fff, fd = 32767, u32 = 32767, u64 = 20006000614473727}}, {events = 0, data = {ptr = 0x7fffa9689758, fd = -1452763304, u32 = 2842203992, u64 = 140736035592024}}, {events = 4104114848, data = {ptr = 0x7316f00007fff, fd = 32767, u32 = 32767, u64 = 2024677648138239}}, {events = 0, data = {ptr = 0x4712a5 <boost::date_time::microsec_clock<boost::posix_time::ptime>::create_time(tm* (*)(long const*, tm*))+149>, fd = 4657829, u32 = 4657829, u64 = 4657829}}, {events = 471405, data = {ptr = 0x47000700000000, fd = 0, u32 = 0, u64 = 19984753411227648}}, {events = 0, data = {ptr = 0x7fffbd8e0008, fd = -1114767352, u32 = 3180199944, u64 = 140736373587976}}, {events = 18417638, data = {ptr = 0x25889700000000, fd = 0, u32 = 0, u64 = 10564756259733504}}, {events = 32767, data = {ptr = 0x62efde20, fd = 1659887136, u32 = 1659887136, u64 = 1659887136}}, {events = 1659887136, data = {ptr = 0x7316f00000000, fd = 0, u32 = 0, u64 = 2024677648105472}}, {events = 0, data = {ptr = 0x2d00000024, fd = 36, u32 = 36, u64 = 193273528356}}, {events = 15, data = {ptr = 0x700000007, fd = 7, u32 = 7, u64 = 30064771079}}, {events = 122, data = {ptr = 0xda00000000, fd = 0, u32 = 0, u64 = 936302870528}}, {events = 0, data = {ptr = 0x2f30be6, fd = 49482726, u32 = 49482726, u64 = 49482726}}, {events = 0, data = {ptr = 0x7ffff75c04cd, fd = -144964403, u32 = 4150002893, u64 = 140737343390925}}, {events = 2858233248, data = {ptr = 0xfffffffe00007fff, fd = 32767, u32 = 32767, u64 = 18446744065119649791}}, {events = 2147483647, data = {ptr = 0x478b9a <boost::asio::detail::timer_queue<boost::asio::time_traits<boost::posix_time::ptime> >::wait_duration_usec(long) const+42>, fd = 4688794, u32 = 4688794, u64 = 4688794}}, {events = 4063966056, data = {ptr = 0xf4e5670000007fff, fd = 32767, u32 = 32767, u64 = 17646623964618850303}}, {events = 32767, data = {ptr = 0x431bde82d7b634db, fd = -675924773, u32 = 3619042523, u64 = 4835703278458516699}}, {events = 4619922, data = {ptr = 0x0, fd = 0, u32 = 0, u64 = 0}}, {events = 0, data = {ptr = 0x0, fd = 0, u32 = 0, u64 = 0}}, {events = 0, data = {ptr = 0x3b9ac23000000000, fd = 0, u32 = 0, u64 = 4294958706065408000}}, {events = 0, data = {ptr = 0x7ffff49fd560, fd = -190851744, u32 = 4104115552, u64 = 140737297503584}}, {events = 0, data = {ptr = 0x0, fd = 0, u32 = 0, u64 = 0}}, {events = 0, data = {ptr = 0x12b, fd = 299, u32 = 299, u64 = 299}}, {events = 999991590, data = {ptr = 0xa7a8372000000000, fd = 0, u32 = 0, u64 = 12080966610999836672}}, {events = 32767, data = {ptr = 0x7ffff49fd3c0, fd = -190852160, u32 = 4104115136, u64 = 140737297503168}}, {events = 0, data = {ptr = 0xa968975800000000, fd = 0, u32 = 0, u64 = 12207173194200645632}}, {events = 32767, data = {ptr = 0x7ffff23b3368, fd = -231001240, u32 = 4063966056, u64 = 140737257354088}}, {events = 4104115552, data = {ptr = 0x467c9a00007fff, fd = 32767, u32 = 32767, u64 = 19840249236586495}}, {events = 0, data = {ptr = 0x7fffa9689740, fd = -1452763328, u32 = 2842203968, u64 = 140736035592000}}, {events = 4104115296, data = {ptr = 0xe73e576100007fff, fd = 32767, u32 = 32767, u64 = 16662851745440890879}}, {events = 3600, data = {ptr = 0x7fffa9689790, fd = -1452763248, u32 = 2842204048, u64 = 140736035592080}}, {events = 2842203968, data = {ptr = 0x459bb500007fff, fd = 32767, u32 = 32767, u64 = 19592975084453887}}, {events = 0, data = {ptr = 0x459960 <FreezeDetector::Handler(std::weak_ptr<FreezeDetector>, boost::system::error_code const&)>, fd = 4561248, u32 = 4561248, u64 = 4561248}}, {events = 0, data = {ptr = 0x0, fd = 0, u32 = 0, u64 = 0}}, {events = 0, data = {ptr = 0x7ffff49fd450, fd = -190852016, u32 = 4104115280, u64 = 140737297503312}}, {events = 0, data = {ptr = 0x0, fd = 0, u32 = 0, u64 = 0}}, {events = 0, data = {ptr = 0x0, fd = 0, u32 = 0, u64 = 0}}, {events = 3471736512, data = {ptr = 0x16fb41000007fff, fd = 32767, u32 = 32767, u64 = 103499297265319935}}, {events = 0, data = {ptr = 0x0, fd = 0, u32 = 0, u64 = 0}}, {events = 24097840, data = {ptr = 0x16fb5b000000000, fd = 0, u32 = 0, u64 = 103501083971682304}}, {events = 0, data = {ptr = 0x1, fd = 1, u32 = 1, u64 = 1}}, {events = 4640220, data = {ptr = 0xf4e6510000000000, fd = 0, u32 = 0, u64 = 17646881250339717120}}, {events = 32767, data = {ptr = 0x7fffa7a83720, fd = -1482148064, u32 = 2812819232, u64 = 140736006207264}}, {events = 0, data = {ptr = 0xf49fd5e000000000, fd = 0, u32 = 0, u64 = 17627042624600801280}}, {events = 32767, data = {ptr = 0x7ffff49fd550, fd = -190851760, u32 = 4104115536, u64 = 140737297503568}}, {events = 4620137, data = {ptr = 0xa968975000000000, fd = 0, u32 = 0, u64 = 12207173159840907264}}, {events = 32767, data = {ptr = 0x7fffa9689740, fd = -1452763328, u32 = 2842203968, u64 = 140736035592000}}}
+        timeout = <optimized out>
+        num_events = <optimized out>
+        check_timers = <error reading variable check_timers (Unhandled dwarf expression opcode 0xff)>
+#2  0x000000000046a130 in boost::asio::detail::scheduler::do_run_one (this=<error reading variable: Unhandled dwarf expression opcode 0xff>, lock=<error reading variable: Unhandled dwarf expression opcode 0xff>, this_thread=..., ec=<error reading variable: Unhandled dwarf expression opcode 0xff>) at /usr/include/boost/asio/detail/impl/scheduler.ipp:465
+        on_exit = {scheduler_ = <optimized out>, lock_ = <optimized out>, this_thread_ = <optimized out>}
+        o = <optimized out>
+        more_handlers = <optimized out>
+#3  0x0000000000469d41 in boost::asio::detail::scheduler::run (this=<optimized out>, ec=...) at /usr/include/boost/asio/detail/impl/scheduler.ipp:204
+        this_thread = {<boost::asio::detail::thread_info_base> = {<boost::asio::detail::noncopyable> = {<No data fields>}, reusable_memory_ = {0x0, 0x0, 0x0}, has_pending_exception_ = 0, pending_exception_ = {_M_exception_object = 0x0}}, private_op_queue = {<boost::asio::detail::noncopyable> = {<No data fields>}, front_ = 0x0, back_ = 0x0}, private_outstanding_work = 0}
+        ctx = {<boost::asio::detail::noncopyable> = {<No data fields>}, key_ = 0x7ffff4e65100, value_ = 0x7ffff49fd560, next_ = 0x0}
+        lock = {<boost::asio::detail::noncopyable> = {<No data fields>}, mutex_ = @0x7ffff4e65130, locked_ = false}
+        n = <optimized out>
+#4  0x0000000000476a48 in boost::asio::io_context::run (this=<optimized out>) at /usr/include/boost/asio/impl/io_context.ipp:63
+        ec = {val_ = 0, failed_ = false, cat_ = 0x16fae50 <boost::system::detail::cat_holder<void>::system_category_instance>}
+        s = <error reading variable s (Unhandled dwarf expression opcode 0xff)>
+#5  Trinity::Asio::IoContext::run (this=<optimized out>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/common/Asio/IoContext.h:37
+No locals.
+#6  0x00007ffff7826ed0 in ?? () from /usr/lib/x86_64-linux-gnu/libstdc++.so.6
+No symbol table info available.
+#7  0x00007ffff79a9ea7 in start_thread (arg=<optimized out>) at pthread_create.c:477
+        ret = <optimized out>
+        pd = <optimized out>
+        unwind_buf = {cancel_jmp_buf = {{jmp_buf = {140737297512192, 1908770013962513458, 140737488346382, 140737488346383, 140737297504064, 8396800, -1908759842182976462, -1908753269010912206}, mask_was_saved = 0}}, priv = {pad = {0x0, 0x0, 0x0, 0x0}, data = {prev = 0x0, cleanup = 0x0, canceltype = 0}}}
+        not_first_call = 0
+#8  0x00007ffff7532def in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:95
+No locals.
+
+Thread 1 (Thread 0x7ffff530efc0 (LWP 166658) "worldserver"):
+#0  futex_wait_cancelable (private=0, expected=0, futex_word=0x1ef3410 <MapManager::instance()::instance+448>) at ../sysdeps/nptl/futex-internal.h:186
+        __ret = -512
+        oldtype = 0
+        err = <optimized out>
+        oldtype = <optimized out>
+        err = <optimized out>
+        __ret = <optimized out>
+        resultvar = <optimized out>
+        __arg4 = <optimized out>
+        __arg3 = <optimized out>
+        __arg2 = <optimized out>
+        __arg1 = <optimized out>
+        _a4 = <optimized out>
+        _a3 = <optimized out>
+        _a2 = <optimized out>
+        _a1 = <optimized out>
+#1  __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x1ef33c0 <MapManager::instance()::instance+368>, cond=0x1ef33e8 <MapManager::instance()::instance+408>) at pthread_cond_wait.c:508
+        spin = 0
+        buffer = {__routine = 0x7ffff79b0540 <__condvar_cleanup_waiting>, __arg = 0x7fffffffdb50, __canceltype = 1534460, __prev = 0x0}
+        cbuffer = {wseq = 41927788, cond = 0x1ef33e8 <MapManager::instance()::instance+408>, mutex = 0x1ef33c0 <MapManager::instance()::instance+368>, private = 0}
+        err = <optimized out>
+        g = 4294957872
+        flags = <optimized out>
+        g1_start = <optimized out>
+        maxspin = 0
+        signals = <optimized out>
+        result = 0
+        wseq = 41927788
+        seq = 20963894
+        private = 0
+        maxspin = <optimized out>
+        err = <optimized out>
+        result = <optimized out>
+        wseq = <optimized out>
+        g = <optimized out>
+        seq = <optimized out>
+        flags = <optimized out>
+        private = <optimized out>
+        signals = <optimized out>
+        done = <optimized out>
+        g1_start = <optimized out>
+        spin = <optimized out>
+        buffer = {__routine = <optimized out>, __arg = <optimized out>, __canceltype = <optimized out>, __prev = <optimized out>}
+        cbuffer = {wseq = <optimized out>, cond = <optimized out>, mutex = <optimized out>, private = <optimized out>}
+        s = <optimized out>
+#2  __pthread_cond_wait (cond=0x1ef33e8 <MapManager::instance()::instance+408>, mutex=0x1ef33c0 <MapManager::instance()::instance+368>) at pthread_cond_wait.c:638
+No locals.
+#3  0x00007ffff782190c in std::condition_variable::wait(std::unique_lock<std::mutex>&) () from /usr/lib/x86_64-linux-gnu/libstdc++.so.6
+No symbol table info available.
+#4  0x00000000010d20db in MapUpdater::wait (this=<error reading variable: Unhandled dwarf expression opcode 0xff>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/server/game/Maps/MapUpdater.cpp:75
+        lock = {_M_device = 0x1ef33c0 <MapManager::instance()::instance+368>, _M_owns = true}
+#5  0x00000000010c13b0 in MapManager::Update (this=<error reading variable: Unhandled dwarf expression opcode 0x0>, diff=<optimized out>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/server/game/Maps/MapManager.cpp:232
+        iter = {<std::__detail::_Node_iterator_base<std::pair<unsigned int const, Map*>, false>> = {_M_cur = <optimized out>}, <No data fields>}
+#6  0x0000000001398bda in World::Update (this=<error reading variable: Unhandled dwarf expression opcode 0xff>, diff=<error reading variable: Unhandled dwarf expression opcode 0xff>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/server/game/World/World.cpp:2466
+        __tc_metric_stop_watch2465 = std::optional<MetricStopWatch<(lambda at /var/www/vhosts/clangaming.eu/TrinityCore/src/server/game/World/World.cpp:2465:9)>> [no contained value]
+        __tc_metric_stop_watch2315 = std::optional<MetricStopWatch<(lambda at /var/www/vhosts/clangaming.eu/TrinityCore/src/server/game/World/World.cpp:2315:5)>> [no contained value]
+        currentGameTime = <error reading variable currentGameTime (Unhandled dwarf expression opcode 0xff)>
+#7  0x000000000045981f in WorldUpdateLoop () at /var/www/vhosts/clangaming.eu/TrinityCore/src/server/worldserver/Main.cpp:496
+        diff = <optimized out>
+        minUpdateDiff = <error reading variable minUpdateDiff (Unhandled dwarf expression opcode 0xff)>
+        realCurrTime = <optimized out>
+        realPrevTime = <error reading variable realPrevTime (Unhandled dwarf expression opcode 0xff)>
+#8  0x0000000000455508 in main (argc=<optimized out>, argv=<optimized out>) at /var/www/vhosts/clangaming.eu/TrinityCore/src/server/worldserver/Main.cpp:390
+        configFile = {<boost::filesystem::path_detail::path_constants<char, (char)'/', (char)'/', (char)'.'>> = {static separator = 47 '/', static preferred_separator = <optimized out>, static dot = 46 '.'}, m_pathname = <incomplete type>}
+        configService = <incomplete type>
+        vm = <incomplete type>
+        configError = <incomplete type>
+        overriddenKeys = warning: Type size unknown, assuming 1. Try casting to a known type, or void *.
+warning: Type size unknown, assuming 1. Try casting to a known type, or void *.
+std::vector of length 0, capacity 0
+        seed = {_bn = 0x7ffff4e39840}
+        pidFile = <incomplete type>
+        signals = {impl_ = {service_ = 0x7ffff4e7c000, implementation_ = {queue_ = {<boost::asio::detail::noncopyable> = {<No data fields>}, front_ = 0x7ffff4eb49e0, back_ = 0x7ffff4eb49e0}, signals_ = 0x7ffff4e20a00}, executor_ = {<boost::asio::execution::detail::any_executor_base> = {object_ = {__data = "\020}\342\364\377\177\000\000\000\000\000\000\000\000\000", __align = {<No data fields>}}, object_fns_ = 0x16fbd50 <_ZZN5boost4asio9execution6detail17any_executor_base16object_fns_tableINS0_10io_context19basic_executor_typeISaIvELj0EEEEEPKNS3_10object_fnsEPNSt9enable_ifIXaantsr7is_sameIT_vEE5valuentsr7is_sameISD_St10shared_ptrIvEEE5valueEvE4typeEE3fns>, target_ = 0x7fffffffde20, target_fns_ = 0x16fbcc8 <_ZZN5boost4asio9execution6detail17any_executor_base16target_fns_tableINS0_10io_context19basic_executor_typeISaIvELj0EEEEEPKNS3_10target_fnsEbPNSt9enable_ifIXntsr7is_sameIT_vEE5valueEvE4typeEE16fns_with_execute>}, <boost::asio::execution::detail::any_executor_context<boost::asio::execution::any_executor<boost::asio::execution::context_as_t<boost::asio::execution_context &>, boost::asio::execution::detail::blocking::never_t<0>, boost::asio::execution::prefer_only<boost::asio::execution::detail::blocking::possibly_t<0> >, boost::asio::execution::prefer_only<boost::asio::execution::detail::outstanding_work::tracked_t<0> >, boost::asio::execution::prefer_only<boost::asio::execution::detail::outstanding_work::untracked_t<0> >, boost::asio::execution::prefer_only<boost::asio::execution::detail::relationship::fork_t<0> >, boost::asio::execution::prefer_only<boost::asio::execution::detail::relationship::continuation_t<0> > >, boost::asio::execution::detail::supportable_properties<0, void (boost::asio::execution::context_as_t<boost::asio::execution_context &>, boost::asio::execution::detail::blocking::never_t<0>, boost::asio::execution::prefer_only<boost::asio::execution::detail::blocking::possibly_t<0> >, boost::asio::execution::prefer_only<boost::asio::execution::detail::outstanding_work::tracked_t<0> >, boost::asio::execution::prefer_only<boost::asio::execution::detail::outstanding_work::untracked_t<0> >, boost::asio::execution::prefer_only<boost::asio::execution::detail::relationship::fork_t<0> >, boost::asio::execution::prefer_only<boost::asio::execution::detail::relationship::continuation_t<0> >)>::find_context_as_property, void>> = {<No data fields>}, prop_fns_ = 0x16fbd70 <boost::asio::execution::any_executor<boost::asio::execution::context_as_t<boost::asio::execution_context&>, boost::asio::execution::detail::blocking::never_t<0>, boost::asio::execution::prefer_only<boost::asio::execution::detail::blocking::possibly_t<0> >, boost::asio::execution::prefer_only<boost::asio::execution::detail::outstanding_work::tracked_t<0> >, boost::asio::execution::prefer_only<boost::asio::execution::detail::outstanding_work::untracked_t<0> >, boost::asio::execution::prefer_only<boost::asio::execution::detail::relationship::fork_t<0> >, boost::asio::execution::prefer_only<boost::asio::execution::detail::relationship::continuation_t<0> > >::prop_fns_table<boost::asio::io_context::basic_executor_type<std::allocator<void>, 0u> >()::fns>}}}
+        worldListener = <incomplete type>
+        freezeDetector = warning: RTTI symbol not found for class 'std::_Sp_counted_ptr_inplace<FreezeDetector, std::allocator<FreezeDetector>, (__gnu_cxx::_Lock_policy)2>'
+warning: RTTI symbol not found for class 'std::_Sp_counted_ptr_inplace<FreezeDetector, std::allocator<FreezeDetector>, (__gnu_cxx::_Lock_policy)2>'
+std::shared_ptr<FreezeDetector> (use count 1, weak count 1) = {get() = 0x7fffa9689750}
+        cliThread = warning: RTTI symbol not found for class 'std::_Sp_counted_deleter<std::thread*, void (*)(std::thread*), std::allocator<void>, (__gnu_cxx::_Lock_policy)2>'
+warning: RTTI symbol not found for class 'std::_Sp_counted_deleter<std::thread*, void (*)(std::thread*), std::allocator<void>, (__gnu_cxx::_Lock_policy)2>'
+std::shared_ptr<std::thread> (use count 1, weak count 0) = {get() = 0x7fffa8cfba00}
+        ioContext = Python Exception <class 'gdb.error'> value has been optimized out: 
+
+        opensslHandle = <error reading variable opensslHandle (Unhandled dwarf expression opcode 0x0)>
+        numThreads = <error reading variable numThreads (Unhandled dwarf expression opcode 0xb0)>
+        threadPool = Python Exception <class 'gdb.error'> value has been optimized out: 
+
+        dbHandle = <error reading variable dbHandle (DWARF-2 expression error: `DW_OP_reg' operations must be used either alone or in conjunction with DW_OP_piece or DW_OP_bit_piece.)>
+        sMetricHandle = <error reading variable sMetricHandle (Unhandled dwarf expression opcode 0x0)>
+        sScriptMgrHandle = Python Exception <class 'gdb.error'> value has been optimized out: 
+
+        mapManagementHandle = <error reading variable mapManagementHandle (Unhandled dwarf expression opcode 0x0)>
+        raAcceptor = std::unique_ptr<AsyncAcceptor> = {get() = <optimized out>}
+        soapThread = Python Exception <class 'gdb.error'> value has been optimized out: 
+
+        worldPort = <error reading variable worldPort (Unhandled dwarf expression opcode 0x0)>
+        networkThreads = <error reading variable networkThreads (Unhandled dwarf expression opcode 0xff)>
+        sWorldSocketMgrHandle = Python Exception <class 'gdb.error'> value has been optimized out: 
+

@@ -1,0 +1,53 @@
+#include "ScriptedCreature.h"
+#include "ScriptMgr.h"
+#include "ScriptedGossip.h"
+
+struct npc_simple_gossip : public ScriptedAI
+{
+    npc_simple_gossip(Creature* creature) : ScriptedAI(creature) {}
+
+    bool OnGossipHello(Player* player) override
+    {
+        if (me->IsQuestGiver())
+            player->PrepareQuestMenu(me->GetGUID());
+
+        ClearGossipMenuFor(player);
+
+        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Test Button", 0, GOSSIP_ACTION_INFO_DEF);
+        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Wetter Button", 0, GOSSIP_ACTION_INFO_DEF + 1);
+
+        SendGossipMenuFor(player, player->GetGossipTextId(me), me->GetGUID());
+
+        return true;
+    }
+
+    bool OnGossipSelect(Player* player, uint32 /*menuId*/, uint32 gossipListId) override
+    {
+        uint32 action = player->PlayerTalkClass->GetGossipOptionAction(gossipListId);
+
+        CloseGossipMenuFor(player);
+
+        switch (action)
+        {
+        case GOSSIP_ACTION_INFO_DEF:       // 1000
+            Talk(0);                      // SAY_TEST = 0
+            break;
+        case GOSSIP_ACTION_INFO_DEF + 1:   // 1001
+            Talk(1);                      // SAY_WEATHER = 1
+            break;
+        default:
+            break;
+        }
+        return true;
+    }
+};
+
+CreatureAI* GetAI_npc_simple_gossip(Creature* creature)
+{
+    return new npc_simple_gossip(creature);
+}
+
+void AddSC_npc_simple_gossip()
+{
+    RegisterCreatureAI(npc_simple_gossip);
+}

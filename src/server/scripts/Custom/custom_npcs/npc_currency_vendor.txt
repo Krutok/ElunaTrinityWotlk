@@ -1,0 +1,238 @@
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Winvalid-source-encoding"
+#include "ScriptMgr.h"
+#include "ScriptedCreature.h"
+#include "ScriptedGossip.h"
+#include "CreatureData.h"
+#include "DBCStores.h"
+#include "ObjectMgr.h"
+#include "WorldSession.h"
+#include "SmartEnum.h"
+#include "Log.h"
+
+
+namespace
+{
+    struct ItemData
+    {
+        std::string_view gossipName;
+        uint32 ItemId;
+        uint32 ItemCount;
+        uint32 ExtendedCost;
+        uint32 AllowedClasses;
+    };
+
+    std::array<ItemData, 2> g_ItemData =
+    {{
+        { "1x Shadowmourne", 49623, 1, 1994, 1 << (CLASS_WARRIOR - 1) },                        // 2x Shadowmourne for 10x Glowcap - only allowed for warriors
+        { "2x Long Sword",   923,   2, 1979, 1 << (CLASS_HUNTER - 1) | 1 << (CLASS_ROGUE - 1) } // 2x long sword for 160x apexis shard - only allowed for hunters and rogues
+    }};
+
+
+    EnumText ClassToString(Classes value)
+    {
+        switch (value)
+        {
+            case CLASS_NONE: return { "", "" , "" };
+            case CLASS_WARRIOR: return { "CLASS_WARRIOR", "Krieger", "" };
+            case CLASS_PALADIN: return { "CLASS_PALADIN", "Paladin", "" };
+            case CLASS_HUNTER: return { "CLASS_HUNTER", "J�ger", "" };
+            case CLASS_ROGUE: return { "CLASS_ROGUE", "Schurke", "" };
+            case CLASS_PRIEST: return { "CLASS_PRIEST", "Priester", "" };
+            case CLASS_DEATH_KNIGHT: return { "CLASS_DEATH_KNIGHT", "Todesritter", "" };
+            case CLASS_SHAMAN: return { "CLASS_SHAMAN", "Schamane", "" };
+            case CLASS_MAGE: return { "CLASS_MAGE", "Magier", "" };
+            case CLASS_WARLOCK: return { "CLASS_WARLOCK", "Hexenmeister", "" };
+            case CLASS_DRUID: return { "CLASS_DRUID", "Druide", "" };
+        }
+        return { "", "", "" };
+    }
+}
+
+class CS_CurrencyVendor : public CreatureScript
+{
+public:
+    CS_CurrencyVendor()
+        : CreatureScript("CS_CurrencyVendor")
+    { }
+
+    class CurrencyVendorAI : public ScriptedAI
+    {
+    public:
+        CurrencyVendorAI(Creature* creature)
+            : ScriptedAI(creature)
+        { }
+
+        std::string GetCurrencyNameAndCount(uint8 index, uint8 currIndex)
+        {
+            std::string message;
+            uint32 itemExId = 0;
+            if (ItemExtendedCostEntry const* iece = sItemExtendedCostStore.LookupEntry(g_ItemData[index].ExtendedCost))
+                if (iece->ItemID[currIndex])
+                {
+                    message += std::to_string(iece->ItemCount[currIndex]);
+                    if (itemExId == 0)
+                        itemExId = iece->ItemID[currIndex];
+
+                    std::string itemName;
+                    if (ItemLocale const* il = sObjectMgr->GetItemLocale(itemExId))
+                        ObjectMgr::GetLocaleString(il->Name, LOCALE_deDE, itemName);
+
+                    message += "x ";
+                    message += itemName.c_str();
+                }
+
+            return message;
+        }
+
+        bool OnGossipHello(Player* player) override
+        {
+            ClearGossipMenuFor(player);
+
+            for (uint32 i = 0; i != g_ItemData.size(); ++i)
+            {
+                std::string message = "Willst du das Item wirklich kaufen: ";
+
+                message += std::to_string(g_ItemData[i].ItemCount);
+                message += "x ";
+
+                std::string itemName;
+                if (ItemLocale const* il = sObjectMgr->GetItemLocale(g_ItemData[i].ItemId))
+                    ObjectMgr::GetLocaleString(il->Name, LOCALE_deDE, itemName);
+
+                message += itemName.c_str();
+                message += " für\n";
+                for (uint8 j = 0; j < MAX_ITEM_EXTENDED_COST_REQUIREMENTS; ++j)
+                    message += GetCurrencyNameAndCount(i, j).c_str();
+                message += "?";
+
+                AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, g_ItemData[i].gossipName.data(), GOSSIP_SENDER_MAIN, i, message.c_str(), 0, false);
+            }
+
+            SendGossipMenuFor(player, 100043, me->GetGUID());
+            return true;
+        }
+
+        bool OnGossipSelect(Player* player, uint32 /*menu_id*/, uint32 gossipListId) override
+        {
+            const uint32 action = player->PlayerTalkClass->GetGossipOptionAction(gossipListId);
+            ClearGossipMenuFor(player);
+
+            uint32 itemId = 0;
+
+            try
+            {
+                itemId = g_ItemData.at(action).ItemId;
+            }
+            catch (...)
+            {
+                CloseGossipMenuFor(player);
+                return false;
+            }
+
+            if (std::find_if(std::begin(g_ItemData), std::end(g_ItemData),
+                             [itemId](const ItemData& item) { return item.ItemId == itemId; }) != std::end(g_ItemData))
+            {
+                const auto* crItem = &g_ItemData[action];
+                if (crItem->ExtendedCost)
+                {
+                    ItemExtendedCostEntry const* iece = sItemExtendedCostStore.LookupEntry(crItem->ExtendedCost);
+                    if (!iece)
+                    {
+                        TC_LOG_ERROR("entities.player", "CS_CurrencyVendor Item {} has wrong ExtendedCost field value {}", crItem->ItemId, crItem->ExtendedCost);
+                        CloseGossipMenuFor(player);
+                        return false;
+                    }
+
+                    // honor points price
+                    if (player->GetHonorPoints() < iece->HonorPoints)
+                    {
+                        player->SendEquipError(EQUIP_ERR_NOT_ENOUGH_HONOR_POINTS, nullptr, nullptr);
+                        CloseGossipMenuFor(player);
+                        return false;
+                    }
+
+                    // arena points price
+                    if (player->GetArenaPoints() < iece->ArenaPoints)
+                    {
+                        player->SendEquipError(EQUIP_ERR_NOT_ENOUGH_ARENA_POINTS, nullptr, nullptr);
+                        CloseGossipMenuFor(player);
+                        return false;
+                    }
+
+                    // item base price
+                    for (uint8 i = 0; i < MAX_ITEM_EXTENDED_COST_REQUIREMENTS; ++i)
+                    {
+                        if (iece->ItemID[i] && !player->HasItemCount(iece->ItemID[i], iece->ItemCount[i]))
+                        {
+                            std::string err = "|cffff0000Du hast nicht genug:\n";
+                            err += GetCurrencyNameAndCount(action, i).c_str();
+                            player->GetSession()->SendAreaTriggerMessage("%s", err.c_str());
+                            CloseGossipMenuFor(player);
+                            return false;
+                        }
+                    }
+
+                    // check for personal arena rating requirement
+                    if (player->GetMaxPersonalArenaRatingRequirement(iece->ArenaBracket) < iece->RequiredArenaRating)
+                    {
+                        // probably not the proper equip err
+                        player->SendEquipError(EQUIP_ERR_CANT_EQUIP_RANK, nullptr, nullptr);
+                        CloseGossipMenuFor(player);
+                        return false;
+                    }
+
+                    if ((player->GetClassMask() & crItem->AllowedClasses) == 0)
+                    {
+                        std::string err = "|cffff0000Das Item ist nur verfügbar für:\n";
+
+                        for (uint32 c = CLASS_WARRIOR; c <= CLASS_DRUID; ++c)
+                        {
+                            if (c == 10)
+                                continue;
+
+                            if (crItem->AllowedClasses & (1 << (c - 1)))
+                            {
+                                err += ClassToString(Classes(c)).Title;
+                                err += ",";
+                            }
+                        }
+
+                        if (err[err.size() - 1] == ',')
+                            err.pop_back();
+
+                        player->GetSession()->SendAreaTriggerMessage("%s", err.c_str());
+                        CloseGossipMenuFor(player);
+                        return false;
+                    }
+
+                    // add item
+                    player->AddItem(crItem->ItemId, crItem->ItemCount);
+
+                    // destory currency
+                    if (iece->HonorPoints)
+                        player->ModifyHonorPoints(-int32(iece->HonorPoints));
+                    if (iece->ArenaPoints)
+                        player->ModifyArenaPoints(-int32(iece->ArenaPoints));
+
+                    for (uint8 i = 0; i < MAX_ITEM_EXTENDED_COST_REQUIREMENTS; ++i)
+                        if (iece->ItemID[i])
+                            player->DestroyItemCount(iece->ItemID[i], (iece->ItemCount[i]), true);
+                }
+            }
+
+            CloseGossipMenuFor(player);
+            return true;
+        }
+    };
+
+    CreatureAI* GetAI(Creature* creature) const override
+    {
+        return new CurrencyVendorAI(creature);
+    }
+};
+
+void AddSC_CurrencyVendor()
+{
+    new CS_CurrencyVendor();
+}

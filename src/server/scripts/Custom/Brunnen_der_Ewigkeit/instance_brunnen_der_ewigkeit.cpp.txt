@@ -1,0 +1,27 @@
+#include "InstanceScript.h"
+#include "brunnen_der_ewigkeit.h"
+
+class instance_brunnen_der_ewigkeit : public InstanceMapScript
+{
+public:
+    instance_brunnen_der_ewigkeit() : InstanceMapScript(BrunnenDerEwigkeitScriptName, 734) { }
+
+    struct instance_brunnen_der_ewigkeit_InstanceScript : public InstanceScript
+    {
+        instance_brunnen_der_ewigkeit_InstanceScript(InstanceMap* map) : InstanceScript(map)
+        {
+            SetHeaders(DataHeader);
+            SetBossNumber(EncounterCount);
+        }
+    };
+
+    InstanceScript* GetInstanceScript(InstanceMap* map) const override
+    {
+        return new instance_brunnen_der_ewigkeit_InstanceScript(map);
+    }
+};
+
+void AddSC_instance_brunnen_der_ewigkeit()
+{
+    new instance_brunnen_der_ewigkeit();
+}
