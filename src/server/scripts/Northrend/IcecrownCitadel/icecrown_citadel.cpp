@@ -132,7 +132,14 @@ enum ICCSpells
     SPELL_WEB_BEAM                  = 69887,
     SPELL_CRYPT_SCARABS             = 70965,
     SPELL_WEB_WRAP                  = 70980,
-    SPELL_DARK_MENDING              = 71020
+    SPELL_DARK_MENDING              = 71020,
+
+    // Putricide Trap
+    SPELL_GIANT_INSECT_SWARM        = 70475,
+    SPELL_LEAP_TO_A_RANDOM_LOCATION = 70485,
+
+    // Misc
+    SPELL_WEB_BEAM2                 = 69986,
 };
 
 enum ICCEvents
@@ -190,7 +197,8 @@ enum ICCActions
 {
     ACTION_SIPHON_INTERRUPTED = 1,
     ACTION_EVADE,
-    ACTION_COMBAT
+    ACTION_COMBAT,
+    ACTION_START_GAUNTLET
 };
 
 enum ICCEventIds
@@ -1607,12 +1615,816 @@ class at_icc_nerubar_broodkeeper : public OnlyOnceAreaTriggerScript
         }
 };
 
+enum gauntletEvents
+{
+    SAY_INIT = 0,
+    POINT_ENTER_COMBAT = 1,
+
+    EVENT_CHECK_FIGHT = 1,
+    EVENT_GAUNTLET_PHASE1 = 2,
+    EVENT_GAUNTLET_PHASE2 = 3,
+    EVENT_GAUNTLET_PHASE3 = 4,
+    EVENT_SUMMON_BROODLING = 5
+};
+
+// 38879 - Putricide's Trap
+struct npc_icc_putricades_trap : public NullCreatureAI
+{
+    npc_icc_putricades_trap(Creature* creature) : NullCreatureAI(creature), _summons(me), _instance(creature->GetInstanceScript()) { }
+
+    void DoAction(int32 param) override
+    {
+        if (param == ACTION_START_GAUNTLET)
+        {
+            me->setActive(true);
+            _events.Reset();
+            _events.ScheduleEvent(EVENT_CHECK_FIGHT, 1s);
+            _instance->SetData(DATA_PUTRICIDE_TRAP_STATE, IN_PROGRESS);
+            me->CastSpell(me, SPELL_GIANT_INSECT_SWARM, true);
+
+            for (uint8 i = 0; i < 60; ++i)
+                _events.ScheduleEvent(EVENT_GAUNTLET_PHASE1, Seconds(i));
+            _events.ScheduleEvent(EVENT_GAUNTLET_PHASE2, 1min);
+        }
+    }
+
+    void Reset() override
+    {
+        _events.Reset();
+        _summons.DespawnAll();
+    }
+
+    void JustReachedHome() override
+    {
+        me->setActive(false);
+    }
+
+    void JustSummoned(Creature* summon) override
+    {
+        _summons.Summon(summon);
+        summon->CastSpell(summon, SPELL_LEAP_TO_A_RANDOM_LOCATION, true);
+    }
+
+    void SummonedCreatureDies(Creature* summon, Unit*) override
+    {
+        _summons.Despawn(summon);
+    }
+
+    void UpdateAI(uint32 diff) override
+    {
+        _events.Update(diff);
+
+        switch (_events.ExecuteEvent())
+        {
+            case EVENT_CHECK_FIGHT:
+            {
+                Map::PlayerList const& pList = me->GetMap()->GetPlayers();
+                for (Map::PlayerList::const_iterator itr = pList.begin(); itr != pList.end(); ++itr)
+                {
+                    if (me->GetDistance(itr->GetSource()) > 100.0f || !itr->GetSource()->IsAlive() || itr->GetSource()->IsGameMaster())
+                        continue;
+
+                    _events.ScheduleEvent(EVENT_CHECK_FIGHT, 1s);
+                    return;
+                }
+
+                CreatureAI::EnterEvadeMode();
+                return;
+            }
+            case EVENT_GAUNTLET_PHASE1:
+            {
+                std::list<Creature*> clist;
+                GetCreatureListWithEntryInGrid(clist, me, NPC_INVISIBLE_STALKER, 80.0f);
+                for (std::list<Creature*>::const_iterator itr = clist.begin(); itr != clist.end(); ++itr)
+                    me->SummonCreature(NPC_FLASH_EATING_INSECT, **itr, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15s);
+                break;
+            }
+            case EVENT_GAUNTLET_PHASE2:
+                _instance->SetData(DATA_PUTRICIDE_TRAP_STATE, DONE);
+                me->RemoveAllAuras();
+                me->RemoveAllDynObjects();
+                break;
+            default:
+                break;
+        }
+    }
+
+private:
+    SummonList _summons;
+    InstanceScript* _instance;
+    EventMap _events;
+};
+
+class at_icc_putricide_trap : public AreaTriggerScript
+{
+public:
+    at_icc_putricide_trap() : AreaTriggerScript("at_icc_putricide_trap") {}
+
+    bool OnTrigger(Player* player, AreaTriggerEntry const* /*areaTrigger*/) override
+    {
+        if (InstanceScript* instance = player->GetInstanceScript())
+            if (instance->GetBossState(DATA_FESTERGUT) == DONE &&
+                instance->GetBossState(DATA_ROTFACE) == DONE &&
+                instance->GetData(DATA_PUTRICIDE_TRAP_STATE) == NOT_STARTED)
+                if (Creature* trap = ObjectAccessor::GetCreature(*player, instance->GetGuidData(NPC_PUTRICADES_TRAP)))
+                    trap->AI()->DoAction(ACTION_START_GAUNTLET);
+
+        return true;
+    }
+};
+
+class at_icc_gauntlet_event : public AreaTriggerScript
+{
+public:
+    at_icc_gauntlet_event() : AreaTriggerScript("at_icc_gauntlet_event") {}
+
+    bool OnTrigger(Player* player, AreaTriggerEntry const* /*areaTrigger*/) override
+    {
+        if (InstanceScript* instance = player->GetInstanceScript())
+            if (instance->GetData(DATA_SINDRAGOSA_GAUNTLET) == NOT_STARTED)
+                if (Creature* gauntlet = ObjectAccessor::GetCreature(*player, instance->GetGuidData(DATA_SINDRAGOSA_GAUNTLET)))
+                    gauntlet->AI()->DoAction(ACTION_START_GAUNTLET);
+        return true;
+    }
+};
+
+class npc_icc_gauntlet_controller : public CreatureScript
+{
+public:
+    npc_icc_gauntlet_controller() : CreatureScript("npc_icc_gauntlet_controller") {}
+
+    struct npc_icc_gauntlet_controllerAI : public NullCreatureAI
+    {
+        npc_icc_gauntlet_controllerAI(Creature* creature) : NullCreatureAI(creature), summons(me)
+        {
+            instance = creature->GetInstanceScript();
+        }
+
+        SummonList summons;
+        InstanceScript* instance;
+        EventMap events;
+
+        void ScheduleBroodlings()
+        {
+            for (uint8 i = 0; i < 30; ++i)
+                events.ScheduleEvent(EVENT_SUMMON_BROODLING, Milliseconds(10000 + i * 350));
+        }
+
+        void SummonBroodling()
+        {
+            float dist = frand(18.0f, 39.0f);
+            float o = rand_norm() * 2 * M_PI;
+            if (Creature* broodling = me->SummonCreature(NPC_NERUBAR_BROODLING, me->GetPositionX() + cos(o) * dist, me->GetPositionY() + std::sin(o) * dist, 250.0f, Position::NormalizeOrientation(o - M_PI)))
+            {
+                broodling->CastSpell(broodling, SPELL_WEB_BEAM2);
+                MoveLand(broodling);
+            }
+        }
+
+        void SummonFrostwardens()
+        {
+            for (uint8 i = 0; i < 3; ++i)
+            {
+                me->SummonCreature(i == 1 ? NPC_FROSTWARDEN_SORCERESS : NPC_FROSTWARDEN_WARRIOR, 4173.94f + i * 7.0f, 2409.15f, 211.033f, 1.56f);
+                me->SummonCreature(i == 1 ? NPC_FROSTWARDEN_SORCERESS : NPC_FROSTWARDEN_WARRIOR, 4173.94f + i * 7.0f, 2556.71f, 211.033f, 4.712f);
+            }
+        }
+
+        void SummonSpiders()
+        {
+            me->SummonCreature(NPC_NERUBAR_CHAMPION, 4207.30f, 2532.00f, 256.0f, 4.253f);
+            me->SummonCreature(NPC_NERUBAR_WEBWEAVER, 4228.79f, 2510.36f, 256.0f, 3.577f);
+            me->SummonCreature(NPC_NERUBAR_CHAMPION, 4228.34f, 2458.20f, 256.0f, 2.642f);
+            me->SummonCreature(NPC_NERUBAR_WEBWEAVER, 4207.54f, 2437.18f, 256.0f, 2.073f);
+            me->SummonCreature(NPC_NERUBAR_CHAMPION, 4156.20f, 2436.80f, 256.0f, 1.083f);
+            me->SummonCreature(NPC_NERUBAR_WEBWEAVER, 4133.50f, 2459.28f, 256.0f, 0.483f);
+            me->SummonCreature(NPC_NERUBAR_CHAMPION, 4134.28f, 2509.71f, 256.0f, 5.788f);
+            me->SummonCreature(NPC_NERUBAR_WEBWEAVER, 4156.29f, 2532.19f, 256.0f, 5.187f);
+        }
+
+        void SpidersMoveDown()
+        {
+            for (SummonList::const_iterator itr = summons.begin(); itr != summons.end(); ++itr)
+                if (Creature* spider = ObjectAccessor::GetCreature(*me, *itr))
+                    if (spider->GetPositionZ() > 220.0f)
+                    {
+                        spider->CastSpell(spider, SPELL_WEB_BEAM2);
+                        MoveLand(spider);
+                    }
+        }
+
+        void DoAction(int32 param) override
+        {
+            if (param == ACTION_START_GAUNTLET)
+            {
+                Talk(SAY_INIT);
+                me->setActive(true);
+                events.Reset();
+                events.SetPhase(0);
+                events.ScheduleEvent(EVENT_CHECK_FIGHT, 1s);
+                events.ScheduleEvent(EVENT_GAUNTLET_PHASE1, 0ms);
+                instance->SetData(DATA_SINDRAGOSA_GAUNTLET, IN_PROGRESS);
+            }
+        }
+
+        void Reset() override
+        {
+            events.Reset();
+            summons.DespawnAll();
+            if (instance->GetData(DATA_SINDRAGOSA_GAUNTLET) != DONE)
+            {
+                instance->SetData(DATA_SINDRAGOSA_GAUNTLET, NOT_STARTED);
+                SummonSpiders();
+            }
+        }
+
+        void JustReachedHome() override
+        {
+            me->setActive(false);
+        }
+
+        void JustDied(Unit*) override
+        {
+            instance->SetData(DATA_SINDRAGOSA_GAUNTLET, DONE);
+        }
+
+        void JustSummoned(Creature* summon) override
+        {
+            summons.Summon(summon);
+            if (summon->GetPositionZ() > 220.0f)
+            {
+                summon->SetDisableGravity(true);
+                summon->SetWalk(true);
+                summon->SetEmoteState(EMOTE_STATE_CUSTOM_SPELL_03);
+            }
+        }
+
+        void SummonedCreatureDies(Creature* summon, Unit*) override
+        {
+            summons.Despawn(summon);
+            if (summon->GetEntry() != NPC_NERUBAR_BROODLING && GetSummonListEntryCount(NPC_NERUBAR_BROODLING) == summons.size())
+            {
+                if (events.GetPhaseMask() == 0)
+                {
+                    events.SetPhase(1);
+                    events.ScheduleEvent(EVENT_GAUNTLET_PHASE2, 0ms);
+                }
+                else if (events.GetPhaseMask() == 1)
+                {
+                    events.SetPhase(2);
+                    events.ScheduleEvent(EVENT_GAUNTLET_PHASE3, 0ms);
+                }
+                else
+                    me->KillSelf();
+            }
+        }
+
+        void UpdateAI(uint32 diff) override
+        {
+            events.Update(diff);
+
+            switch (events.ExecuteEvent())
+            {
+            case EVENT_CHECK_FIGHT:
+            {
+                Map::PlayerList const& pList = me->GetMap()->GetPlayers();
+                for (Map::PlayerList::const_iterator itr = pList.begin(); itr != pList.end(); ++itr)
+                {
+                    if (me->GetDistance(itr->GetSource()) > 100.0f || !itr->GetSource()->IsAlive() || itr->GetSource()->IsGameMaster())
+                        continue;
+
+                    events.ScheduleEvent(EVENT_CHECK_FIGHT, 1s);
+                    return;
+                }
+
+                CreatureAI::EnterEvadeMode();
+                return;
+            }
+            case EVENT_GAUNTLET_PHASE1:
+                ScheduleBroodlings();
+                SpidersMoveDown();
+                break;
+            case EVENT_GAUNTLET_PHASE2:
+                ScheduleBroodlings();
+                SummonFrostwardens();
+                break;
+            case EVENT_GAUNTLET_PHASE3:
+                ScheduleBroodlings();
+                SummonSpiders();
+                SpidersMoveDown();
+                break;
+            case EVENT_SUMMON_BROODLING:
+                SummonBroodling();
+                break;
+            }
+        }
+
+    private:
+        uint32 GetSummonListEntryCount(uint32 entry) const
+        {
+            uint32 count = 0;
+            for (SummonList::const_iterator i = summons.begin(); i != summons.end(); ++i)
+            {
+                Creature* summon = ObjectAccessor::GetCreature(*me, *i);
+                if (summon && summon->GetEntry() == entry)
+                    ++count;
+            }
+
+            return count;
+        }
+
+        void MoveLand(Creature* spider)
+        {
+            float x, y, z;
+            spider->GetPosition(x, y);
+            z = 213.03f;
+            spider->SetHomePosition(x, y, z, spider->GetOrientation());
+
+            spider->GetMotionMaster()->MoveLand(POINT_LAND, spider->GetHomePosition(), me->GetSpeed(MOVE_WALK) * 1.8f);
+            spider->SetEmoteState(EMOTE_ONESHOT_NONE);
+        }
+    };
+
+    CreatureAI* GetAI(Creature* creature) const override
+    {
+        return GetIcecrownCitadelAI<npc_icc_gauntlet_controllerAI>(creature);
+    }
+};
+
+// 37501
+struct npc_icc_nerubar_champion : public ScriptedAI
+{
+    npc_icc_nerubar_champion(Creature* creature) : ScriptedAI(creature) {}
+
+    void Reset() override
+    {
+        me->SetImmuneToAll(true);
+        me->SetUnitFlag(UNIT_FLAG_UNINTERACTIBLE);
+
+        _events.Reset();
+        _events.ScheduleEvent(EVENT_CAST_RUSH, 1s);
+    }
+
+    void UpdateAI(uint32 diff) override
+    {
+        if (!UpdateVictim())
+            return;
+
+        _events.Update(diff);
+
+        if (me->HasUnitState(UNIT_STATE_CASTING))
+            return;
+
+        while (uint32 eventId = _events.ExecuteEvent())
+        {
+            switch (eventId)
+            {
+            case EVENT_CAST_RUSH:
+                DoCastVictim(SPELL_RUSH);
+                _events.ScheduleEvent(EVENT_CAST_RUSH, 2000ms, 2500ms);
+                break;
+            default:
+                break;
+            }
+        }
+
+        DoMeleeAttackIfReady();
+    }
+
+    void MovementInform(uint32 /*type*/, uint32 id) override
+    {
+        if (id == POINT_LAND)
+        {
+            me->SetImmuneToAll(false);
+            me->RemoveUnitFlag(UNIT_FLAG_UNINTERACTIBLE);
+            me->SetDisableGravity(false);
+            me->SetCanFly(false);
+            DoZoneInCombat();
+        }
+    }
+
+private:
+    EventMap _events;
+
+    enum Data
+    {
+        SPELL_RUSH = 71801,
+
+        EVENT_CAST_RUSH = 1,
+    };
+};
+
+// 37502
+struct npc_icc_nerubar_webweaver : public ScriptedAI
+{
+    npc_icc_nerubar_webweaver(Creature* creature) : ScriptedAI(creature) {}
+
+    void Reset() override
+    {
+        me->SetImmuneToAll(true);
+        me->SetUnitFlag(UNIT_FLAG_UNINTERACTIBLE);
+
+        _events.Reset();
+        _events.ScheduleEvent(EVENT_CAST_CRYPT_SCARABS, 1s);
+    }
+
+    void UpdateAI(uint32 diff) override
+    {
+        if (!UpdateVictim())
+            return;
+
+        _events.Update(diff);
+
+        if (me->HasUnitState(UNIT_STATE_CASTING))
+            return;
+
+        while (uint32 eventId = _events.ExecuteEvent())
+        {
+            switch (eventId)
+            {
+            case EVENT_CAST_CRYPT_SCARABS:
+                DoCastVictim(SPELL_CRYPT_SCARABS);
+                _events.ScheduleEvent(EVENT_CAST_CRYPT_SCARABS, 2000ms, 2500ms);
+                break;
+            default:
+                break;
+            }
+        }
+
+        DoMeleeAttackIfReady();
+    }
+
+    void MovementInform(uint32 /*type*/, uint32 id) override
+    {
+        if (id == POINT_LAND)
+        {
+            me->RemoveAura(SPELL_WEB_BEAM2);
+            me->CastStop();
+            me->SetImmuneToAll(false);
+            me->RemoveUnitFlag(UNIT_FLAG_UNINTERACTIBLE);
+            me->SetDisableGravity(false);
+            me->SetCanFly(false);
+            DoZoneInCombat();
+        }
+    }
+
+private:
+    EventMap _events;
+
+    enum Data
+    {
+        SPELL_CRYPT_SCARABS = 71326,
+
+        EVENT_CAST_CRYPT_SCARABS = 1,
+    };
+};
+
+// 37232
+struct npc_icc_nerubar_broodling : public ScriptedAI
+{
+    npc_icc_nerubar_broodling(Creature* creature) : ScriptedAI(creature) {}
+
+    void Reset() override
+    {
+        me->SetImmuneToAll(true);
+        me->SetUnitFlag(UNIT_FLAG_UNINTERACTIBLE);
+    }
+
+    void JustReachedHome() override
+    {
+        if (InstanceScript* instance = me->GetInstanceScript())
+        {
+            if (instance->GetData(DATA_SINDRAGOSA_GAUNTLET) == DONE)
+            {
+                me->DespawnOrUnsummon();
+                return;
+            }
+        }
+    }
+
+    void MovementInform(uint32 /*type*/, uint32 id) override
+    {
+        if (id == POINT_LAND)
+        {
+            me->RemoveAura(SPELL_WEB_BEAM2);
+            me->CastStop();
+            me->SetImmuneToAll(false);
+            me->RemoveUnitFlag(UNIT_FLAG_UNINTERACTIBLE);
+            me->SetDisableGravity(false);
+            me->SetCanFly(false);
+            DoZoneInCombat();
+        }
+    }
+};
+
+class spell_icc_geist_alarm : public SpellScript
+{
+    PrepareSpellScript(spell_icc_geist_alarm);
+
+    void HandleEvent(SpellEffIndex effIndex)
+    {
+        PreventHitDefaultEffect(effIndex);
+
+        GameObject* caster = GetGObjCaster();
+        if (!caster)
+            return;
+
+        InstanceScript* instance = caster->GetInstanceScript();
+        if (!instance)
+            return;
+
+        Position p = { 4356.77f, 2971.90f, 360.52f, M_PI / 2 };
+
+        if (Creature* l = instance->instance->SummonCreature(NPC_VENGEFUL_FLESHREAPER, p))
+        {
+            bool hasTarget = false;
+            Unit* target = nullptr;
+
+            if ((target = l->SelectNearestTarget(20.0f)))
+            {
+                hasTarget = true;
+            }
+            else
+            {
+                target = l->SelectNearestTarget(120.0f);
+
+                l->GetMotionMaster()->MoveJump(
+                    l->GetPositionX(),
+                    l->GetPositionY() + 55.0f,
+                    l->GetPositionZ(),
+                    l->GetOrientation(),
+                    20.0f,
+                    6.0f);
+            }
+
+            l->AI()->Talk(0);
+
+            if (target)
+                l->AI()->AttackStart(target);
+
+            for (uint8 i = 0; i < 5; ++i)
+            {
+                float dist = 2.0f + rand_norm() * 4.0f;
+                float angle = rand_norm() * 2 * M_PI;
+
+                Position pos(p);
+                l->MovePosition(pos, dist, angle);
+
+                if (Creature* c = l->SummonCreature(
+                    NPC_VENGEFUL_FLESHREAPER,
+                    pos,
+                    TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,
+                    30min))
+                {
+                    if (l->GetVictim())
+                        c->AI()->AttackStart(l->GetVictim());
+
+                    if (!hasTarget)
+                    {
+                        c->GetMotionMaster()->MoveJump(
+                            c->GetPositionX(),
+                            c->GetPositionY() + 55.0f,
+                            c->GetPositionZ(),
+                            c->GetOrientation(),
+                            20.0f,
+                            6.0f);
+                    }
+                }
+            }
+        }
+    }
+
+    void Register() override
+    {
+        OnEffectHit += SpellEffectFn(
+            spell_icc_geist_alarm::HandleEvent,
+            EFFECT_2,
+            SPELL_EFFECT_SEND_EVENT);
+    }
+};
+
+#define VENGEFUL_WP_COUNT 8
+
+const Position VengefulWP[VENGEFUL_WP_COUNT] =
+{
+    { 4432.21f, 3041.50f, 372.783f, 0.0f },
+    { 4408.67f, 3041.81f, 372.480f, 0.0f },
+    { 4370.50f, 3042.00f, 372.800f, 0.0f },
+    { 4370.37f, 3059.16f, 371.690f, 0.0f },
+    { 4342.53f, 3058.97f, 371.680f, 0.0f },
+    { 4342.51f, 3041.24f, 372.800f, 0.0f },
+    { 4304.75f, 3041.57f, 372.430f, 0.0f },
+    { 4281.30f, 3041.77f, 372.780f, 0.0f }
+};
+
+class npc_icc_vengeful_fleshreaper : public CreatureScript
+{
+public:
+    npc_icc_vengeful_fleshreaper() : CreatureScript("npc_icc_vengeful_fleshreaper") {}
+
+    struct npc_icc_vengeful_fleshreaperAI : public ScriptedAI
+    {
+        npc_icc_vengeful_fleshreaperAI(Creature* creature) : ScriptedAI(creature)
+        {
+            currPipeWP = VENGEFUL_WP_COUNT;
+            forward = true;
+            needMove = false;
+
+            Position homePos = me->GetHomePosition();
+
+            if (homePos.GetPositionZ() > 365.0f)
+            {
+                currPipeWP = (homePos.GetPositionX() > 4400.0f ? 0 : 1);
+                needMove = true;
+            }
+        }
+
+        uint8 currPipeWP;
+        bool forward;
+        bool needMove;
+        EventMap events;
+
+        void Reset() override
+        {
+            events.Reset();
+
+            // Boden = Rennen, Rohr = Gehen
+            me->SetWalk(currPipeWP != VENGEFUL_WP_COUNT);
+
+            events.ScheduleEvent(1, 3s, 6s);
+
+            if (currPipeWP != VENGEFUL_WP_COUNT)
+                needMove = true;
+        }
+
+        void JustReachedHome() override
+        {
+            if (currPipeWP != VENGEFUL_WP_COUNT)
+                needMove = true;
+
+            me->SetWalk(currPipeWP != VENGEFUL_WP_COUNT);
+        }
+
+        void MovementInform(uint32 type, uint32 id) override
+        {
+            // Sprung vom Rohr zum Spieler beendet
+            if (type == EFFECT_MOTION_TYPE && id == 2)
+            {
+                Unit* victim = me->GetVictim();
+
+                if (victim &&
+                    !victim->HasAura(71163) &&
+                    me->IsValidAttackTarget(victim) &&
+                    me->GetDistance(victim) <= 5.0f)
+                {
+                    me->CastSpell(victim, 71163, false);
+                }
+
+                return;
+            }
+
+            if (currPipeWP != VENGEFUL_WP_COUNT &&
+                (type == POINT_MOTION_TYPE || type == EFFECT_MOTION_TYPE) &&
+                id)
+            {
+                needMove = true;
+            }
+        }
+
+        void MoveInLineOfSight(Unit* who) override
+        {
+            if (currPipeWP == VENGEFUL_WP_COUNT)
+            {
+                ScriptedAI::MoveInLineOfSight(who);
+            }
+            else
+            {
+                if (!me->IsInCombat() &&
+                    who->IsPlayer() &&
+                    me->GetExactDist2dSq(who) < 25.0f * 25.0f &&
+                    me->CanSeeOrDetect(who) &&
+                    me->IsValidAttackTarget(who))
+                {
+                    AttackStart(who);
+                }
+            }
+        }
+
+        void AttackStart(Unit* who) override
+        {
+            ScriptedAI::AttackStart(who);
+
+            if (currPipeWP != VENGEFUL_WP_COUNT)
+            {
+                Position pos = who->GetPosition();
+
+                float angle = std::atan2(
+                    me->GetPositionY() - who->GetPositionY(),
+                    me->GetPositionX() - who->GetPositionX());
+
+                float dist = 3.0f;
+
+                pos.m_positionX += std::cos(angle) * dist;
+                pos.m_positionY += std::sin(angle) * dist;
+
+                me->GetMotionMaster()->MoveJump(
+                    pos.GetPositionX(),
+                    pos.GetPositionY(),
+                    pos.GetPositionZ(),
+                    me->GetOrientation(),
+                    10.0f,
+                    6.0f,
+                    2);
+            }
+        }
+
+        void UpdateAI(uint32 diff) override
+        {
+            if (needMove)
+            {
+                needMove = false;
+
+                if (forward)
+                {
+                    if (currPipeWP == VENGEFUL_WP_COUNT - 1)
+                    {
+                        forward = false;
+                        --currPipeWP;
+                    }
+                    else
+                        ++currPipeWP;
+                }
+                else
+                {
+                    if (currPipeWP == 0)
+                    {
+                        forward = true;
+                        ++currPipeWP;
+                    }
+                    else
+                        --currPipeWP;
+                }
+
+                me->SetHomePosition(
+                    VengefulWP[currPipeWP].GetPositionX(),
+                    VengefulWP[currPipeWP].GetPositionY(),
+                    VengefulWP[currPipeWP].GetPositionZ(),
+                    me->GetOrientation());
+
+                if ((forward && currPipeWP == 4) ||
+                    (!forward && currPipeWP == 3))
+                {
+                    me->GetMotionMaster()->MoveJump(
+                        VengefulWP[currPipeWP].GetPositionX(),
+                        VengefulWP[currPipeWP].GetPositionY(),
+                        VengefulWP[currPipeWP].GetPositionZ(),
+                        me->GetOrientation(),
+                        10.0f,
+                        6.0f,
+                        1);
+                }
+                else
+                {
+                    me->GetMotionMaster()->MovePoint(
+                        1,
+                        VengefulWP[currPipeWP].GetPositionX(),
+                        VengefulWP[currPipeWP].GetPositionY(),
+                        VengefulWP[currPipeWP].GetPositionZ());
+                }
+            }
+
+            if (!UpdateVictim())
+                return;
+
+            events.Update(diff);
+
+            if (me->HasUnitState(UNIT_STATE_CASTING))
+                return;
+
+            switch (events.ExecuteEvent())
+            {
+            case 1:
+                events.Repeat(3s);
+                break;
+            }
+
+            DoMeleeAttackIfReady();
+        }
+    };
+
+    CreatureAI* GetAI(Creature* creature) const override
+    {
+        return GetIcecrownCitadelAI<npc_icc_vengeful_fleshreaperAI>(creature);
+    }
+};
+
 void AddSC_icecrown_citadel()
 {
     // Creatures
     RegisterIcecrownCitadelCreatureAI(npc_highlord_tirion_fordring_lh);
     RegisterIcecrownCitadelCreatureAI(npc_rotting_frost_giant);
     RegisterIcecrownCitadelCreatureAI(npc_frost_freeze_trap);
+    RegisterCreatureAI(npc_icc_putricades_trap);
     RegisterIcecrownCitadelCreatureAI(npc_alchemist_adrianna);
     new npc_arthas_teleport_visual();
     RegisterIcecrownCitadelCreatureAI(npc_entrance_faction_leader);
@@ -1624,6 +2436,7 @@ void AddSC_icecrown_citadel()
     RegisterIcecrownCitadelCreatureAI(npc_darkfallen_advisor);
     RegisterIcecrownCitadelCreatureAI(npc_darkfallen_tactician);
     RegisterIcecrownCitadelCreatureAI(npc_icc_nerubar_broodkeeper);
+    new npc_icc_vengeful_fleshreaper();
 
     // GameObjects
     RegisterGameObjectAI(go_empowering_blood_orb);
@@ -1639,10 +2452,18 @@ void AddSC_icecrown_citadel()
     RegisterSpellScript(spell_frost_giant_death_plague);
     RegisterSpellScript(spell_icc_harvest_blight_specimen);
     RegisterSpellScript(spell_icc_soul_missile);
+    RegisterSpellScript(spell_icc_geist_alarm);
 
     // AreaTriggers
     new at_icc_saurfang_portal();
     new at_icc_shutdown_traps();
     new at_icc_start_blood_quickening();
     new at_icc_nerubar_broodkeeper();
+    new at_icc_gauntlet_event();
+    new at_icc_putricide_trap();
+    new npc_icc_gauntlet_controller();
+
+    RegisterIcecrownCitadelCreatureAI(npc_icc_nerubar_champion);
+    RegisterIcecrownCitadelCreatureAI(npc_icc_nerubar_webweaver);
+    RegisterIcecrownCitadelCreatureAI(npc_icc_nerubar_broodling);
 }

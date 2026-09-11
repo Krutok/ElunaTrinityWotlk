@@ -331,7 +331,7 @@ struct boss_sindragosa : public BossAI
             Milliseconds moveTime = Milliseconds(uint64(me->GetExactDist(&SindragosaFlyPos) / (me->GetSpeed(MOVE_FLIGHT) * 0.001f)));
             me->m_Events.AddEvent(new FrostwyrmLandEvent(*me, SindragosaLandPos), me->m_Events.CalculateTime(moveTime + 250ms));
             me->GetMotionMaster()->MovePoint(POINT_FROSTWYRM_FLY_IN, SindragosaFlyPos);
-            DoCastSelf(SPELL_SINDRAGOSA_S_FURY);
+            // DoCastSelf(SPELL_SINDRAGOSA_S_FURY);
         }
     }
 

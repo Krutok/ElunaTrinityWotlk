@@ -54,7 +54,9 @@ enum ICSharedSpells
 
     // ICC Buffs
     SPELL_HELLSCREAMS_WARSONG           = 73822,
-    SPELL_STRENGHT_OF_WRYNN             = 73828
+    SPELL_STRENGHT_OF_WRYNN             = 73828,
+
+    SPELL_OUTRO_TELEPORT_VISUAL         = 51347,
 };
 
 enum ICTeleporterSpells
@@ -121,7 +123,12 @@ enum ICDataTypes
     DATA_BLOOD_PRINCE_COUNCIL_INTRO    = 43,
     DATA_SINDRAGOSA_INTRO              = 44,
     DATA_FACTION_BUFF                  = 45, // used by conditions
-    DATA_NERUBAR_BROODKEEPER_EVENT     = 46
+    DATA_NERUBAR_BROODKEEPER_EVENT     = 46,
+    DATA_SAURFANG_CAMP                 = 47,
+    DATA_SAURFANG_OUTRO_ZEPPELIN       = 48,
+    DATA_SAURFANG_OUTRO_PORTAL         = 49,
+    DATA_SINDRAGOSA_GAUNTLET           = 50,
+    DATA_PUTRICIDE_TRAP_STATE          = 51,
 };
 
 enum ICCreaturesIds
@@ -219,6 +226,13 @@ enum ICCreaturesIds
     NPC_SE_KOR_KRON_REAVER                      = 37920,
     NPC_SE_SKYBREAKER_MARINE                    = 37830,
     NPC_FROST_FREEZE_TRAP                       = 37744,
+    // Victory camp raised on Deathbringer's Rise once Saurfang is defeated
+    NPC_CAMP_ALLIANCE_MASON                     = 37902,
+    NPC_CAMP_SHELY_STEELBOWELS                  = 37903,    // Alliance blacksmith
+    NPC_CAMP_BRAZIE_GETZ                        = 37904,    // Alliance general goods
+    NPC_CAMP_WARSONG_PEON                       = 37930,
+    NPC_CAMP_APOTHECARY_CANDITH_TOMAS           = 37935,    // Horde general goods
+    NPC_CAMP_MORGAN_DAYBLAZE                    = 37936,    // Horde blacksmith
 
     // Festergut
     NPC_FESTERGUT                               = 36626,
@@ -234,6 +248,8 @@ enum ICCreaturesIds
 
     // Professor Putricide
     NPC_PROFESSOR_PUTRICIDE                     = 36678,
+    NPC_PUTRICADES_TRAP                          = 38879,
+    NPC_FLASH_EATING_INSECT                      = 37782,
     NPC_ABOMINATION_WING_MAD_SCIENTIST_STALKER  = 37824,
     NPC_GROWING_OOZE_PUDDLE                     = 37690,
     NPC_GAS_CLOUD                               = 37562,
@@ -312,6 +328,14 @@ enum ICCreaturesIds
     NPC_FROST_BOMB                              = 37186,
     NPC_ICE_TOMB                                = 36980,
 
+    // Sindragosa Gauntlet
+    NPC_SINDRAGOSA_GAUNTLET                     = 37503,
+    NPC_NERUBAR_CHAMPION                        = 37501,
+    NPC_NERUBAR_WEBWEAVER                       = 37502,
+    NPC_NERUBAR_BROODLING                       = 37232,
+    NPC_FROSTWARDEN_SORCERESS                   = 37229,
+    NPC_FROSTWARDEN_WARRIOR                     = 37228,
+
     // The Lich King
     NPC_THE_LICH_KING                           = 36597,
     NPC_HIGHLORD_TIRION_FORDRING_LK             = 38995,
@@ -334,7 +358,8 @@ enum ICCreaturesIds
     NPC_SHADOW_TRAP                             = 39137,
 
     // Generic
-    NPC_INVISIBLE_STALKER                       = 30298
+    NPC_INVISIBLE_STALKER                       = 30298,
+    NPC_VENGEFUL_FLESHREAPER                    = 37038
 };
 
 enum ICGameObjectsIds
@@ -347,6 +372,23 @@ enum ICGameObjectsIds
     GO_SCOURGE_TRANSPORTER_DEATHBRINGER     = 202244,
     GO_SCOURGE_TRANSPORTER_ORATORY          = 202245,
     GO_SCOURGE_TRANSPORTER_SINDRAGOSA       = 202246,
+
+    // Victory camp. Forge, bonfire and anvil are the Horde camp's and have spawn rows - the script
+    // only raises them; everything else, the Alliance camp included, it summons.
+    GO_SAURFANG_CAMP_FORGE                  = 1685,
+    GO_SAURFANG_CAMP_BONFIRE                = 187852,
+    GO_SAURFANG_CAMP_ANVIL                  = 191345,
+    GO_SAURFANG_CAMP_TENT_A                 = 201868,
+    GO_SAURFANG_CAMP_TENT_H1                = 201886,
+    GO_SAURFANG_CAMP_TENT_H2                = 201887,
+    GO_SAURFANG_CAMP_TELEPORTER_A           = 201858,
+    GO_SAURFANG_CAMP_TELEPORTER_H           = 201880,
+    GO_SAURFANG_CAMP_BANNER_A               = 201869,
+    GO_SAURFANG_CAMP_ANVIL_A                = 23303,    // the Alliance camp uses its own anvil
+    // Zeppelin is a MO_TRANSPORT (taxi path 1834) created through TransportMgr, like the gunships.
+    // The portal is a SPELLCASTER, spawned non-selectable so players cannot click its spell.
+    GO_SAURFANG_OUTRO_ZEPPELIN              = 201834,
+    GO_SAURFANG_OUTRO_PORTAL                = 193207,
 
     // Lower Spire Trash
     GO_SPIRIT_ALARM_1                       = 201814,
@@ -392,6 +434,8 @@ enum ICGameObjectsIds
     GO_SCIENTIST_AIRLOCK_DOOR_COLLISION     = 201612,
     GO_SCIENTIST_AIRLOCK_DOOR_ORANGE        = 201613,
     GO_SCIENTIST_AIRLOCK_DOOR_GREEN         = 201614,
+    GO_OOZE_RELEASE_VALVE                   = 201615,
+    GO_GAS_RELEASE_VALVE                    = 201616,
     GO_DOODAD_ICECROWN_ORANGETUBES02        = 201617,
     GO_DOODAD_ICECROWN_GREENTUBES02         = 201618,
     GO_SCIENTIST_ENTRANCE                   = 201372,

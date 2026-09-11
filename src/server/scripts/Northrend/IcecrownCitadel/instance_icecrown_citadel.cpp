@@ -32,6 +32,12 @@
 #include "WorldStatePackets.h"
 #include <unordered_set>
 
+enum PutricideValveState : uint8
+{
+    PUTRICIDE_VALVE_FESTERGUT = 1,
+    PUTRICIDE_VALVE_ROTFACE   = 2
+};
+
 enum EventIds
 {
     EVENT_PLAYERS_GUNSHIP_SPAWN     = 22663,
@@ -40,6 +46,8 @@ enum EventIds
     EVENT_ENEMY_GUNSHIP_COMBAT      = 22860,
     EVENT_ENEMY_GUNSHIP_DESPAWN     = 22861,
     EVENT_QUAKE                     = 23437,
+    EVENT_FESTERGUT_VALVE_USED      = 23438,
+    EVENT_ROTFACE_VALVE_USED        = 23426,
     EVENT_SECOND_REMORSELESS_WINTER = 23507,
     EVENT_TELEPORT_TO_FROSTMOURNE   = 23617
 };
@@ -49,7 +57,24 @@ enum TimedEvents
     EVENT_UPDATE_EXECUTION_TIME = 1,
     EVENT_QUAKE_SHATTER         = 2,
     EVENT_REBUILD_PLATFORM      = 3,
-    EVENT_RESPAWN_GUNSHIP       = 4
+    EVENT_RESPAWN_GUNSHIP       = 4,
+    EVENT_SPAWN_SAURFANG_EVENT  = 6,
+    EVENT_SAURFANG_ZEPPELIN_DOCK = 7,
+    EVENT_SAURFANG_OUTRO_TIMEOUT = 8,
+    EVENT_SAURFANG_ZEPPELIN_REMOVE = 9,
+    // The camp is built on screen, stage by stage.
+    EVENT_SAURFANG_CAMP_TELEPORTERS = 10,
+    EVENT_SAURFANG_CAMP_WORKERS     = 11,
+    EVENT_SAURFANG_CAMP_TENTS       = 12,
+    EVENT_SAURFANG_CAMP_WORKERS_OUT = 13,
+    EVENT_SAURFANG_CAMP_VENDORS     = 14,
+    EVENT_SAURFANG_CAMP_SMITH_ARRIVE = 15,
+    EVENT_SAURFANG_CAMP_WORKERS_FIRST_POS = 16,
+    EVENT_SAURFANG_CAMP_WORKERS_RE_POS = 17,
+    EVENT_SAURFANG_CAMP_WORKERS_BACK = 18,
+    EVENT_SAURFANG_CAMP_VENDOR_ARRIVE = 19,
+    EVENT_SAURFANG_NPCS_RESET = 20,
+    EVENT_SAURFANG_CAMP_RESET = 21
 };
 
 enum SpawnGroups
@@ -98,7 +123,6 @@ DoorData const doorData[] =
     { GO_DOODAD_ICECROWN_ROOSTPORTCULLIS_02,  DATA_VALITHRIA_DREAMWALKER, DOOR_TYPE_SPAWN_HOLE },
     { GO_DOODAD_ICECROWN_ROOSTPORTCULLIS_03,  DATA_VALITHRIA_DREAMWALKER, DOOR_TYPE_SPAWN_HOLE },
     { GO_DOODAD_ICECROWN_ROOSTPORTCULLIS_04,  DATA_VALITHRIA_DREAMWALKER, DOOR_TYPE_SPAWN_HOLE },
-    { GO_SINDRAGOSA_ENTRANCE_DOOR,            DATA_SINDRAGOSA,            DOOR_TYPE_ROOM },
     { GO_SINDRAGOSA_SHORTCUT_ENTRANCE_DOOR,   DATA_SINDRAGOSA,            DOOR_TYPE_PASSAGE },
     { GO_SINDRAGOSA_SHORTCUT_EXIT_DOOR,       DATA_SINDRAGOSA,            DOOR_TYPE_PASSAGE },
     { GO_ICE_WALL,                            DATA_SINDRAGOSA,            DOOR_TYPE_ROOM },
@@ -133,6 +157,48 @@ Position const MuradinSpawnPos  = { -47.34549f, 2208.087f, 27.98586f, 3.106686f 
 Position const UtherSpawnPos    = { -26.58507f, 2211.524f, 30.19898f, 3.124139f };
 Position const SylvanasSpawnPos = { -41.45833f, 2222.891f, 27.98586f, 3.647738f };
 
+// The camps differ: Horde tents from the retail sniff, Alliance ones measured in game and much
+// closer together, with their own forge, anvil and banner by the second tent, and no bonfire.
+Position const SaurfangCampTentPosH[2] =
+{
+    { -532.86456f, 2229.0088f, 539.2921f, 2.530723f },
+    { -524.55730f, 2238.0920f, 539.2920f, 0.13962449f }
+};
+
+Position const SaurfangCampTentPosA[2] =
+{
+    { -531.84283f, 2230.6853f, 539.2918f, 5.625422f },
+    { -528.76000f, 2234.7815f, 539.2918f, 5.609714f }
+};
+
+Position const SaurfangWorkerFirstPos = { -544.7736f, 2220.677f, 539.29114f, 0.156871f };
+
+Position const SaurfangCampBannerPosA   = { -533.05540f, 2234.6326f, 539.2918f, 5.621495f };
+Position const SaurfangCampBlacksmithPosA   = { -526.41502f, 2232.9104f, 539.2918f, 5.609714f };
+Position const SaurfangCampGeneralGoodsPosA = { -529.46875f, 2228.8513f, 539.2918f, 5.625422f };
+Position const SaurfangCampAnvilPosA    = { -525.71640f, 2236.1909f, 539.2918f, 5.609714f };
+Position const SaurfangCampForgePosA    = { -528.06140f, 2238.0620f, 539.2918f, 5.609714f };
+// Detour: both Alliance vendors round the south side, on separate corners.
+Position const SaurfangCampSmithDetourPosA  = { -525.50000f, 2227.5000f, 539.2918f, 0.0f };
+Position const SaurfangCampGoodsDetourPosA  = { -528.50000f, 2225.0000f, 539.2918f, 0.0f };
+
+Position const SaurfangCampTeleporterPos[2] =
+{
+    { -560.41840f, 2202.7500f, 539.28534f, 0.0f },
+    { -560.29517f, 2220.2153f, 539.28540f, 0.0f }
+};
+
+Position const SaurfangCampBlacksmithPos    = { -520.94100f, 2233.1077f, 539.3463f, 5.3756142f };
+Position const SaurfangCampGeneralGoodsPos  = { -530.3813f, 2227.3657f, 539.2917f, 5.4628806f };
+// Travel time for the ~41y between a teleporter pad and its tent site.
+Seconds const SaurfangCampWorkerTravel = 7s;
+// The Horde smith would otherwise walk straight through the bonfire.
+Position const SaurfangCampSmithDetourPos   = { -529.00000f, 2233.0000f, 539.2920f, 0.0f };
+Position const SaurfangOutroPortalPos       = { -523.55963f, 2238.8900f, 539.29070f, 6.1102815f };
+// Where the zeppelin comes to rest; it is frozen on arrival.
+Position const SaurfangOutroZeppelinPos     = { -527.66110f, 2254.6910f, 538.53300f, 0.6848107f };
+float const SaurfangOutroZeppelinDockRange  = 12.0f;
+
 class instance_icecrown_citadel : public InstanceMapScript
 {
     public:
@@ -154,11 +220,18 @@ class instance_icecrown_citadel : public InstanceMapScript
                 BloodQuickeningMinutes = 0;
                 BloodPrinceIntro = 1;
                 SindragosaIntro = 1;
+                SindragosaGauntletState = NOT_STARTED;
+                _putricideTrapState = NOT_STARTED;
+                _putricideValveState = 0;
                 IsBonedEligible = true;
                 IsOozeDanceEligible = true;
                 IsNauseaEligible = true;
                 IsOrbWhispererEligible = true;
                 IsFactionBuffActive = true;
+                _saurfangCampSpawned = false;
+                _saurfangOutroRunning = false;
+                _saurfangZeppelinDocked = false;
+                _saurfangZeppelinLeaving = false;
             }
 
             // A function to help reduce the number of lines for teleporter management.
@@ -187,12 +260,42 @@ class instance_icecrown_citadel : public InstanceMapScript
 
             void OnPlayerEnter(Player* player) override
             {
+                if (SindragosaGauntletState == DONE)
+                    if (GameObject* go = instance->GetGameObject(SindragosaEntranceDoorGUID))
+                        go->SetGoState(GO_STATE_ACTIVE);
+
                 uint8 spawnGroupId = TeamInInstance == ALLIANCE ? SPAWN_GROUP_ALLIANCE_ROS : SPAWN_GROUP_HORDE_ROS;
                 if (!instance->IsSpawnGroupActive(spawnGroupId))
                     instance->SpawnGroupSpawn(spawnGroupId);
 
                 if (GetBossState(DATA_LADY_DEATHWHISPER) == DONE && GetBossState(DATA_ICECROWN_GUNSHIP_BATTLE) != DONE)
+                {
+                    if (!GunshipGUID.IsEmpty())
+                    {
+                        if (GameObject* gunship = instance->GetGameObject(GunshipGUID))
+                            gunship->AddObjectToRemoveList();
+
+                        GunshipGUID.Clear();
+                    }
+
+                    ObjectGuid enemyGunshipGUID = GetGuidData(DATA_ENEMY_GUNSHIP);
+
+                    if (!enemyGunshipGUID.IsEmpty())
+                    {
+                        if (GameObject* enemyGunship = instance->GetGameObject(enemyGunshipGUID))
+                            enemyGunship->AddObjectToRemoveList();
+                    }
+
                     SpawnGunship();
+                }
+
+                // Also covers an instance whose Gunship Battle state was set directly, which would
+                // otherwise keep them hidden for good.
+                if (GetBossState(DATA_ICECROWN_GUNSHIP_BATTLE) == DONE && !_saurfangOutroRunning)
+                    Events.ScheduleEvent(EVENT_SAURFANG_NPCS_RESET, 3s);
+
+                if (GetBossState(DATA_DEATHBRINGER_SAURFANG) == DONE && !_saurfangOutroRunning)
+                    Events.ScheduleEvent(EVENT_SAURFANG_CAMP_RESET, 3s);
 
                 if (IsFactionBuffActive)
                     DoCastSpellOnPlayer(player, TeamInInstance == ALLIANCE ? SPELL_STRENGHT_OF_WRYNN : SPELL_HELLSCREAMS_WARSONG);
@@ -234,7 +337,22 @@ class instance_icecrown_citadel : public InstanceMapScript
                         break;
                     case NPC_SE_HIGH_OVERLORD_SAURFANG:
                     case NPC_SE_MURADIN_BRONZEBEARD:
+                        // Only the static spawn is the event NPC - the Alliance outro summons another
+                        // High Overlord Saurfang, which would otherwise clobber the guid.
+                        if (creature->IsSummon())
+                            break;
+
                         DeathbringerSaurfangEventGUID = creature->GetGUID();
+                        creature->LastUsedScriptID = creature->GetScriptId();
+                        HideSaurfangEventNpc(creature);
+                        break;
+                    case NPC_SE_KOR_KRON_REAVER:
+                    case NPC_SE_SKYBREAKER_MARINE:
+                        if (creature->IsSummon())
+                            break;
+
+                        SaurfangEventGuardGUIDs.push_back(creature->GetGUID());
+                        HideSaurfangEventNpc(creature);
                         break;
                     case NPC_FESTERGUT:
                         FestergutGUID = creature->GetGUID();
@@ -244,6 +362,9 @@ class instance_icecrown_citadel : public InstanceMapScript
                         break;
                     case NPC_PROFESSOR_PUTRICIDE:
                         ProfessorPutricideGUID = creature->GetGUID();
+                        break;
+                    case NPC_PUTRICADES_TRAP:
+                        PutricadesTrapGUID = creature->GetGUID();
                         break;
                     case NPC_VOLATILE_OOZE:
                     case NPC_GAS_CLOUD:
@@ -298,6 +419,9 @@ class instance_icecrown_citadel : public InstanceMapScript
                     case NPC_GREEN_DRAGON_COMBAT_TRIGGER:
                         ValithriaTriggerGUID = creature->GetGUID();
                         break;
+                    case NPC_SINDRAGOSA_GAUNTLET:
+                        SindragosaGauntletGUID = creature->GetGUID();
+			break;
                     case NPC_SINDRAGOSA:
                         SindragosaGUID = creature->GetGUID();
                         break;
@@ -510,7 +634,13 @@ class instance_icecrown_citadel : public InstanceMapScript
                     case GO_ORATORY_OF_THE_DAMNED_ENTRANCE:
                     case GO_ORANGE_PLAGUE_MONSTER_ENTRANCE:
                     case GO_GREEN_PLAGUE_MONSTER_ENTRANCE:
+                        AddDoor(go, true);
+                        break;
                     case GO_SCIENTIST_ENTRANCE:
+                        AddDoor(go, true);
+                        _putricideEntranceDoorGUID = go->GetGUID();
+                        HandleGameObject(go->GetGUID(), _putricideTrapState == DONE, go);
+                        break;
                     case GO_CRIMSON_HALL_DOOR:
                     case GO_BLOOD_ELF_COUNCIL_DOOR:
                     case GO_BLOOD_ELF_COUNCIL_DOOR_RIGHT:
@@ -520,11 +650,14 @@ class instance_icecrown_citadel : public InstanceMapScript
                     case GO_GREEN_DRAGON_BOSS_EXIT:
                     case GO_DOODAD_ICECROWN_ROOSTPORTCULLIS_02:
                     case GO_DOODAD_ICECROWN_ROOSTPORTCULLIS_03:
-                    case GO_SINDRAGOSA_ENTRANCE_DOOR:
                     case GO_SINDRAGOSA_SHORTCUT_ENTRANCE_DOOR:
                     case GO_SINDRAGOSA_SHORTCUT_EXIT_DOOR:
                     case GO_ICE_WALL:
                         AddDoor(go, true);
+                        break;
+                    case GO_SINDRAGOSA_ENTRANCE_DOOR:
+                        SindragosaEntranceDoorGUID = go->GetGUID();
+                        go->SetGoState(SindragosaGauntletState == DONE ? GO_STATE_ACTIVE : GO_STATE_READY);
                         break;
                     // these 2 gates are functional only on 25man modes
                     case GO_DOODAD_ICECROWN_ROOSTPORTCULLIS_01:
@@ -557,6 +690,18 @@ class instance_icecrown_citadel : public InstanceMapScript
                     case GO_SAURFANG_S_DOOR:
                         DeathbringerSaurfangDoorGUID = go->GetGUID();
                         AddDoor(go, true);
+                        break;
+                    case GO_SAURFANG_CAMP_FORGE:
+                    case GO_SAURFANG_CAMP_BONFIRE:
+                    case GO_SAURFANG_CAMP_ANVIL:
+                        // Camp props belong to the aftermath; their spawn rows are unconditional, hence the despawn.
+                        SaurfangCampGUIDs.push_back(go->GetGUID());
+                        if (GetBossState(DATA_DEATHBRINGER_SAURFANG) != DONE)
+                            go->DespawnOrUnsummon(0ms, Seconds(WEEK));
+                        // The despawn is persisted, so an instance restarted after the outro comes back
+                        // with them hidden. Horde only - the Alliance camp summons its own props.
+                        else if (TeamInInstance == HORDE)
+                            go->Respawn();
                         break;
                     case GO_DEATHBRINGER_S_CACHE_10N:
                     case GO_DEATHBRINGER_S_CACHE_25N:
@@ -613,31 +758,57 @@ class instance_icecrown_citadel : public InstanceMapScript
                         break;
                     case GO_SCIENTIST_AIRLOCK_DOOR_COLLISION:
                         PutricideCollisionGUID = go->GetGUID();
-                        if (GetBossState(DATA_FESTERGUT) == DONE && GetBossState(DATA_ROTFACE) == DONE)
+                        if (_putricideTrapState == IN_PROGRESS)
+                            HandleGameObject(PutricideCollisionGUID, false, go);
+                        else if (_putricideTrapState == DONE)
+                            HandleGameObject(PutricideCollisionGUID, true, go);
+                        else if ((_putricideValveState & (PUTRICIDE_VALVE_FESTERGUT | PUTRICIDE_VALVE_ROTFACE)) == (PUTRICIDE_VALVE_FESTERGUT | PUTRICIDE_VALVE_ROTFACE))
                             HandleGameObject(PutricideCollisionGUID, true, go);
                         break;
                     case GO_SCIENTIST_AIRLOCK_DOOR_ORANGE:
                         PutricideGateGUIDs[0] = go->GetGUID();
-                        if (GetBossState(DATA_FESTERGUT) == DONE && GetBossState(DATA_ROTFACE) == DONE)
+                        if (_putricideTrapState == IN_PROGRESS)
+                            HandleGameObject(PutricideGateGUIDs[0], false, go);
+                        else if (_putricideTrapState == DONE)
                             go->SetGoState(GO_STATE_DESTROYED);
-                        else if (GetBossState(DATA_FESTERGUT) == DONE)
-                            HandleGameObject(PutricideGateGUIDs[1], false, go);
+                        else if ((_putricideValveState & (PUTRICIDE_VALVE_FESTERGUT | PUTRICIDE_VALVE_ROTFACE)) == (PUTRICIDE_VALVE_FESTERGUT | PUTRICIDE_VALVE_ROTFACE))
+                            go->SetGoState(static_cast<GOState>(2));
+                        else
+                            HandleGameObject(PutricideGateGUIDs[0], !(_putricideValveState & PUTRICIDE_VALVE_FESTERGUT), go);
                         break;
                     case GO_SCIENTIST_AIRLOCK_DOOR_GREEN:
                         PutricideGateGUIDs[1] = go->GetGUID();
-                        if (GetBossState(DATA_ROTFACE) == DONE && GetBossState(DATA_FESTERGUT) == DONE)
-                            go->SetGoState(GO_STATE_DESTROYED);
-                        else if (GetBossState(DATA_ROTFACE) == DONE)
+                        if (_putricideTrapState == IN_PROGRESS)
                             HandleGameObject(PutricideGateGUIDs[1], false, go);
+                        else if (_putricideTrapState == DONE)
+                            go->SetGoState(GO_STATE_DESTROYED);
+                        else if ((_putricideValveState & (PUTRICIDE_VALVE_FESTERGUT | PUTRICIDE_VALVE_ROTFACE)) == (PUTRICIDE_VALVE_FESTERGUT | PUTRICIDE_VALVE_ROTFACE))
+                            go->SetGoState(static_cast<GOState>(2));
+                        else
+                            HandleGameObject(PutricideGateGUIDs[1], !(_putricideValveState & PUTRICIDE_VALVE_ROTFACE), go);
+                        break;
+                    case GO_OOZE_RELEASE_VALVE:
+                        OozeReleaseValveGUID = go->GetGUID();
+                        if (GetBossState(DATA_ROTFACE) != DONE)
+                            go->SetFlag(GO_FLAG_INTERACT_COND | GO_FLAG_NOT_SELECTABLE);
+                        else
+                            go->RemoveFlag(GO_FLAG_INTERACT_COND | GO_FLAG_NOT_SELECTABLE);
+                        break;
+                    case GO_GAS_RELEASE_VALVE:
+                        GasReleaseValveGUID = go->GetGUID();
+                        if (GetBossState(DATA_FESTERGUT) != DONE)
+                            go->SetFlag(GO_FLAG_INTERACT_COND | GO_FLAG_NOT_SELECTABLE);
+                        else
+                            go->RemoveFlag(GO_FLAG_INTERACT_COND | GO_FLAG_NOT_SELECTABLE);
                         break;
                     case GO_DOODAD_ICECROWN_ORANGETUBES02:
                         PutricidePipeGUIDs[0] = go->GetGUID();
-                        if (GetBossState(DATA_FESTERGUT) == DONE)
+                        if (_putricideValveState & PUTRICIDE_VALVE_FESTERGUT)
                             HandleGameObject(PutricidePipeGUIDs[0], true, go);
                         break;
                     case GO_DOODAD_ICECROWN_GREENTUBES02:
                         PutricidePipeGUIDs[1] = go->GetGUID();
-                        if (GetBossState(DATA_ROTFACE) == DONE)
+                        if (_putricideValveState & PUTRICIDE_VALVE_ROTFACE)
                             HandleGameObject(PutricidePipeGUIDs[1], true, go);
                         break;
                     case GO_DRINK_ME:
@@ -713,7 +884,6 @@ class instance_icecrown_citadel : public InstanceMapScript
                     case GO_DOODAD_ICECROWN_ROOSTPORTCULLIS_02:
                     case GO_DOODAD_ICECROWN_ROOSTPORTCULLIS_03:
                     case GO_DOODAD_ICECROWN_ROOSTPORTCULLIS_04:
-                    case GO_SINDRAGOSA_ENTRANCE_DOOR:
                     case GO_SINDRAGOSA_SHORTCUT_ENTRANCE_DOOR:
                     case GO_SINDRAGOSA_SHORTCUT_EXIT_DOOR:
                     case GO_ICE_WALL:
@@ -732,6 +902,9 @@ class instance_icecrown_citadel : public InstanceMapScript
             {
                 switch (type)
                 {
+                    case DATA_SAURFANG_OUTRO_ZEPPELIN:
+                    // DONE once it has come to rest, so the outro can wait for the ship instead of guessing.
+                    return _saurfangZeppelinDocked ? DONE : IN_PROGRESS;
                     case DATA_SINDRAGOSA_FROSTWYRMS:
                         return FrostwyrmGUIDs.size();
                     case DATA_SPINESTALKER:
@@ -750,6 +923,10 @@ class instance_icecrown_citadel : public InstanceMapScript
                         return HeroicAttempts;
                     case DATA_BLOOD_PRINCE_COUNCIL_INTRO:
                         return BloodPrinceIntro;
+                    case DATA_SINDRAGOSA_GAUNTLET:
+                        return SindragosaGauntletState;
+                    case DATA_PUTRICIDE_TRAP_STATE:
+                        return _putricideTrapState;
                     case DATA_SINDRAGOSA_INTRO:
                         return SindragosaIntro;
                     case DATA_FACTION_BUFF:
@@ -785,6 +962,8 @@ class instance_icecrown_citadel : public InstanceMapScript
                         return RotfaceGUID;
                     case DATA_PROFESSOR_PUTRICIDE:
                         return ProfessorPutricideGUID;
+                    case NPC_PUTRICADES_TRAP:
+                        return PutricadesTrapGUID;
                     case DATA_PUTRICIDE_TABLE:
                         return PutricideTableGUID;
                     case DATA_PRINCE_KELESETH:
@@ -814,6 +993,10 @@ class instance_icecrown_citadel : public InstanceMapScript
                         return ValithriaLichKingGUID;
                     case DATA_VALITHRIA_TRIGGER:
                         return ValithriaTriggerGUID;
+                    case DATA_SINDRAGOSA_GAUNTLET:
+                        return SindragosaGauntletGUID;
+                    case GO_SINDRAGOSA_ENTRANCE_DOOR:
+                        return SindragosaEntranceDoorGUID;
                     case DATA_SINDRAGOSA:
                         return SindragosaGUID;
                     case DATA_SPINESTALKER:
@@ -938,35 +1121,13 @@ class instance_icecrown_citadel : public InstanceMapScript
                         break;
                     case DATA_FESTERGUT:
                         if (state == DONE)
-                        {
-                            if (GetBossState(DATA_ROTFACE) == DONE)
-                            {
-                                HandleGameObject(PutricideCollisionGUID, true);
-                                if (GameObject* go = instance->GetGameObject(PutricideGateGUIDs[0]))
-                                    go->SetGoState(GO_STATE_DESTROYED);
-                                if (GameObject* go = instance->GetGameObject(PutricideGateGUIDs[1]))
-                                    go->SetGoState(GO_STATE_DESTROYED);
-                            }
-                            else
-                                HandleGameObject(PutricideGateGUIDs[0], false);
-                            HandleGameObject(PutricidePipeGUIDs[0], true);
-                        }
+                            if (GameObject* go = instance->GetGameObject(GasReleaseValveGUID))
+                                go->RemoveFlag(GO_FLAG_INTERACT_COND | GO_FLAG_NOT_SELECTABLE);
                         break;
                     case DATA_ROTFACE:
                         if (state == DONE)
-                        {
-                            if (GetBossState(DATA_FESTERGUT) == DONE)
-                            {
-                                HandleGameObject(PutricideCollisionGUID, true);
-                                if (GameObject* go = instance->GetGameObject(PutricideGateGUIDs[0]))
-                                    go->SetGoState(GO_STATE_DESTROYED);
-                                if (GameObject* go = instance->GetGameObject(PutricideGateGUIDs[1]))
-                                    go->SetGoState(GO_STATE_DESTROYED);
-                            }
-                            else
-                                HandleGameObject(PutricideGateGUIDs[1], false);
-                            HandleGameObject(PutricidePipeGUIDs[1], true);
-                        }
+                            if (GameObject* go = instance->GetGameObject(OozeReleaseValveGUID))
+                                go->RemoveFlag(GO_FLAG_INTERACT_COND | GO_FLAG_NOT_SELECTABLE);
                         break;
                     case DATA_PROFESSOR_PUTRICIDE:
                         HandleGameObject(PlagueSigilGUID, state != DONE);
@@ -1044,10 +1205,321 @@ class instance_icecrown_citadel : public InstanceMapScript
                 }
             }
 
+            GameObject* SummonGameObject(uint32 entry, Position const& pos, uint32 respawnTime)
+            {
+                QuaternionData rot = QuaternionData::fromEulerAnglesZYX(pos.GetOrientation(), 0.f, 0.f);
+
+                GameObject* go = new GameObject();
+                if (!go->Create(instance->GenerateLowGuid<HighGuid::GameObject>(), entry, instance, PHASEMASK_NORMAL, pos, rot, 255, GO_STATE_READY))
+                {
+                    delete go;
+                    return nullptr;
+                }
+
+                // Xinef: if gameobject is temporary, set custom spellid
+                if (respawnTime)
+                    go->SetSpellId(1);
+
+                go->SetRespawnTime(respawnTime);
+                go->SetSpawnedByDefault(false);
+
+                instance->AddToMap(go);
+                return go;
+            }
+
+            // Hidden rather than despawned: a despawned creature leaves the map and its guid would no
+            // longer resolve.
+            void HideSaurfangEventNpc(Creature* creature)
+            {
+                if (GetBossState(DATA_ICECROWN_GUNSHIP_BATTLE) == DONE)
+                    return;
+
+                creature->SetVisible(false);
+            }
+
+            void RestoreSaurfangEventNpc(Creature* creature)
+            {
+                creature->NearTeleportTo(creature->GetHomePosition());
+                creature->SetStandState(UNIT_STAND_STATE_STAND);
+                creature->SetEmoteState(EMOTE_ONESHOT_NONE);
+                creature->SetSheath(SHEATH_STATE_UNARMED);
+                creature->SetVisible(true);
+            }
+
+            void SpawnSaurfangEventNpcs()
+            {
+                if (Creature* captain = instance->GetCreature(DeathbringerSaurfangEventGUID))
+                    RestoreSaurfangEventNpc(captain);
+
+                for (ObjectGuid const& guid : SaurfangEventGuardGUIDs)
+                    if (Creature* guard = instance->GetCreature(guid))
+                        RestoreSaurfangEventNpc(guard);
+            }
+
+            // Only the ones left hidden: a scene in progress has them visible and placed, and
+            // teleporting those to their spawn points would break it mid-run.
+            void RestoreHiddenSaurfangEventNpcs()
+            {
+                if (Creature* captain = instance->GetCreature(DeathbringerSaurfangEventGUID))
+                    if (!captain->IsVisible())
+                        RestoreSaurfangEventNpc(captain);
+
+                for (ObjectGuid const& guid : SaurfangEventGuardGUIDs)
+                    if (Creature* guard = instance->GetCreature(guid))
+                        if (!guard->IsVisible())
+                            RestoreSaurfangEventNpc(guard);
+            }
+
+            // staged runs the on-screen build: teleporters, then workers raising the tents, then the
+            // vendors. Unstaged drops the finished camp at once, for an instance already DONE.
+            void SpawnSaurfangCamp(bool staged)
+            {
+                if (_saurfangCampSpawned || !instance->HavePlayers())
+                    return;
+
+                _saurfangCampSpawned = true;
+                if (staged)
+                {
+                    Events.ScheduleEvent(EVENT_SAURFANG_CAMP_TELEPORTERS, 3s);
+                    return;
+                }
+
+                SummonSaurfangCampTeleporters();
+                SpawnSaurfangEventNpcs();
+                SpawnSaurfangCampTents();
+                SummonSaurfangCampVendor(true, false);
+                SummonSaurfangCampVendor(false, false);
+            }
+
+            void SummonSaurfangCampTeleporters()
+            {
+                uint32 const teleporter = TeamInInstance == HORDE ? GO_SAURFANG_CAMP_TELEPORTER_H : GO_SAURFANG_CAMP_TELEPORTER_A;
+                for (uint8 i = 0; i < 2; ++i)
+                {
+                    if (GameObject* go = SummonGameObject(teleporter, SaurfangCampTeleporterPos[i], WEEK))
+                    {
+                        go->setActive(true);
+                        go->SetGoState(GO_STATE_ACTIVE);
+                    }
+                }
+            }
+
+            void SpawnSaurfangCampTeleporters()
+            {
+                SummonSaurfangCampTeleporters();
+                Events.ScheduleEvent(EVENT_SAURFANG_CAMP_WORKERS, 5s);
+            }
+
+            void SpawnSaurfangCampWorkers()
+            {
+                bool const horde = TeamInInstance == HORDE;
+                uint32 const worker = horde ? NPC_CAMP_WARSONG_PEON : NPC_CAMP_ALLIANCE_MASON;
+                for (uint8 i = 0; i < 2; ++i)
+                {
+                    if (Creature* builder = instance->SummonCreature(worker, SaurfangCampTeleporterPos[i]))
+                    {
+                        SaurfangCampWorkerGUIDs.push_back(builder->GetGUID());
+                        builder->SetReactState(REACT_PASSIVE);
+                        builder->CastSpell(builder, SPELL_OUTRO_TELEPORT_VISUAL, true);
+                    }
+                }
+
+                Events.ScheduleEvent(EVENT_SAURFANG_CAMP_WORKERS_FIRST_POS, 0s);
+                Events.ScheduleEvent(EVENT_SAURFANG_CAMP_WORKERS_RE_POS, 1500ms);
+                const Seconds workTime = SaurfangCampWorkerTravel + (TeamInInstance == HORDE ? 3s : 11s);
+                Events.ScheduleEvent(EVENT_SAURFANG_CAMP_WORKERS_FIRST_POS, workTime);
+                // Timed from the summon, so the run out has to be paid for before the hammering starts.
+                Events.ScheduleEvent(EVENT_SAURFANG_CAMP_WORKERS_BACK, workTime + 1500ms);
+            }
+
+            void SpawnSaurfangCampTents()
+            {
+                bool const horde = TeamInInstance == HORDE;
+                uint32 const tents[2] =
+                {
+                    static_cast<uint32>(horde ? GO_SAURFANG_CAMP_TENT_H1 : GO_SAURFANG_CAMP_TENT_A),
+                    static_cast<uint32>(horde ? GO_SAURFANG_CAMP_TENT_H2 : GO_SAURFANG_CAMP_TENT_A)
+                };
+
+                Position const* tentPos = horde ? SaurfangCampTentPosH : SaurfangCampTentPosA;
+                for (uint8 i = 0; i < 2; ++i)
+                    if (GameObject* go = SummonGameObject(tents[i], tentPos[i], WEEK))
+                        go->setActive(true);
+
+                if (horde)
+                {
+                    for (ObjectGuid const& guid : SaurfangCampGUIDs)
+                        if (GameObject* camp = instance->GetGameObject(guid))
+                        {
+                            camp->Respawn();
+                            camp->setActive(true);
+                        }
+                }
+                else
+                {
+                    if (GameObject* go = SummonGameObject(GO_SAURFANG_CAMP_FORGE, SaurfangCampForgePosA, WEEK))
+                        go->setActive(true);
+                    if (GameObject* go = SummonGameObject(GO_SAURFANG_CAMP_ANVIL_A, SaurfangCampAnvilPosA, WEEK))
+                        go->setActive(true);
+                    if (GameObject* go = SummonGameObject(GO_SAURFANG_CAMP_BANNER_A, SaurfangCampBannerPosA, WEEK))
+                        go->setActive(true);
+                }
+            }
+
+            // They clear the site before the tent drops, or it lands on top of them.
+            void SendSaurfangCampWorkersBack()
+            {
+                uint8 i = 0;
+                for (ObjectGuid const& guid : SaurfangCampWorkerGUIDs)
+                {
+                    if (Creature* builder = instance->GetCreature(guid))
+                    {
+                        builder->SetEmoteState(EMOTE_ONESHOT_NONE);
+                        builder->SetWalk(false);
+                        builder->GetMotionMaster()->MovePoint(0, SaurfangCampTeleporterPos[1 - (i % 2)]);
+                    }
+                    ++i;
+                }
+
+                Events.ScheduleEvent(EVENT_SAURFANG_CAMP_TENTS, 500ms);
+                // They only vanish once they are back standing on the pad.
+                Events.ScheduleEvent(EVENT_SAURFANG_CAMP_WORKERS_OUT,
+                    SaurfangCampWorkerTravel + (TeamInInstance == HORDE ? 2s : 5s));
+            }
+
+            void DespawnSaurfangCampWorkers()
+            {
+                for (ObjectGuid const& guid : SaurfangCampWorkerGUIDs)
+                    if (Creature* builder = instance->GetCreature(guid))
+                    {
+                        builder->CastSpell(builder, SPELL_OUTRO_TELEPORT_VISUAL, true);
+                        builder->DespawnOrUnsummon(1s);
+                    }
+
+                SaurfangCampWorkerGUIDs.clear();
+                Events.ScheduleEvent(EVENT_SAURFANG_CAMP_VENDORS, 2s);
+            }
+
+            // walkIn false drops the vendor straight on his pitch, for a camp not built on screen.
+            // The detours exist because the direct line clips the Horde bonfire / the first Alliance tent.
+            void SummonSaurfangCampVendor(bool smith, bool walkIn)
+            {
+                bool const horde = TeamInInstance == HORDE;
+                uint32 const entry = smith ? (horde ? NPC_CAMP_MORGAN_DAYBLAZE : NPC_CAMP_SHELY_STEELBOWELS)
+                    : (horde ? NPC_CAMP_APOTHECARY_CANDITH_TOMAS : NPC_CAMP_BRAZIE_GETZ);
+                Position const& pitch = smith ? (horde ? SaurfangCampBlacksmithPos : SaurfangCampBlacksmithPosA)
+                    : (horde ? SaurfangCampGeneralGoodsPos : SaurfangCampGeneralGoodsPosA);
+
+                if (!walkIn)
+                {
+                    instance->SummonCreature(entry, pitch);
+                    return;
+                }
+
+                Creature* vendor = instance->SummonCreature(entry, SaurfangCampTeleporterPos[smith ? 0 : 1]);
+                if (!vendor)
+                    return;
+
+                vendor->CastSpell(vendor, SPELL_OUTRO_TELEPORT_VISUAL, true);
+                vendor->setActive(true);
+                vendor->SetWalk(true);
+                if (horde && !smith)
+                {
+                    vendor->GetMotionMaster()->MovePoint(0, pitch, false, pitch.GetOrientation());
+                    return;
+                }
+
+                Position const& detour = horde ? SaurfangCampSmithDetourPos
+                    : (smith ? SaurfangCampSmithDetourPosA : SaurfangCampGoodsDetourPosA);
+                vendor->GetMotionMaster()->MovePoint(0, detour, false, detour.GetOrientation());
+
+                if (smith)
+                {
+                    SaurfangCampSmithGUID = vendor->GetGUID();
+                    Events.ScheduleEvent(EVENT_SAURFANG_CAMP_SMITH_ARRIVE, horde ? 19s : 17s);
+                }
+                else
+                {
+                    SaurfangCampGoodsGUID = vendor->GetGUID();
+                    Events.ScheduleEvent(EVENT_SAURFANG_CAMP_VENDOR_ARRIVE, 15s);
+                }
+            }
+
+            void SpawnSaurfangCampVendors()
+            {
+                SummonSaurfangCampVendor(true, true);
+                SummonSaurfangCampVendor(false, true);
+            }
+
             void SetData(uint32 type, uint32 data) override
             {
                 switch (type)
                 {
+                        case DATA_SAURFANG_CAMP:
+                        // The boss is DONE for the whole outro, so the encounter state alone cannot tell
+                        // "outro playing" from "outro over".
+                        if (data == IN_PROGRESS)
+                        {
+                            _saurfangOutroRunning = true;
+                            // Safety net: an instance emptying mid-outro would leave the flag set and
+                            // the camp could never be raised.
+                            Events.ScheduleEvent(EVENT_SAURFANG_OUTRO_TIMEOUT, 8min);
+                        }
+                        else if (data == DONE)
+                        {
+                            Events.CancelEvent(EVENT_SAURFANG_OUTRO_TIMEOUT);
+                            _saurfangOutroRunning = false;
+                            SpawnSaurfangCamp(true);
+                        }
+                        break;
+                    case DATA_SAURFANG_OUTRO_ZEPPELIN:
+                        if (data == IN_PROGRESS)
+                        {
+                            if (!SaurfangZeppelinGUID)
+                            {
+                                _saurfangZeppelinDocked = false;
+                                _saurfangZeppelinLeaving = false;
+                                if (Transport* zeppelin = sTransportMgr->CreateTransport(GO_SAURFANG_OUTRO_ZEPPELIN, 0, instance))
+                                {
+                                    SaurfangZeppelinGUID = zeppelin->GetGUID();
+                                    zeppelin->setActive(true);
+                                    Events.ScheduleEvent(EVENT_SAURFANG_ZEPPELIN_DOCK, 1s);
+                                }
+                            }
+                        }
+                        // Asked for twice (departure, then cleanup); without the guard the second call
+                        // would restart the removal timer.
+                        else if (SaurfangZeppelinGUID != ObjectGuid::Empty && !_saurfangZeppelinLeaving)
+                        {
+                            Events.CancelEvent(EVENT_SAURFANG_ZEPPELIN_DOCK);
+                            _saurfangZeppelinDocked = false;
+                            _saurfangZeppelinLeaving = true;
+                            if (GameObject* go = instance->GetGameObject(SaurfangZeppelinGUID))
+                                if (Transport* zeppelin = go->ToTransport())
+                                    zeppelin->EnableMovement(true);
+
+                            // Releasing _pendingStop does not launch it: it leaves when the stop frame
+                            // DepartureTime comes round, ~24s. Removal is well past that.
+                            Events.ScheduleEvent(EVENT_SAURFANG_ZEPPELIN_REMOVE, 60s);
+                        }
+                        break;
+                    case DATA_SAURFANG_OUTRO_PORTAL:
+                        if (data == IN_PROGRESS)
+                        {
+                            if (GameObject* portal = SummonGameObject(GO_SAURFANG_OUTRO_PORTAL, SaurfangOutroPortalPos, HOUR))
+                            {
+                                // SPELLCASTER object carrying spell 59065; scenery here, so it must not be clickable.
+                                portal->SetFlag(GO_FLAG_NOT_SELECTABLE);
+                                SaurfangPortalGUID = portal->GetGUID();
+                            }
+                        }
+                        else
+                        {
+                            if (GameObject* portal = instance->GetGameObject(SaurfangPortalGUID))
+                                portal->DespawnOrUnsummon();
+                            SaurfangPortalGUID.Clear();
+                        }
+                        break;
                     case DATA_BONED_ACHIEVEMENT:
                         IsBonedEligible = data ? true : false;
                         break;
@@ -1108,6 +1580,63 @@ class instance_icecrown_citadel : public InstanceMapScript
                     case DATA_BLOOD_PRINCE_COUNCIL_INTRO:
                         BloodPrinceIntro = data;
                         break;
+                    case DATA_SINDRAGOSA_GAUNTLET:
+                        SindragosaGauntletState = data;
+
+                        if (GameObject* go = instance->GetGameObject(SindragosaEntranceDoorGUID))
+                            go->SetGoState(data == DONE ? GO_STATE_ACTIVE : GO_STATE_READY);
+
+                        if (data == DONE)
+                            SaveToDB();
+                        break;
+                    case DATA_PUTRICIDE_TRAP_STATE:
+                    {
+                        _putricideTrapState = data;
+
+                        if (GameObject* go = instance->GetGameObject(_putricideEntranceDoorGUID))
+                            HandleGameObject(go->GetGUID(), data == DONE, go);
+
+                        if (data == IN_PROGRESS)
+                        {
+                            if (GameObject* go = instance->GetGameObject(PutricideCollisionGUID))
+                                HandleGameObject(go->GetGUID(), false, go);
+
+                            if (GameObject* go = instance->GetGameObject(PutricideGateGUIDs[0]))
+                                HandleGameObject(go->GetGUID(), false, go);
+
+                            if (GameObject* go = instance->GetGameObject(PutricideGateGUIDs[1]))
+                                HandleGameObject(go->GetGUID(), false, go);
+                        }
+                        else if (data == NOT_STARTED)
+                        {
+                            // Nach komplettem Wipe: Airlock wieder vollständig öffnen
+                            HandleGameObject(PutricideCollisionGUID, true);
+
+                            if (GameObject* go = instance->GetGameObject(PutricideGateGUIDs[0]))
+                                go->SetGoState(GO_STATE_DESTROYED);
+
+                            if (GameObject* go = instance->GetGameObject(PutricideGateGUIDs[1]))
+                                go->SetGoState(GO_STATE_DESTROYED);
+
+                            // Putricide-Eingang bleibt geschlossen
+                            if (GameObject* go = instance->GetGameObject(_putricideEntranceDoorGUID))
+                                HandleGameObject(go->GetGUID(), false, go);
+                        }
+                        else if (data == DONE)
+                        {
+                            HandleGameObject(PutricideCollisionGUID, true);
+
+                            if (GameObject* go = instance->GetGameObject(PutricideGateGUIDs[0]))
+                                go->SetGoState(GO_STATE_DESTROYED);
+
+                            if (GameObject* go = instance->GetGameObject(PutricideGateGUIDs[1]))
+                                go->SetGoState(GO_STATE_DESTROYED);
+
+                            SaveToDB();
+                        }
+
+                        break;
+                    }
                     case DATA_SINDRAGOSA_INTRO:
                         SindragosaIntro = data;
                         break;
@@ -1277,6 +1806,8 @@ class instance_icecrown_citadel : public InstanceMapScript
                     case DATA_SINDRAGOSA:
                         if (GetBossState(DATA_VALITHRIA_DREAMWALKER) != DONE)
                             return false;
+                        if (GetData(DATA_SINDRAGOSA_GAUNTLET) != DONE)
+                            return false;
                         break;
                     default:
                         break;
@@ -1346,9 +1877,12 @@ class instance_icecrown_citadel : public InstanceMapScript
             {
                 data << HeroicAttempts << ' '
                     << ColdflameJetsState << ' '
+                    << SindragosaGauntletState << ' '
                     << BloodQuickeningState << ' '
                     << BloodQuickeningMinutes << ' '
-                    << UpperSpireTeleporterActiveState;
+                    << UpperSpireTeleporterActiveState << ' '
+                    << _putricideTrapState << ' '
+                    << uint32(_putricideValveState);
             }
 
             void ReadSaveDataMore(std::istringstream& data) override
@@ -1361,17 +1895,49 @@ class instance_icecrown_citadel : public InstanceMapScript
                 ColdflameJetsState = temp == DONE ? DONE : NOT_STARTED;
 
                 data >> temp;
+                SindragosaGauntletState = temp == DONE ? DONE : NOT_STARTED;
+
+                data >> temp;
                 BloodQuickeningState = temp == DONE ? DONE : NOT_STARTED;
 
                 data >> BloodQuickeningMinutes;
 
                 data >> temp;
                 UpperSpireTeleporterActiveState = temp == DONE ? DONE : NOT_STARTED;
+
+                if (data >> temp)
+                    _putricideTrapState = temp == DONE ? DONE : NOT_STARTED;
+                else
+                    _putricideTrapState = NOT_STARTED;
+
+                if (data >> temp)
+                    _putricideValveState = static_cast<uint8>(temp & (PUTRICIDE_VALVE_FESTERGUT | PUTRICIDE_VALVE_ROTFACE));
+                else
+                    _putricideValveState = 0;
             }
 
             void Update(uint32 diff) override
             {
-                if (BloodQuickeningState != IN_PROGRESS && GetBossState(DATA_THE_LICH_KING) != IN_PROGRESS && GetBossState(DATA_ICECROWN_GUNSHIP_BATTLE) != FAIL)
+                // Reset Putricide's trap event only after the complete group has died.
+                if (_putricideTrapState == IN_PROGRESS)
+                {
+                    bool anyPlayerAlive = false;
+                    for (Map::PlayerList::const_iterator itr = instance->GetPlayers().begin();
+                         itr != instance->GetPlayers().end(); ++itr)
+                    {
+                        Player* player = itr->GetSource();
+                        if (player && player->IsAlive())
+                        {
+                            anyPlayerAlive = true;
+                            break;
+                        }
+                    }
+
+                    if (!anyPlayerAlive)
+                        SetData(DATA_PUTRICIDE_TRAP_STATE, NOT_STARTED);
+                }
+
+                if (Events.Empty())
                     return;
 
                 Events.Update(diff);
@@ -1424,6 +1990,112 @@ class instance_icecrown_citadel : public InstanceMapScript
                         case EVENT_RESPAWN_GUNSHIP:
                             SpawnGunship();
                             break;
+                        case EVENT_SPAWN_SAURFANG_EVENT:
+                            SpawnSaurfangEventNpcs();
+                            break;
+                        case EVENT_SAURFANG_OUTRO_TIMEOUT:
+                            _saurfangOutroRunning = false;
+                            SetData(DATA_SAURFANG_OUTRO_PORTAL, DONE);
+                            SetData(DATA_SAURFANG_OUTRO_ZEPPELIN, DONE);
+                            if (GetBossState(DATA_DEATHBRINGER_SAURFANG) == DONE)
+                            {
+                                SpawnSaurfangCamp(false);
+                                SpawnSaurfangEventNpcs();
+                            }
+                            break;
+                        case EVENT_SAURFANG_CAMP_TELEPORTERS:
+                            SpawnSaurfangCampTeleporters();
+                            break;
+                        case EVENT_SAURFANG_CAMP_WORKERS:
+                            SpawnSaurfangCampWorkers();
+                            break;
+                        case EVENT_SAURFANG_CAMP_TENTS:
+                            SpawnSaurfangCampTents();
+                            break;
+                        case EVENT_SAURFANG_CAMP_WORKERS_OUT:
+                            DespawnSaurfangCampWorkers();
+                            break;
+                        case EVENT_SAURFANG_CAMP_WORKERS_FIRST_POS:
+                        {
+                            uint8 i = 0;
+                            for (ObjectGuid guid : SaurfangCampWorkerGUIDs)
+                                if (Creature* builder = instance->GetCreature(guid))
+                                {
+                                    builder->SetWalk(false);
+                                    builder->GetMotionMaster()->MovePoint(0, SaurfangWorkerFirstPos, false, SaurfangWorkerFirstPos.GetOrientation());
+                                    builder->SetEmoteState(EMOTE_ONESHOT_NONE);
+                                    ++i;
+                                }
+                            break;
+                        }
+                        case EVENT_SAURFANG_CAMP_WORKERS_RE_POS:
+                        {
+                            bool const horde = TeamInInstance == HORDE;
+                            uint8 i = 0;
+                            for (ObjectGuid guid : SaurfangCampWorkerGUIDs)
+                                if (Creature* builder = instance->GetCreature(guid))
+                                {
+                                    builder->SetWalk(false);
+                                    Position pos = horde ? SaurfangCampTentPosH[i] : SaurfangCampTentPosA[i];
+                                    builder->GetMotionMaster()->MovePoint(0, pos, false, pos.GetOrientation());
+                                    builder->SetEmoteState(EMOTE_STATE_WORK_MINING);
+                                    ++i;
+                                }
+                            break;
+                        }
+                        case EVENT_SAURFANG_CAMP_WORKERS_BACK:
+                            SendSaurfangCampWorkersBack();
+                            break;
+                        case EVENT_SAURFANG_CAMP_SMITH_ARRIVE:
+                            if (Creature* smith = instance->GetCreature(SaurfangCampSmithGUID))
+                            {
+                                Position pos = TeamInInstance == HORDE ? SaurfangCampBlacksmithPos : SaurfangCampBlacksmithPosA;
+                                smith->GetMotionMaster()->MovePoint(0, pos, false, pos.GetOrientation());
+                            }
+                            break;
+                        case EVENT_SAURFANG_CAMP_VENDOR_ARRIVE:
+                            if (Creature* goods = instance->GetCreature(SaurfangCampGoodsGUID))
+                                goods->GetMotionMaster()->MovePoint(0, SaurfangCampGeneralGoodsPosA, false, SaurfangCampGeneralGoodsPosA.GetOrientation());
+                            break;
+                        case EVENT_SAURFANG_CAMP_VENDORS:
+                            SpawnSaurfangCampVendors();
+                            break;
+                        case EVENT_SAURFANG_ZEPPELIN_REMOVE:
+                            if (GameObject* go = instance->GetGameObject(SaurfangZeppelinGUID))
+                            {
+                                // A MO_TRANSPORT is not despawned like an ordinary gameobject.
+                                if (Transport* zeppelin = go->ToTransport())
+                                {
+                                    zeppelin->EnableMovement(false);
+                                    zeppelin->UnloadStaticPassengers();
+                                }
+
+                                go->AddObjectToRemoveList();
+                            }
+                            _saurfangZeppelinLeaving = false;
+                            SaurfangZeppelinGUID.Clear();
+                            break;
+                        case EVENT_SAURFANG_ZEPPELIN_DOCK:
+                        {
+                            // Reschedule unconditionally: giving up on a failed lookup would leave
+                            // it looping its path forever.
+                            GameObject* go = instance->GetGameObject(SaurfangZeppelinGUID);
+                            Transport* zeppelin = go ? go->ToTransport() : nullptr;
+                            if (zeppelin && zeppelin->GetExactDist2d(&SaurfangOutroZeppelinPos) <= SaurfangOutroZeppelinDockRange)
+                            {
+                                zeppelin->EnableMovement(false);
+                                _saurfangZeppelinDocked = true;
+                            }
+                            else if (SaurfangZeppelinGUID != ObjectGuid::Empty)
+                                Events.ScheduleEvent(EVENT_SAURFANG_ZEPPELIN_DOCK, 500ms);
+                        }
+                        break;
+                        case EVENT_SAURFANG_NPCS_RESET:
+                            RestoreHiddenSaurfangEventNpcs();
+                            break;
+                        case EVENT_SAURFANG_CAMP_RESET:
+                            SpawnSaurfangCamp(false);
+                            break;
                         default:
                             break;
                     }
@@ -1454,6 +2126,8 @@ class instance_icecrown_citadel : public InstanceMapScript
                         if (GameObject* go = source->ToGameObject())
                             if (Transport* transport = go->ToTransport())
                                 transport->EnableMovement(false);
+                        // The captain despawns 18s into his walk off the ship; the event party appears with him.
+                        Events.ScheduleEvent(EVENT_SPAWN_SAURFANG_EVENT, 18s);
                         break;
                     case EVENT_QUAKE:
                         if (GameObject* warning = instance->GetGameObject(FrozenThroneWarningGUID))
@@ -1465,6 +2139,44 @@ class instance_icecrown_citadel : public InstanceMapScript
                         {
                             platform->SetDestructibleState(GO_DESTRUCTIBLE_DESTROYED);
                             Events.ScheduleEvent(EVENT_REBUILD_PLATFORM, 1500ms);
+                        }
+                        break;
+                    case EVENT_FESTERGUT_VALVE_USED:
+                        if (!(_putricideValveState & PUTRICIDE_VALVE_FESTERGUT))
+                        {
+                            _putricideValveState |= PUTRICIDE_VALVE_FESTERGUT;
+                            if ((_putricideValveState & (PUTRICIDE_VALVE_FESTERGUT | PUTRICIDE_VALVE_ROTFACE)) == (PUTRICIDE_VALVE_FESTERGUT | PUTRICIDE_VALVE_ROTFACE))
+                            {
+                                HandleGameObject(PutricideCollisionGUID, true);
+                                if (GameObject* go = instance->GetGameObject(PutricideGateGUIDs[0]))
+                                    go->SetGoState(static_cast<GOState>(2));
+                                if (GameObject* go = instance->GetGameObject(PutricideGateGUIDs[1]))
+                                    go->SetGoState(static_cast<GOState>(2));
+                            }
+                            else
+                                HandleGameObject(PutricideGateGUIDs[0], false);
+
+                            HandleGameObject(PutricidePipeGUIDs[0], true);
+                            SaveToDB();
+                        }
+                        break;
+                    case EVENT_ROTFACE_VALVE_USED:
+                        if (!(_putricideValveState & PUTRICIDE_VALVE_ROTFACE))
+                        {
+                            _putricideValveState |= PUTRICIDE_VALVE_ROTFACE;
+                            if ((_putricideValveState & (PUTRICIDE_VALVE_FESTERGUT | PUTRICIDE_VALVE_ROTFACE)) == (PUTRICIDE_VALVE_FESTERGUT | PUTRICIDE_VALVE_ROTFACE))
+                            {
+                                HandleGameObject(PutricideCollisionGUID, true);
+                                if (GameObject* go = instance->GetGameObject(PutricideGateGUIDs[0]))
+                                    go->SetGoState(static_cast<GOState>(2));
+                                if (GameObject* go = instance->GetGameObject(PutricideGateGUIDs[1]))
+                                    go->SetGoState(static_cast<GOState>(2));
+                            }
+                            else
+                                HandleGameObject(PutricideGateGUIDs[1], false);
+
+                            HandleGameObject(PutricidePipeGUIDs[1], true);
+                            SaveToDB();
                         }
                         break;
                     case EVENT_TELEPORT_TO_FROSTMOURNE: // Harvest Soul (normal mode)
@@ -1504,6 +2216,17 @@ class instance_icecrown_citadel : public InstanceMapScript
             ObjectGuid DeathbringerSaurfangDoorGUID;
             ObjectGuid DeathbringerSaurfangEventGUID;   // Muradin Bronzebeard or High Overlord Saurfang
             ObjectGuid DeathbringersCacheGUID;
+            GuidList SaurfangCampGUIDs;
+            GuidList SaurfangEventGuardGUIDs;
+            GuidList SaurfangCampWorkerGUIDs;
+            ObjectGuid SaurfangCampSmithGUID;
+            ObjectGuid SaurfangCampGoodsGUID;
+            ObjectGuid SaurfangZeppelinGUID;
+            ObjectGuid SaurfangPortalGUID;
+            bool _saurfangCampSpawned;
+            bool _saurfangOutroRunning;
+            bool _saurfangZeppelinDocked;
+            bool _saurfangZeppelinLeaving;
             ObjectGuid TeleporterLichKingGUID;
             ObjectGuid TeleporterUpperSpireGUID;
             ObjectGuid TeleporterLightsHammerGUID;
@@ -1516,10 +2239,13 @@ class instance_icecrown_citadel : public InstanceMapScript
             ObjectGuid FrostwingSigilGUID;
             ObjectGuid PutricidePipeGUIDs[2];
             ObjectGuid PutricideGateGUIDs[2];
+            ObjectGuid GasReleaseValveGUID;
+            ObjectGuid OozeReleaseValveGUID;
             ObjectGuid PutricideCollisionGUID;
             ObjectGuid FestergutGUID;
             ObjectGuid RotfaceGUID;
             ObjectGuid ProfessorPutricideGUID;
+            ObjectGuid PutricadesTrapGUID;
             ObjectGuid PutricideTableGUID;
             ObjectGuid BloodCouncilGUIDs[3];
             ObjectGuid BloodCouncilControllerGUID;
@@ -1531,6 +2257,8 @@ class instance_icecrown_citadel : public InstanceMapScript
             ObjectGuid ValithriaDreamwalkerGUID;
             ObjectGuid ValithriaLichKingGUID;
             ObjectGuid ValithriaTriggerGUID;
+            ObjectGuid SindragosaGauntletGUID;
+            ObjectGuid SindragosaEntranceDoorGUID;
             ObjectGuid SindragosaGUID;
             ObjectGuid SpinestalkerGUID;
             ObjectGuid RimefangGUID;
@@ -1556,6 +2284,7 @@ class instance_icecrown_citadel : public InstanceMapScript
             uint32 HeroicAttempts;
             uint16 BloodQuickeningMinutes;
             uint8 BloodPrinceIntro;
+            uint32 SindragosaGauntletState;
             uint8 SindragosaIntro;
             bool IsBonedEligible;
             bool IsOozeDanceEligible;
@@ -1563,6 +2292,11 @@ class instance_icecrown_citadel : public InstanceMapScript
             bool IsOrbWhispererEligible;
             bool IsFactionBuffActive;
             std::array<GuidVector, 2> nerubarBroodkeepersGUIDs;
+
+        private:
+            uint32 _putricideTrapState;
+            uint8 _putricideValveState;
+            ObjectGuid _putricideEntranceDoorGUID;
         };
 
         InstanceScript* GetInstanceScript(InstanceMap* map) const override

@@ -30,99 +30,99 @@
 
 enum SvalnaTexts
 {
-    SAY_SVALNA_KILL_CAPTAIN       = 1, // happens when she kills a captain
-    SAY_SVALNA_KILL               = 4,
-    SAY_SVALNA_CAPTAIN_DEATH      = 5, // happens when a captain resurrected by her dies
-    SAY_SVALNA_DEATH              = 6,
-    EMOTE_SVALNA_IMPALE           = 7,
-    EMOTE_SVALNA_BROKEN_SHIELD    = 8,
+    SAY_SVALNA_KILL_CAPTAIN = 1, // happens when she kills a captain
+    SAY_SVALNA_KILL = 4,
+    SAY_SVALNA_CAPTAIN_DEATH = 5, // happens when a captain resurrected by her dies
+    SAY_SVALNA_DEATH = 6,
+    EMOTE_SVALNA_IMPALE = 7,
+    EMOTE_SVALNA_BROKEN_SHIELD = 8,
 
-    SAY_CROK_INTRO_1              = 0, // Ready your arms, my Argent Brothers. The Vrykul will protect the Frost Queen with their lives.
-    SAY_ARNATH_INTRO_2            = 5, // Even dying here beats spending another day collecting reagents for that madman, Finklestein.
-    SAY_CROK_INTRO_3              = 1, // Enough idle banter! Our champions have arrived - support them as we push our way through the hall!
-    SAY_SVALNA_EVENT_START        = 0, // You may have once fought beside me, Crok, but now you are nothing more than a traitor. Come, your second death approaches!
-    SAY_CROK_COMBAT_WP_0          = 2, // Draw them back to us, and we'll assist you.
-    SAY_CROK_COMBAT_WP_1          = 3, // Quickly, push on!
-    SAY_CROK_FINAL_WP             = 4, // Her reinforcements will arrive shortly, we must bring her down quickly!
+    SAY_CROK_INTRO_1 = 0, // Ready your arms, my Argent Brothers. The Vrykul will protect the Frost Queen with their lives.
+    SAY_ARNATH_INTRO_2 = 5, // Even dying here beats spending another day collecting reagents for that madman, Finklestein.
+    SAY_CROK_INTRO_3 = 1, // Enough idle banter! Our champions have arrived - support them as we push our way through the hall!
+    SAY_SVALNA_EVENT_START = 0, // You may have once fought beside me, Crok, but now you are nothing more than a traitor. Come, your second death approaches!
+    SAY_CROK_COMBAT_WP_0 = 2, // Draw them back to us, and we'll assist you.
+    SAY_CROK_COMBAT_WP_1 = 3, // Quickly, push on!
+    SAY_CROK_FINAL_WP = 4, // Her reinforcements will arrive shortly, we must bring her down quickly!
     SAY_SVALNA_RESURRECT_CAPTAINS = 2, // Foolish Crok. You brought my reinforcements with you. Arise, Argent Champions, and serve the Lich King in death!
-    SAY_CROK_COMBAT_SVALNA        = 5, // I'll draw her attacks. Return our brothers to their graves, then help me bring her down!
-    SAY_SVALNA_AGGRO              = 3, // Come, Scourgebane. I'll show the master which of us is truly worthy of the title of "Champion"!
-    SAY_CAPTAIN_DEATH             = 0,
-    SAY_CAPTAIN_RESURRECTED       = 1,
-    SAY_CAPTAIN_KILL              = 2,
-    SAY_CAPTAIN_SECOND_DEATH      = 3,
-    SAY_CAPTAIN_SURVIVE_TALK      = 4,
-    SAY_CROK_WEAKENING_GAUNTLET   = 6,
-    SAY_CROK_WEAKENING_SVALNA     = 7,
-    SAY_CROK_DEATH                = 8,
+    SAY_CROK_COMBAT_SVALNA = 5, // I'll draw her attacks. Return our brothers to their graves, then help me bring her down!
+    SAY_SVALNA_AGGRO = 3, // Come, Scourgebane. I'll show the master which of us is truly worthy of the title of "Champion"!
+    SAY_CAPTAIN_DEATH = 0,
+    SAY_CAPTAIN_RESURRECTED = 1,
+    SAY_CAPTAIN_KILL = 2,
+    SAY_CAPTAIN_SECOND_DEATH = 3,
+    SAY_CAPTAIN_SURVIVE_TALK = 4,
+    SAY_CROK_WEAKENING_GAUNTLET = 6,
+    SAY_CROK_WEAKENING_SVALNA = 7,
+    SAY_CROK_DEATH = 8,
 };
 
 enum SvalnaSpells
 {
     // Crok Scourgebane
-    SPELL_ICEBOUND_ARMOR              = 70714,
-    SPELL_SCOURGE_STRIKE              = 71488,
-    SPELL_DEATH_STRIKE                = 71489,
+    SPELL_ICEBOUND_ARMOR = 70714,
+    SPELL_SCOURGE_STRIKE = 71488,
+    SPELL_DEATH_STRIKE = 71489,
 
     // Sister Svalna
-    SPELL_CARESS_OF_DEATH             = 70078,
-    SPELL_IMPALING_SPEAR_KILL         = 70196,
-    SPELL_REVIVE_CHAMPION             = 70053,
-    SPELL_UNDEATH                     = 70089,
-    SPELL_IMPALING_SPEAR              = 71443,
-    SPELL_AETHER_SHIELD               = 71463,
-    SPELL_HURL_SPEAR                  = 71466,
-    SPELL_DIVINE_SURGE                = 71465,
+    SPELL_CARESS_OF_DEATH = 70078,
+    SPELL_IMPALING_SPEAR_KILL = 70196,
+    SPELL_REVIVE_CHAMPION = 70053,
+    SPELL_UNDEATH = 70089,
+    SPELL_IMPALING_SPEAR = 71443,
+    SPELL_AETHER_SHIELD = 71463,
+    SPELL_HURL_SPEAR = 71466,
+    SPELL_DIVINE_SURGE = 71465,
 
     // Captain Arnath
-    SPELL_DOMINATE_MIND               = 14515,
-    SPELL_FLASH_HEAL_NORMAL           = 71595,
-    SPELL_POWER_WORD_SHIELD_NORMAL    = 71548,
-    SPELL_SMITE_NORMAL                = 71546,
-    SPELL_FLASH_HEAL_UNDEAD           = 71782,
-    SPELL_POWER_WORD_SHIELD_UNDEAD    = 71780,
-    SPELL_SMITE_UNDEAD                = 71778,
+    SPELL_DOMINATE_MIND = 14515,
+    SPELL_FLASH_HEAL_NORMAL = 71595,
+    SPELL_POWER_WORD_SHIELD_NORMAL = 71548,
+    SPELL_SMITE_NORMAL = 71546,
+    SPELL_FLASH_HEAL_UNDEAD = 71782,
+    SPELL_POWER_WORD_SHIELD_UNDEAD = 71780,
+    SPELL_SMITE_UNDEAD = 71778,
 
     // Captain Brandon
-    SPELL_CRUSADER_STRIKE             = 71549,
-    SPELL_DIVINE_SHIELD               = 71550,
-    SPELL_JUDGEMENT_OF_COMMAND        = 71551,
-    SPELL_HAMMER_OF_BETRAYAL          = 71784,
+    SPELL_CRUSADER_STRIKE = 71549,
+    SPELL_DIVINE_SHIELD = 71550,
+    SPELL_JUDGEMENT_OF_COMMAND = 71551,
+    SPELL_HAMMER_OF_BETRAYAL = 71784,
 
     // Captain Grondel
-    SPELL_CHARGE                      = 71553,
-    SPELL_MORTAL_STRIKE               = 71552,
-    SPELL_SUNDER_ARMOR                = 71554,
-    SPELL_CONFLAGRATION               = 71785,
+    SPELL_CHARGE = 71553,
+    SPELL_MORTAL_STRIKE = 71552,
+    SPELL_SUNDER_ARMOR = 71554,
+    SPELL_CONFLAGRATION = 71785,
 
     // Captain Rupert
-    SPELL_FEL_IRON_BOMB_NORMAL        = 71592,
-    SPELL_MACHINE_GUN_NORMAL          = 71594,
-    SPELL_ROCKET_LAUNCH_NORMAL        = 71590,
-    SPELL_FEL_IRON_BOMB_UNDEAD        = 71787,
-    SPELL_MACHINE_GUN_UNDEAD          = 71788,
-    SPELL_ROCKET_LAUNCH_UNDEAD        = 71786,
+    SPELL_FEL_IRON_BOMB_NORMAL = 71592,
+    SPELL_MACHINE_GUN_NORMAL = 71594,
+    SPELL_ROCKET_LAUNCH_NORMAL = 71590,
+    SPELL_FEL_IRON_BOMB_UNDEAD = 71787,
+    SPELL_MACHINE_GUN_UNDEAD = 71788,
+    SPELL_ROCKET_LAUNCH_UNDEAD = 71786,
 
     // Ymirjar Vrykuls
-    SPELL_ARCTIC_CHILL                = 71270,
-    SPELL_FROZEN_ORB_CAST             = 71274,
-    SPELL_FROZEN_ORB_MISSILE          = 71285,
-    SPELL_SPIRIT_STREAM               = 69929,
-    SPELL_TWISTED_WINDS               = 71306,
-    SPELL_BARBARIC_STRIKE             = 71257,
-    SPELL_ADRENALINE_RUSH             = 71258,
-    SPELL_WHIRLWIND                   = 41056,
-    SPELL_RAPID_SHOT                  = 71251,
-    SPELL_ICE_TRAP                    = 71249,
-    SPELL_SUMMON_WARHAWK              = 71705,
-    SPELL_VOLLEY                      = 71252,
-    SPELL_YMIRJAR_SHOOT               = 71253,
-    SPELL_YMIRJAR_SHADOW_BOLT         = 71296,
-    SPELL_DEATH_EMBRACE               = 71299,
-    SPELL_BANISH                      = 71298,
-    SPELL_SUMMON_YMIRJAR              = 71303,
-    SPELL_AWAKEN_YMIRJAR_FALLEN       = 71302,
-    SPELL_WARLORDS_PRESENCE           = 71244
+    SPELL_ARCTIC_CHILL = 71270,
+    SPELL_FROZEN_ORB_CAST = 71274,
+    SPELL_FROZEN_ORB_MISSILE = 71285,
+    SPELL_SPIRIT_STREAM = 69929,
+    SPELL_TWISTED_WINDS = 71306,
+    SPELL_BARBARIC_STRIKE = 71257,
+    SPELL_ADRENALINE_RUSH = 71258,
+    SPELL_WHIRLWIND = 41056,
+    SPELL_RAPID_SHOT = 71251,
+    SPELL_ICE_TRAP = 71249,
+    SPELL_SUMMON_WARHAWK = 71705,
+    SPELL_VOLLEY = 71252,
+    SPELL_YMIRJAR_SHOOT = 71253,
+    SPELL_YMIRJAR_SHADOW_BOLT = 71296,
+    SPELL_DEATH_EMBRACE = 71299,
+    SPELL_BANISH = 71298,
+    SPELL_SUMMON_YMIRJAR = 71303,
+    SPELL_AWAKEN_YMIRJAR_FALLEN = 71302,
+    SPELL_WARLORDS_PRESENCE = 71244
 };
 
 enum SvalnaEvents
@@ -212,10 +212,22 @@ enum SvalnaMisc
 #define SPELL_MACHINE_GUN (IsUndead ? SPELL_MACHINE_GUN_UNDEAD : SPELL_MACHINE_GUN_NORMAL)
 #define SPELL_ROCKET_LAUNCH (IsUndead ? SPELL_ROCKET_LAUNCH_UNDEAD : SPELL_ROCKET_LAUNCH_NORMAL)
 
+class ICCSvalnaAlivePlayerCheck
+{
+public:
+    bool operator()(WorldObject* object) const
+    {
+        if (Player* player = object->ToPlayer())
+            return player->IsAlive();
+
+        return false;
+    }
+};
+
 class FrostwingVrykulSearcher
 {
 public:
-    FrostwingVrykulSearcher(Creature const* source, float range) : _source(source), _range(range) { }
+    FrostwingVrykulSearcher(Creature const* source, float range) : _source(source), _range(range) {}
 
     bool operator()(Unit* unit)
     {
@@ -224,14 +236,14 @@ public:
 
         switch (unit->GetEntry())
         {
-            case NPC_YMIRJAR_BATTLE_MAIDEN:
-            case NPC_YMIRJAR_DEATHBRINGER:
-            case NPC_YMIRJAR_FROSTBINDER:
-            case NPC_YMIRJAR_HUNTRESS:
-            case NPC_YMIRJAR_WARLORD:
-                break;
-            default:
-                return false;
+        case NPC_YMIRJAR_BATTLE_MAIDEN:
+        case NPC_YMIRJAR_DEATHBRINGER:
+        case NPC_YMIRJAR_FROSTBINDER:
+        case NPC_YMIRJAR_HUNTRESS:
+        case NPC_YMIRJAR_WARLORD:
+            break;
+        default:
+            return false;
         }
 
         if (!unit->IsWithinDist(_source, _range, false))
@@ -252,25 +264,25 @@ public:
     {
         switch (creature->GetOriginalEntry())
         {
-            case NPC_YMIRJAR_BATTLE_MAIDEN:
-            case NPC_YMIRJAR_DEATHBRINGER:
-            case NPC_YMIRJAR_FROSTBINDER:
-            case NPC_YMIRJAR_HUNTRESS:
-            case NPC_YMIRJAR_WARLORD:
-                break;
-            case NPC_CROK_SCOURGEBANE:
-            case NPC_CAPTAIN_ARNATH:
-            case NPC_CAPTAIN_BRANDON:
-            case NPC_CAPTAIN_GRONDEL:
-            case NPC_CAPTAIN_RUPERT:
-                creature->AI()->DoAction(ACTION_RESET_EVENT);
-                break;
-            case NPC_SISTER_SVALNA:
-                creature->AI()->DoAction(ACTION_RESET_EVENT);
-                // return, this creature is never dead if event is reset
-                return;
-            default:
-                return;
+        case NPC_YMIRJAR_BATTLE_MAIDEN:
+        case NPC_YMIRJAR_DEATHBRINGER:
+        case NPC_YMIRJAR_FROSTBINDER:
+        case NPC_YMIRJAR_HUNTRESS:
+        case NPC_YMIRJAR_WARLORD:
+            break;
+        case NPC_CROK_SCOURGEBANE:
+        case NPC_CAPTAIN_ARNATH:
+        case NPC_CAPTAIN_BRANDON:
+        case NPC_CAPTAIN_GRONDEL:
+        case NPC_CAPTAIN_RUPERT:
+            creature->AI()->DoAction(ACTION_RESET_EVENT);
+            break;
+        case NPC_SISTER_SVALNA:
+            creature->AI()->DoAction(ACTION_RESET_EVENT);
+            // return, this creature is never dead if event is reset
+            return;
+        default:
+            return;
         }
 
         uint32 corpseDelay = creature->GetCorpseDelay();
@@ -290,7 +302,7 @@ public:
 class CaptainSurviveTalk : public BasicEvent
 {
 public:
-    explicit CaptainSurviveTalk(Creature const* owner) : _owner(owner) { }
+    explicit CaptainSurviveTalk(Creature const* owner) : _owner(owner) {}
 
     bool Execute(uint64 /*currTime*/, uint32 /*diff*/) override
     {
@@ -305,7 +317,7 @@ private:
 // 37126 - Sister Svalna
 struct boss_sister_svalna : public BossAI
 {
-    boss_sister_svalna(Creature* creature) : BossAI(creature, DATA_SISTER_SVALNA), _isEventInProgress(false) { }
+    boss_sister_svalna(Creature* creature) : BossAI(creature, DATA_SISTER_SVALNA), _isEventInProgress(false) {}
 
     void InitializeAI() override
     {
@@ -319,6 +331,7 @@ struct boss_sister_svalna : public BossAI
     {
         _Reset();
         me->SetReactState(REACT_DEFENSIVE);
+        me->SetImmuneToAll(true);
         _isEventInProgress = false;
     }
 
@@ -344,8 +357,13 @@ struct boss_sister_svalna : public BossAI
     void JustEngagedWith(Unit* who) override
     {
         BossAI::JustEngagedWith(who);
+
         if (Creature* crok = ObjectAccessor::GetCreature(*me, instance->GetGuidData(DATA_CROK_SCOURGEBANE)))
+        {
             crok->AI()->Talk(SAY_CROK_COMBAT_SVALNA);
+            crok->AI()->AttackStart(me);
+        }
+
         DoCastSelf(SPELL_DIVINE_SURGE, true);
         events.ScheduleEvent(EVENT_SVALNA_COMBAT, 9s);
         events.ScheduleEvent(EVENT_IMPALING_SPEAR, 40s, 50s);
@@ -356,24 +374,24 @@ struct boss_sister_svalna : public BossAI
     {
         switch (victim->GetTypeId())
         {
-            case TYPEID_PLAYER:
-                Talk(SAY_SVALNA_KILL);
-                break;
-            case TYPEID_UNIT:
-                switch (victim->GetEntry())
-                {
-                    case NPC_CAPTAIN_ARNATH:
-                    case NPC_CAPTAIN_BRANDON:
-                    case NPC_CAPTAIN_GRONDEL:
-                    case NPC_CAPTAIN_RUPERT:
-                        Talk(SAY_SVALNA_KILL_CAPTAIN);
-                        break;
-                    default:
-                        break;
-                }
+        case TYPEID_PLAYER:
+            Talk(SAY_SVALNA_KILL);
+            break;
+        case TYPEID_UNIT:
+            switch (victim->GetEntry())
+            {
+            case NPC_CAPTAIN_ARNATH:
+            case NPC_CAPTAIN_BRANDON:
+            case NPC_CAPTAIN_GRONDEL:
+            case NPC_CAPTAIN_RUPERT:
+                Talk(SAY_SVALNA_KILL_CAPTAIN);
                 break;
             default:
                 break;
+            }
+            break;
+        default:
+            break;
         }
     }
 
@@ -389,32 +407,32 @@ struct boss_sister_svalna : public BossAI
     {
         switch (action)
         {
-            case ACTION_KILL_CAPTAIN:
-                DoCastSelf(SPELL_CARESS_OF_DEATH, CastSpellExtraArgs(TRIGGERED_FULL_MASK).AddSpellMod(SPELLVALUE_MAX_TARGETS, 1));
-                break;
-            case ACTION_START_GAUNTLET:
-                if (me->IsAlive())
-                {
-                    me->setActive(true);
-                    me->SetFarVisible(true);
-                    _isEventInProgress = true;
-                    me->SetImmuneToAll(true);
-                    events.ScheduleEvent(EVENT_SVALNA_START, 25s);
-                }
-                break;
-            case ACTION_RESURRECT_CAPTAINS:
-                events.ScheduleEvent(EVENT_SVALNA_RESURRECT, 7s);
-                break;
-            case ACTION_CAPTAIN_DIES:
-                Talk(SAY_SVALNA_CAPTAIN_DEATH);
-                break;
-            case ACTION_RESET_EVENT:
-                me->setActive(false);
-                me->SetFarVisible(false);
-                Reset();
-                break;
-            default:
-                break;
+        case ACTION_KILL_CAPTAIN:
+            DoCastSelf(SPELL_CARESS_OF_DEATH, CastSpellExtraArgs(TRIGGERED_FULL_MASK).AddSpellMod(SPELLVALUE_MAX_TARGETS, 1));
+            break;
+        case ACTION_START_GAUNTLET:
+            if (me->IsAlive())
+            {
+                me->setActive(true);
+                me->SetFarVisible(true);
+                _isEventInProgress = true;
+                me->SetImmuneToAll(true);
+                events.ScheduleEvent(EVENT_SVALNA_START, 25s);
+            }
+            break;
+        case ACTION_RESURRECT_CAPTAINS:
+            events.ScheduleEvent(EVENT_SVALNA_RESURRECT, 7s);
+            break;
+        case ACTION_CAPTAIN_DIES:
+            Talk(SAY_SVALNA_CAPTAIN_DEATH);
+            break;
+        case ACTION_RESET_EVENT:
+            me->setActive(false);
+            me->SetFarVisible(false);
+            Reset();
+            break;
+        default:
+            break;
         }
     }
 
@@ -448,21 +466,21 @@ struct boss_sister_svalna : public BossAI
 
         switch (spellInfo->Id)
         {
-            case SPELL_IMPALING_SPEAR_KILL:
-                Unit::Kill(me, unitTarget);
-                break;
-            case SPELL_IMPALING_SPEAR:
-                if (TempSummon* summon = unitTarget->SummonCreature(NPC_IMPALING_SPEAR, *unitTarget))
-                {
-                    Talk(EMOTE_SVALNA_IMPALE, unitTarget);
-                    CastSpellExtraArgs args;
-                    args.AddSpellBP0(1);
-                    summon->CastSpell(target, VEHICLE_SPELL_RIDE_HARDCODED, args);
-                    summon->SetUnitFlag2(UNIT_FLAG2_ALLOW_ENEMY_INTERACT);
-                }
-                break;
-            default:
-                break;
+        case SPELL_IMPALING_SPEAR_KILL:
+            Unit::Kill(me, unitTarget);
+            break;
+        case SPELL_IMPALING_SPEAR:
+            if (TempSummon* summon = unitTarget->SummonCreature(NPC_IMPALING_SPEAR, *unitTarget))
+            {
+                Talk(EMOTE_SVALNA_IMPALE, unitTarget);
+                CastSpellExtraArgs args;
+                args.AddSpellBP0(1);
+                summon->CastSpell(target, VEHICLE_SPELL_RIDE_HARDCODED, args);
+                summon->SetUnitFlag2(UNIT_FLAG2_ALLOW_ENEMY_INTERACT);
+            }
+            break;
+        default:
+            break;
         }
     }
 
@@ -480,27 +498,27 @@ struct boss_sister_svalna : public BossAI
         {
             switch (eventId)
             {
-                case EVENT_SVALNA_START:
-                    Talk(SAY_SVALNA_EVENT_START);
-                    break;
-                case EVENT_SVALNA_RESURRECT:
-                    Talk(SAY_SVALNA_RESURRECT_CAPTAINS);
-                    DoCast(me, SPELL_REVIVE_CHAMPION, false);
-                    break;
-                case EVENT_SVALNA_COMBAT:
-                    me->SetReactState(REACT_DEFENSIVE);
-                    Talk(SAY_SVALNA_AGGRO);
-                    break;
-                case EVENT_IMPALING_SPEAR:
-                    if (Unit* target = SelectTarget(SelectTargetMethod::Random, 1, 0.0f, true, true, -SPELL_IMPALING_SPEAR))
-                    {
-                        DoCast(me, SPELL_AETHER_SHIELD);
-                        DoCast(target, SPELL_IMPALING_SPEAR);
-                    }
-                    events.ScheduleEvent(EVENT_IMPALING_SPEAR, 20s, 25s);
-                    break;
-                default:
-                    break;
+            case EVENT_SVALNA_START:
+                Talk(SAY_SVALNA_EVENT_START);
+                break;
+            case EVENT_SVALNA_RESURRECT:
+                Talk(SAY_SVALNA_RESURRECT_CAPTAINS);
+                DoCast(me, SPELL_REVIVE_CHAMPION, false);
+                break;
+            case EVENT_SVALNA_COMBAT:
+                me->SetReactState(REACT_DEFENSIVE);
+                Talk(SAY_SVALNA_AGGRO);
+                break;
+            case EVENT_IMPALING_SPEAR:
+                if (Unit* target = SelectTarget(SelectTargetMethod::Random, 1, 0.0f, true, true, -SPELL_IMPALING_SPEAR))
+                {
+                    DoCast(me, SPELL_AETHER_SHIELD);
+                    DoCast(target, SPELL_IMPALING_SPEAR);
+                }
+                events.ScheduleEvent(EVENT_IMPALING_SPEAR, 20s, 25s);
+                break;
+            default:
+                break;
             }
 
             if (me->HasUnitState(UNIT_STATE_CASTING))
@@ -527,6 +545,7 @@ struct npc_crok_scourgebane : public EscortAI
         _isEventActive = false;
         _isEventDone = _instance->GetBossState(DATA_SISTER_SVALNA) == DONE;
         _currentWPid = 0;
+        _escortStarted = false;
     }
 
     void Initialize()
@@ -579,6 +598,7 @@ struct npc_crok_scourgebane : public EscortAI
             me->SetFarVisible(false);
             _aliveTrash.clear();
             _currentWPid = 0;
+            _escortStarted = false;
         }
     }
 
@@ -607,30 +627,30 @@ struct npc_crok_scourgebane : public EscortAI
     {
         switch (waypointId)
         {
-            case 0: // pause pathing until trash pack is cleared
-                me->SetImmuneToNPC(false);
-                Talk(SAY_CROK_COMBAT_WP_0);
-                if (!_aliveTrash.empty())
-                    SetEscortPaused(true);
-                break;
-            case 1:
-                Talk(SAY_CROK_COMBAT_WP_1);
-                if (!_aliveTrash.empty())
-                    SetEscortPaused(true);
-                break;
-            case 4:
-                if (_aliveTrash.empty() && _isEventActive)
-                {
-                    _isEventActive = false;
-                    me->setActive(false);
-                    me->SetFarVisible(false);
-                    Talk(SAY_CROK_FINAL_WP);
-                    if (Creature* svalna = ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_SISTER_SVALNA)))
-                        svalna->AI()->DoAction(ACTION_RESURRECT_CAPTAINS);
-                }
-                break;
-            default:
-                break;
+        case 0: // pause pathing until trash pack is cleared
+            me->SetImmuneToNPC(false);
+            Talk(SAY_CROK_COMBAT_WP_0);
+            if (!_aliveTrash.empty())
+                SetEscortPaused(true);
+            break;
+        case 1:
+            Talk(SAY_CROK_COMBAT_WP_1);
+            if (!_aliveTrash.empty())
+                SetEscortPaused(true);
+            break;
+        case 4:
+            if (_aliveTrash.empty() && _isEventActive)
+            {
+                _isEventActive = false;
+                me->setActive(false);
+                me->SetFarVisible(false);
+                Talk(SAY_CROK_FINAL_WP);
+                if (Creature* svalna = ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_SISTER_SVALNA)))
+                    svalna->AI()->DoAction(ACTION_RESURRECT_CAPTAINS);
+            }
+            break;
+        default:
+            break;
         }
     }
 
@@ -639,74 +659,56 @@ struct npc_crok_scourgebane : public EscortAI
         _currentWPid = waypointId;
         switch (waypointId)
         {
-            case 0:
-            case 1:
-            case 4:
+        case 0:
+        case 1:
+        case 4:
+        {
+            // get spawns by home position
+            float minY = 2600.0f;
+            float maxY = 2650.0f;
+            if (waypointId == 1)
             {
-                // get spawns by home position
-                float minY = 2600.0f;
-                float maxY = 2650.0f;
-                if (waypointId == 1)
-                {
-                    minY -= 50.0f;
-                    maxY -= 50.0f;
-                    // at waypoints 1 and 2 she kills one captain
-                    if (Creature* svalna = ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_SISTER_SVALNA)))
-                        svalna->AI()->DoAction(ACTION_KILL_CAPTAIN);
-                }
-                else if (waypointId == 4)
-                {
-                    minY -= 100.0f;
-                    maxY -= 100.0f;
-                }
-
-                // get all nearby vrykul
-                std::list<Creature*> temp;
-                FrostwingVrykulSearcher check(me, 80.0f);
-                Trinity::CreatureListSearcher<FrostwingVrykulSearcher> searcher(me, temp, check);
-                Cell::VisitGridObjects(me, searcher, 80.0f);
-
-                _aliveTrash.clear();
-                for (auto itr = temp.begin(); itr != temp.end(); ++itr)
-                    if ((*itr)->GetHomePosition().GetPositionY() < maxY && (*itr)->GetHomePosition().GetPositionY() > minY)
-                        _aliveTrash.insert((*itr)->GetGUID());
-                break;
-            }
-            // at waypoints 1 and 2 she kills one captain
-            case 2:
+                minY -= 50.0f;
+                maxY -= 50.0f;
+                // at waypoints 1 and 2 she kills one captain
                 if (Creature* svalna = ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_SISTER_SVALNA)))
                     svalna->AI()->DoAction(ACTION_KILL_CAPTAIN);
-                break;
-            default:
-                break;
+            }
+            else if (waypointId == 4)
+            {
+                minY -= 100.0f;
+                maxY -= 100.0f;
+            }
+
+            // get all nearby vrykul
+            std::list<Creature*> temp;
+            FrostwingVrykulSearcher check(me, 80.0f);
+            Trinity::CreatureListSearcher<FrostwingVrykulSearcher> searcher(me, temp, check);
+            Cell::VisitGridObjects(me, searcher, 80.0f);
+
+            _aliveTrash.clear();
+            for (auto itr = temp.begin(); itr != temp.end(); ++itr)
+            {
+                if ((*itr)->GetHomePosition().GetPositionY() < maxY && (*itr)->GetHomePosition().GetPositionY() > minY)
+                {
+                    (*itr)->SetImmuneToAll(false);
+                    _aliveTrash.insert((*itr)->GetGUID());
+                }
+            }
+            break;
+        }
+        // at waypoints 1 and 2 she kills one captain
+        case 2:
+            if (Creature* svalna = ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_SISTER_SVALNA)))
+                svalna->AI()->DoAction(ACTION_KILL_CAPTAIN);
+            break;
+        default:
+            break;
         }
     }
 
     void DamageTaken(Unit* /*attacker*/, uint32& damage, DamageEffectType /*damageType*/, SpellInfo const* /*spellInfo = nullptr*/) override
     {
-        // check wipe
-        if (!_wipeCheckTimer)
-        {
-            _wipeCheckTimer = 1000;
-            Player* player = nullptr;
-            Trinity::AnyPlayerInObjectRangeCheck check(me, 60.0f);
-            Trinity::PlayerSearcher<Trinity::AnyPlayerInObjectRangeCheck> searcher(me, player, check);
-            Cell::VisitWorldObjects(me, searcher, 60.0f);
-            // wipe
-            if (!player)
-            {
-                damage *= 100;
-                if (damage >= me->GetHealth())
-                {
-                    FrostwingGauntletRespawner respawner;
-                    Trinity::CreatureWorker<FrostwingGauntletRespawner> worker(me, respawner);
-                    Cell::VisitGridObjects(me, worker, 333.0f);
-                    Talk(SAY_CROK_DEATH);
-                }
-                return;
-            }
-        }
-
         if (HealthBelowPct(10))
         {
             if (!_didUnderTenPercentText)
@@ -727,7 +729,30 @@ struct npc_crok_scourgebane : public EscortAI
     void UpdateEscortAI(uint32 diff) override
     {
         if (_wipeCheckTimer <= diff)
-            _wipeCheckTimer = 0;
+        {
+            _wipeCheckTimer = 1000;
+
+            // Only check for a wipe once the escort has actually started.
+            if (_escortStarted)
+            {
+                Player* player = nullptr;
+                ICCSvalnaAlivePlayerCheck check;
+                Trinity::PlayerSearcher<ICCSvalnaAlivePlayerCheck> searcher(me, player, check);
+                Cell::VisitWorldObjects(me, searcher, 60.0f);
+
+                if (!player)
+                {
+                    // Load the complete gauntlet area first. VisitGridObjects only sees loaded creatures.
+                    me->GetMap()->LoadGrid(4356.71f, 2484.33f);
+
+                    FrostwingGauntletRespawner respawner;
+                    Trinity::CreatureWorker<FrostwingGauntletRespawner> worker(me, respawner);
+                    Cell::VisitGridObjects(me, worker, 333.0f);
+                    Talk(SAY_CROK_DEATH);
+                    return;
+                }
+            }
+        }
         else
             _wipeCheckTimer -= diff;
 
@@ -743,41 +768,42 @@ struct npc_crok_scourgebane : public EscortAI
         {
             switch (eventId)
             {
-                case EVENT_ARNATH_INTRO_2:
-                    if (Creature* arnath = ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_CAPTAIN_ARNATH)))
-                        arnath->AI()->Talk(SAY_ARNATH_INTRO_2);
-                    break;
-                case EVENT_CROK_INTRO_3:
-                    Talk(SAY_CROK_INTRO_3);
-                    break;
-                case EVENT_START_PATHING:
-                    LoadPath(PATH_ESCORT_CROK_SCOURGEBANE),
+            case EVENT_ARNATH_INTRO_2:
+                if (Creature* arnath = ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_CAPTAIN_ARNATH)))
+                    arnath->AI()->Talk(SAY_ARNATH_INTRO_2);
+                break;
+            case EVENT_CROK_INTRO_3:
+                Talk(SAY_CROK_INTRO_3);
+                break;
+            case EVENT_START_PATHING:
+                LoadPath(PATH_ESCORT_CROK_SCOURGEBANE),
                     Start(true);
-                    break;
-                case EVENT_SCOURGE_STRIKE:
-                    DoCastVictim(SPELL_SCOURGE_STRIKE);
-                    _events.ScheduleEvent(EVENT_SCOURGE_STRIKE, 10s, 14s);
-                    break;
-                case EVENT_DEATH_STRIKE:
-                    if (HealthBelowPct(20))
-                        DoCastVictim(SPELL_DEATH_STRIKE);
-                    _events.ScheduleEvent(EVENT_DEATH_STRIKE, 5s, 10s);
-                    break;
-                case EVENT_HEALTH_CHECK:
-                    if (HealthAbovePct(15))
-                    {
-                        me->RemoveAurasDueToSpell(SPELL_ICEBOUND_ARMOR);
-                        _didUnderTenPercentText = false;
-                    }
-                    else
-                    {
-                        // looks totally hacky to me
-                        me->ModifyHealth(me->CountPctFromMaxHealth(5));
-                        _events.ScheduleEvent(EVENT_HEALTH_CHECK, 1s);
-                    }
-                    break;
-                default:
-                    break;
+                _escortStarted = true;
+                break;
+            case EVENT_SCOURGE_STRIKE:
+                DoCastVictim(SPELL_SCOURGE_STRIKE);
+                _events.ScheduleEvent(EVENT_SCOURGE_STRIKE, 10s, 14s);
+                break;
+            case EVENT_DEATH_STRIKE:
+                if (HealthBelowPct(20))
+                    DoCastVictim(SPELL_DEATH_STRIKE);
+                _events.ScheduleEvent(EVENT_DEATH_STRIKE, 5s, 10s);
+                break;
+            case EVENT_HEALTH_CHECK:
+                if (HealthAbovePct(15))
+                {
+                    me->RemoveAurasDueToSpell(SPELL_ICEBOUND_ARMOR);
+                    _didUnderTenPercentText = false;
+                }
+                else
+                {
+                    // looks totally hacky to me
+                    me->ModifyHealth(me->CountPctFromMaxHealth(5));
+                    _events.ScheduleEvent(EVENT_HEALTH_CHECK, 1s);
+                }
+                break;
+            default:
+                break;
             }
         }
 
@@ -800,6 +826,7 @@ private:
     uint32 const _corpseDelay;
     bool _isEventActive;
     bool _isEventDone;
+    bool _escortStarted;
     bool _didUnderTenPercentText;
 };
 
@@ -895,25 +922,30 @@ public:
             uint32 newEntry = 0;
             switch (me->GetEntry())
             {
-                case NPC_CAPTAIN_ARNATH:
-                    newEntry = NPC_CAPTAIN_ARNATH_UNDEAD;
-                    break;
-                case NPC_CAPTAIN_BRANDON:
-                    newEntry = NPC_CAPTAIN_BRANDON_UNDEAD;
-                    break;
-                case NPC_CAPTAIN_GRONDEL:
-                    newEntry = NPC_CAPTAIN_GRONDEL_UNDEAD;
-                    break;
-                case NPC_CAPTAIN_RUPERT:
-                    newEntry = NPC_CAPTAIN_RUPERT_UNDEAD;
-                    break;
-                default:
-                    return;
+            case NPC_CAPTAIN_ARNATH:
+                newEntry = NPC_CAPTAIN_ARNATH_UNDEAD;
+                break;
+            case NPC_CAPTAIN_BRANDON:
+                newEntry = NPC_CAPTAIN_BRANDON_UNDEAD;
+                break;
+            case NPC_CAPTAIN_GRONDEL:
+                newEntry = NPC_CAPTAIN_GRONDEL_UNDEAD;
+                break;
+            case NPC_CAPTAIN_RUPERT:
+                newEntry = NPC_CAPTAIN_RUPERT_UNDEAD;
+                break;
+            default:
+                return;
             }
 
             Talk(SAY_CAPTAIN_RESURRECTED);
             me->UpdateEntry(newEntry, me->GetCreatureData());
             DoCastSelf(SPELL_UNDEATH, true);
+
+            if (Player* p = me->SelectNearestPlayer(150.0f))
+                AttackStart(p);
+
+            me->AI()->DoZoneInCombat();
         }
     }
 
@@ -959,30 +991,30 @@ struct npc_captain_arnath : public npc_argent_captainAI
         {
             switch (eventId)
             {
-                case EVENT_ARNATH_FLASH_HEAL:
-                    if (Creature* target = FindFriendlyCreature())
-                        DoCast(target, SPELL_FLASH_HEAL);
-                    Events.ScheduleEvent(EVENT_ARNATH_FLASH_HEAL, 6s, 9s);
-                    break;
-                case EVENT_ARNATH_PW_SHIELD:
-                {
-                    std::list<Creature*> targets = DoFindFriendlyMissingBuff(40.0f, SPELL_POWER_WORD_SHIELD);
-                    if (!targets.empty())
-                        DoCast(Trinity::Containers::SelectRandomContainerElement(targets), SPELL_POWER_WORD_SHIELD);
-                    Events.ScheduleEvent(EVENT_ARNATH_PW_SHIELD, 15s, 20s);
-                    break;
-                }
-                case EVENT_ARNATH_SMITE:
-                    DoCastVictim(SPELL_SMITE);
-                    Events.ScheduleEvent(EVENT_ARNATH_SMITE, 4s, 7s);
-                    break;
-                case EVENT_ARNATH_DOMINATE_MIND:
-                    if (Unit* target = SelectTarget(SelectTargetMethod::Random, 1, 0.0f, true))
-                        DoCast(target, SPELL_DOMINATE_MIND);
-                    Events.ScheduleEvent(EVENT_ARNATH_DOMINATE_MIND, 28s, 37s);
-                    break;
-                default:
-                    break;
+            case EVENT_ARNATH_FLASH_HEAL:
+                if (Creature* target = FindFriendlyCreature())
+                    DoCast(target, SPELL_FLASH_HEAL);
+                Events.ScheduleEvent(EVENT_ARNATH_FLASH_HEAL, 6s, 9s);
+                break;
+            case EVENT_ARNATH_PW_SHIELD:
+            {
+                std::list<Creature*> targets = DoFindFriendlyMissingBuff(40.0f, SPELL_POWER_WORD_SHIELD);
+                if (!targets.empty())
+                    DoCast(Trinity::Containers::SelectRandomContainerElement(targets), SPELL_POWER_WORD_SHIELD);
+                Events.ScheduleEvent(EVENT_ARNATH_PW_SHIELD, 15s, 20s);
+                break;
+            }
+            case EVENT_ARNATH_SMITE:
+                DoCastVictim(SPELL_SMITE);
+                Events.ScheduleEvent(EVENT_ARNATH_SMITE, 4s, 7s);
+                break;
+            case EVENT_ARNATH_DOMINATE_MIND:
+                if (Unit* target = SelectTarget(SelectTargetMethod::Random, 1, 0.0f, true))
+                    DoCast(target, SPELL_DOMINATE_MIND);
+                Events.ScheduleEvent(EVENT_ARNATH_DOMINATE_MIND, 28s, 37s);
+                break;
+            default:
+                break;
             }
 
             if (me->HasUnitState(UNIT_STATE_CASTING))
@@ -1034,26 +1066,26 @@ struct npc_captain_brandon : public npc_argent_captainAI
         {
             switch (eventId)
             {
-                case EVENT_BRANDON_CRUSADER_STRIKE:
-                    DoCastVictim(SPELL_CRUSADER_STRIKE);
-                    Events.ScheduleEvent(EVENT_BRANDON_CRUSADER_STRIKE, 6s, 12s);
-                    break;
-                case EVENT_BRANDON_DIVINE_SHIELD:
-                    if (HealthBelowPct(20))
-                        DoCast(me, SPELL_DIVINE_SHIELD);
-                    Events.ScheduleEvent(EVENT_BRANDON_DIVINE_SHIELD, 500ms);
-                    break;
-                case EVENT_BRANDON_JUDGEMENT_OF_COMMAND:
-                    DoCastVictim(SPELL_JUDGEMENT_OF_COMMAND);
-                    Events.ScheduleEvent(EVENT_BRANDON_JUDGEMENT_OF_COMMAND, 8s, 13s);
-                    break;
-                case EVENT_BRANDON_HAMMER_OF_BETRAYAL:
-                    if (Unit* target = SelectTarget(SelectTargetMethod::Random, 1, 0.0f, true))
-                        DoCast(target, SPELL_HAMMER_OF_BETRAYAL);
-                    Events.ScheduleEvent(EVENT_BRANDON_HAMMER_OF_BETRAYAL, 45s, 60s);
-                    break;
-                default:
-                    break;
+            case EVENT_BRANDON_CRUSADER_STRIKE:
+                DoCastVictim(SPELL_CRUSADER_STRIKE);
+                Events.ScheduleEvent(EVENT_BRANDON_CRUSADER_STRIKE, 6s, 12s);
+                break;
+            case EVENT_BRANDON_DIVINE_SHIELD:
+                if (HealthBelowPct(20))
+                    DoCast(me, SPELL_DIVINE_SHIELD);
+                Events.ScheduleEvent(EVENT_BRANDON_DIVINE_SHIELD, 500ms);
+                break;
+            case EVENT_BRANDON_JUDGEMENT_OF_COMMAND:
+                DoCastVictim(SPELL_JUDGEMENT_OF_COMMAND);
+                Events.ScheduleEvent(EVENT_BRANDON_JUDGEMENT_OF_COMMAND, 8s, 13s);
+                break;
+            case EVENT_BRANDON_HAMMER_OF_BETRAYAL:
+                if (Unit* target = SelectTarget(SelectTargetMethod::Random, 1, 0.0f, true))
+                    DoCast(target, SPELL_HAMMER_OF_BETRAYAL);
+                Events.ScheduleEvent(EVENT_BRANDON_HAMMER_OF_BETRAYAL, 45s, 60s);
+                break;
+            default:
+                break;
             }
 
             if (me->HasUnitState(UNIT_STATE_CASTING))
@@ -1095,25 +1127,25 @@ struct npc_captain_grondel : public npc_argent_captainAI
         {
             switch (eventId)
             {
-                case EVENT_GRONDEL_CHARGE_CHECK:
-                    DoCastVictim(SPELL_CHARGE);
-                    Events.ScheduleEvent(EVENT_GRONDEL_CHARGE_CHECK, 500ms);
-                    break;
-                case EVENT_GRONDEL_MORTAL_STRIKE:
-                    DoCastVictim(SPELL_MORTAL_STRIKE);
-                    Events.ScheduleEvent(EVENT_GRONDEL_MORTAL_STRIKE, 10s, 15s);
-                    break;
-                case EVENT_GRONDEL_SUNDER_ARMOR:
-                    DoCastVictim(SPELL_SUNDER_ARMOR);
-                    Events.ScheduleEvent(EVENT_GRONDEL_SUNDER_ARMOR, 5s, 17s);
-                    break;
-                case EVENT_GRONDEL_CONFLAGRATION:
-                    if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 0.0f, true))
-                        DoCast(target, SPELL_CONFLAGRATION);
-                    Events.ScheduleEvent(EVENT_GRONDEL_CONFLAGRATION, 10s, 15s);
-                    break;
-                default:
-                    break;
+            case EVENT_GRONDEL_CHARGE_CHECK:
+                DoCastVictim(SPELL_CHARGE);
+                Events.ScheduleEvent(EVENT_GRONDEL_CHARGE_CHECK, 500ms);
+                break;
+            case EVENT_GRONDEL_MORTAL_STRIKE:
+                DoCastVictim(SPELL_MORTAL_STRIKE);
+                Events.ScheduleEvent(EVENT_GRONDEL_MORTAL_STRIKE, 10s, 15s);
+                break;
+            case EVENT_GRONDEL_SUNDER_ARMOR:
+                DoCastVictim(SPELL_SUNDER_ARMOR);
+                Events.ScheduleEvent(EVENT_GRONDEL_SUNDER_ARMOR, 5s, 17s);
+                break;
+            case EVENT_GRONDEL_CONFLAGRATION:
+                if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 0.0f, true))
+                    DoCast(target, SPELL_CONFLAGRATION);
+                Events.ScheduleEvent(EVENT_GRONDEL_CONFLAGRATION, 10s, 15s);
+                break;
+            default:
+                break;
             }
 
             if (me->HasUnitState(UNIT_STATE_CASTING))
@@ -1153,23 +1185,23 @@ struct npc_captain_rupert : public npc_argent_captainAI
         {
             switch (eventId)
             {
-                case EVENT_RUPERT_FEL_IRON_BOMB:
-                    if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0))
-                        DoCast(target, SPELL_FEL_IRON_BOMB);
-                    Events.ScheduleEvent(EVENT_RUPERT_FEL_IRON_BOMB, 15s, 20s);
-                    break;
-                case EVENT_RUPERT_MACHINE_GUN:
-                    if (Unit* target = SelectTarget(SelectTargetMethod::Random, 1))
-                        DoCast(target, SPELL_MACHINE_GUN);
-                    Events.ScheduleEvent(EVENT_RUPERT_MACHINE_GUN, 25s, 30s);
-                    break;
-                case EVENT_RUPERT_ROCKET_LAUNCH:
-                    if (Unit* target = SelectTarget(SelectTargetMethod::Random, 1))
-                        DoCast(target, SPELL_ROCKET_LAUNCH);
-                    Events.ScheduleEvent(EVENT_RUPERT_ROCKET_LAUNCH, 10s, 15s);
-                    break;
-                default:
-                    break;
+            case EVENT_RUPERT_FEL_IRON_BOMB:
+                if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0))
+                    DoCast(target, SPELL_FEL_IRON_BOMB);
+                Events.ScheduleEvent(EVENT_RUPERT_FEL_IRON_BOMB, 15s, 20s);
+                break;
+            case EVENT_RUPERT_MACHINE_GUN:
+                if (Unit* target = SelectTarget(SelectTargetMethod::Random, 1))
+                    DoCast(target, SPELL_MACHINE_GUN);
+                Events.ScheduleEvent(EVENT_RUPERT_MACHINE_GUN, 25s, 30s);
+                break;
+            case EVENT_RUPERT_ROCKET_LAUNCH:
+                if (Unit* target = SelectTarget(SelectTargetMethod::Random, 1))
+                    DoCast(target, SPELL_ROCKET_LAUNCH);
+                Events.ScheduleEvent(EVENT_RUPERT_ROCKET_LAUNCH, 10s, 15s);
+                break;
+            default:
+                break;
             }
 
             if (me->HasUnitState(UNIT_STATE_CASTING))
@@ -1200,20 +1232,23 @@ struct npc_frostwing_ymirjar_vrykul : public ScriptedAI
         if (!me->IsAlive())
             return;
 
+        // Ymirjar are immune until Crok reaches their group.
+        me->SetImmuneToAll(true);
+
         switch (me->GetEntry())
         {
-            case NPC_YMIRJAR_FROSTBINDER:
-                me->RemoveAurasDueToSpell(SPELL_ARCTIC_CHILL);
-                [[fallthrough]];
-            case NPC_YMIRJAR_DEATHBRINGER:
-                _OOCevents.ScheduleEvent(EVENT_YMIRJAR_SPIRIT_STREAM, 10s, 20s);
-                break;
-            case NPC_YMIRJAR_HUNTRESS:
-                if (Is25ManRaid())
-                    DoCast(SPELL_SUMMON_WARHAWK);
-                break;
-            default:
-                break;
+        case NPC_YMIRJAR_FROSTBINDER:
+            me->RemoveAurasDueToSpell(SPELL_ARCTIC_CHILL);
+            [[fallthrough]];
+        case NPC_YMIRJAR_DEATHBRINGER:
+            _OOCevents.ScheduleEvent(EVENT_YMIRJAR_SPIRIT_STREAM, 10s, 20s);
+            break;
+        case NPC_YMIRJAR_HUNTRESS:
+            if (Is25ManRaid())
+                DoCast(SPELL_SUMMON_WARHAWK);
+            break;
+        default:
+            break;
         }
     }
 
@@ -1248,32 +1283,32 @@ struct npc_frostwing_ymirjar_vrykul : public ScriptedAI
 
         switch (me->GetEntry())
         {
-            case NPC_YMIRJAR_FROSTBINDER:
-                DoCast(SPELL_ARCTIC_CHILL);
-                _events.ScheduleEvent(EVENT_YMIRJAR_FROZEN_ORB, 5s, 10s);
-                _events.ScheduleEvent(EVENT_YMIRJAR_TWISTED_WINDS, 10s, 20s);
-                break;
-            case NPC_YMIRJAR_BATTLE_MAIDEN:
-                _events.ScheduleEvent(EVENT_YMIRJAR_BARBARIC_STRIKE, 5s, 8s);
-                _events.ScheduleEvent(EVENT_YMIRJAR_ADRENALINE_RUSH, 10s, 20s);
-                break;
-            case NPC_YMIRJAR_WARLORD:
-                _events.ScheduleEvent(EVENT_YMIRJAR_WHIRLWIND, 5s, 8s);
-                break;
-            case NPC_YMIRJAR_HUNTRESS:
-                _events.ScheduleEvent(EVENT_YMIRJAR_RAPID_SHOT, 10s, 20s);
-                _events.ScheduleEvent(EVENT_YMIRJAR_ICE_TRAP, 5s, 10s);
-                _events.ScheduleEvent(EVENT_YMIRJAR_VOLLEY, 20s, 30s);
-                _events.ScheduleEvent(EVENT_YMIRJAR_SHOOT, 1s);
-                break;
-            case NPC_YMIRJAR_DEATHBRINGER:
-                _events.ScheduleEvent(EVENT_YMIRJAR_SHADOW_BOLT, 6s, 12s);
-                _events.ScheduleEvent(EVENT_YMIRJAR_DEATH_EMBRACE, 5s, 10s);
-                _events.ScheduleEvent(EVENT_YMIRJAR_BANISH, 10s, 20s);
-                _events.ScheduleEvent(EVENT_YMIRJAR_SUMMON, 10s, 25s);
-                break;
-            default:
-                break;
+        case NPC_YMIRJAR_FROSTBINDER:
+            DoCast(SPELL_ARCTIC_CHILL);
+            _events.ScheduleEvent(EVENT_YMIRJAR_FROZEN_ORB, 5s, 10s);
+            _events.ScheduleEvent(EVENT_YMIRJAR_TWISTED_WINDS, 10s, 20s);
+            break;
+        case NPC_YMIRJAR_BATTLE_MAIDEN:
+            _events.ScheduleEvent(EVENT_YMIRJAR_BARBARIC_STRIKE, 5s, 8s);
+            _events.ScheduleEvent(EVENT_YMIRJAR_ADRENALINE_RUSH, 10s, 20s);
+            break;
+        case NPC_YMIRJAR_WARLORD:
+            _events.ScheduleEvent(EVENT_YMIRJAR_WHIRLWIND, 5s, 8s);
+            break;
+        case NPC_YMIRJAR_HUNTRESS:
+            _events.ScheduleEvent(EVENT_YMIRJAR_RAPID_SHOT, 10s, 20s);
+            _events.ScheduleEvent(EVENT_YMIRJAR_ICE_TRAP, 5s, 10s);
+            _events.ScheduleEvent(EVENT_YMIRJAR_VOLLEY, 20s, 30s);
+            _events.ScheduleEvent(EVENT_YMIRJAR_SHOOT, 1s);
+            break;
+        case NPC_YMIRJAR_DEATHBRINGER:
+            _events.ScheduleEvent(EVENT_YMIRJAR_SHADOW_BOLT, 6s, 12s);
+            _events.ScheduleEvent(EVENT_YMIRJAR_DEATH_EMBRACE, 5s, 10s);
+            _events.ScheduleEvent(EVENT_YMIRJAR_BANISH, 10s, 20s);
+            _events.ScheduleEvent(EVENT_YMIRJAR_SUMMON, 10s, 25s);
+            break;
+        default:
+            break;
         }
     }
 
@@ -1290,12 +1325,12 @@ struct npc_frostwing_ymirjar_vrykul : public ScriptedAI
             {
                 switch (eventId)
                 {
-                    case EVENT_YMIRJAR_SPIRIT_STREAM:
-                        DoCast(SPELL_SPIRIT_STREAM);
-                        _OOCevents.Repeat(40s, 60s);
-                        break;
-                    default:
-                        break;
+                case EVENT_YMIRJAR_SPIRIT_STREAM:
+                    DoCast(SPELL_SPIRIT_STREAM);
+                    _OOCevents.Repeat(40s, 60s);
+                    break;
+                default:
+                    break;
                 }
 
                 if (me->HasUnitState(UNIT_STATE_CASTING))
@@ -1313,65 +1348,65 @@ struct npc_frostwing_ymirjar_vrykul : public ScriptedAI
         {
             switch (eventId)
             {
-                case EVENT_YMIRJAR_FROZEN_ORB:
-                    DoCast(me, SPELL_FROZEN_ORB_CAST);
-                    _events.Repeat(10s, 20s);
-                    break;
-                case EVENT_YMIRJAR_TWISTED_WINDS:
-                    if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 0.f, true))
-                        DoCast(target, SPELL_TWISTED_WINDS);
-                    _events.Repeat(10s, 20s);
-                    break;
-                case EVENT_YMIRJAR_BARBARIC_STRIKE:
-                    DoCastVictim(SPELL_BARBARIC_STRIKE);
-                    _events.Repeat(2s, 4s);
-                    break;
-                case EVENT_YMIRJAR_ADRENALINE_RUSH:
-                    me->AddAura(SPELL_ADRENALINE_RUSH, me);
-                    _events.Repeat(10s, 20s);
-                    break;
-                case EVENT_YMIRJAR_WHIRLWIND:
-                    DoCastAOE(SPELL_WHIRLWIND);
-                    _events.Repeat(6s, 12s);
-                    break;
-                case EVENT_YMIRJAR_RAPID_SHOT:
-                    DoCast(SPELL_RAPID_SHOT);
-                    _events.Repeat(20s, 30s);
-                    break;
-                case EVENT_YMIRJAR_ICE_TRAP:
-                    if (Unit* target = SelectTarget(SelectTargetMethod::Random, 1, 20.0f, true))
-                        DoCast(target, SPELL_ICE_TRAP);
-                    _events.Repeat(15s, 20s);
-                    break;
-                case EVENT_YMIRJAR_VOLLEY:
-                    if (Unit* target = SelectTarget(SelectTargetMethod::Random, 1, 40.0f, true))
-                        DoCast(target, SPELL_VOLLEY);
-                    _events.Repeat(10s, 20s);
-                    break;
-                case EVENT_YMIRJAR_SHOOT:
-                    DoCastVictim(SPELL_YMIRJAR_SHOOT);
-                    _events.Repeat(2s);
-                    break;
-                case EVENT_YMIRJAR_SHADOW_BOLT:
-                    DoCastVictim(SPELL_YMIRJAR_SHADOW_BOLT);
-                    _events.Repeat(5s, 8s);
-                    break;
-                case EVENT_YMIRJAR_DEATH_EMBRACE:
-                    DoCast(SPELL_DEATH_EMBRACE);
-                    _events.Repeat(10s, 20s);
-                    break;
-                case EVENT_YMIRJAR_BANISH:
-                    if (Unit* target = SelectTarget(SelectTargetMethod::Random, 1, 20.0f, true))
-                        DoCast(target, SPELL_BANISH);
-                    _events.Repeat(10s, 20s);
-                    break;
-                case EVENT_YMIRJAR_SUMMON:
-                    DoCast(SPELL_SUMMON_YMIRJAR);
-                    _events.DelayEvents(2s);
-                    _events.Repeat(90s);
-                    break;
-                default:
-                    break;
+            case EVENT_YMIRJAR_FROZEN_ORB:
+                DoCast(me, SPELL_FROZEN_ORB_CAST);
+                _events.Repeat(10s, 20s);
+                break;
+            case EVENT_YMIRJAR_TWISTED_WINDS:
+                if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 0.f, true))
+                    DoCast(target, SPELL_TWISTED_WINDS);
+                _events.Repeat(10s, 20s);
+                break;
+            case EVENT_YMIRJAR_BARBARIC_STRIKE:
+                DoCastVictim(SPELL_BARBARIC_STRIKE);
+                _events.Repeat(2s, 4s);
+                break;
+            case EVENT_YMIRJAR_ADRENALINE_RUSH:
+                me->AddAura(SPELL_ADRENALINE_RUSH, me);
+                _events.Repeat(10s, 20s);
+                break;
+            case EVENT_YMIRJAR_WHIRLWIND:
+                DoCastAOE(SPELL_WHIRLWIND);
+                _events.Repeat(6s, 12s);
+                break;
+            case EVENT_YMIRJAR_RAPID_SHOT:
+                DoCast(SPELL_RAPID_SHOT);
+                _events.Repeat(20s, 30s);
+                break;
+            case EVENT_YMIRJAR_ICE_TRAP:
+                if (Unit* target = SelectTarget(SelectTargetMethod::Random, 1, 20.0f, true))
+                    DoCast(target, SPELL_ICE_TRAP);
+                _events.Repeat(15s, 20s);
+                break;
+            case EVENT_YMIRJAR_VOLLEY:
+                if (Unit* target = SelectTarget(SelectTargetMethod::Random, 1, 40.0f, true))
+                    DoCast(target, SPELL_VOLLEY);
+                _events.Repeat(10s, 20s);
+                break;
+            case EVENT_YMIRJAR_SHOOT:
+                DoCastVictim(SPELL_YMIRJAR_SHOOT);
+                _events.Repeat(2s);
+                break;
+            case EVENT_YMIRJAR_SHADOW_BOLT:
+                DoCastVictim(SPELL_YMIRJAR_SHADOW_BOLT);
+                _events.Repeat(5s, 8s);
+                break;
+            case EVENT_YMIRJAR_DEATH_EMBRACE:
+                DoCast(SPELL_DEATH_EMBRACE);
+                _events.Repeat(10s, 20s);
+                break;
+            case EVENT_YMIRJAR_BANISH:
+                if (Unit* target = SelectTarget(SelectTargetMethod::Random, 1, 20.0f, true))
+                    DoCast(target, SPELL_BANISH);
+                _events.Repeat(10s, 20s);
+                break;
+            case EVENT_YMIRJAR_SUMMON:
+                DoCast(SPELL_SUMMON_YMIRJAR);
+                _events.DelayEvents(2s);
+                _events.Repeat(90s);
+                break;
+            default:
+                break;
             }
 
             if (me->HasUnitState(UNIT_STATE_CASTING))
@@ -1489,7 +1524,7 @@ class spell_svalna_remove_spear : public SpellScript
 class at_icc_start_frostwing_gauntlet : public AreaTriggerScript
 {
 public:
-    at_icc_start_frostwing_gauntlet() : AreaTriggerScript("at_icc_start_frostwing_gauntlet") { }
+    at_icc_start_frostwing_gauntlet() : AreaTriggerScript("at_icc_start_frostwing_gauntlet") {}
 
     bool OnTrigger(Player* player, AreaTriggerEntry const* /*areaTrigger*/) override
     {

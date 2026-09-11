@@ -26,6 +26,9 @@
 #include "ScriptMgr.h"
 #include "SpellAuras.h"
 #include "SpellScript.h"
+#include "MoveSpline.h"
+#include "MoveSplineInit.h"
+#include "GameObject.h"
 
 enum SaurfangTexts
 {
@@ -62,6 +65,7 @@ enum SaurfangTexts
     SAY_OUTRO_HORDE_2               = 12,
     SAY_OUTRO_HORDE_3               = 13,
     SAY_OUTRO_HORDE_4               = 14,
+    SAY_OUTRO_ALLIANCE_SAURFANG_NOD = 19,   // emote beat, outside the numbered 21
 
     // Muradin Bronzebeard
     SAY_INTRO_ALLIANCE_1            = 0,
@@ -81,6 +85,7 @@ enum SaurfangTexts
     // Lady Jaina Proudmoore
     SAY_OUTRO_ALLIANCE_17           = 0,
     SAY_OUTRO_ALLIANCE_19           = 1,
+    SAY_OUTRO_ALLIANCE_JAINA_SMILE  = 2,    // emote beat, outside the numbered 21
 
     // King Varian Wrynn
     SAY_OUTRO_ALLIANCE_11           = 0,
@@ -173,16 +178,22 @@ enum SaurfangEvents
     EVENT_OUTRO_ALLIANCE_18     = 40,
     EVENT_OUTRO_ALLIANCE_19     = 41,
     EVENT_OUTRO_ALLIANCE_20     = 42,
-    EVENT_OUTRO_ALLIANCE_21     = 43,
 
     EVENT_OUTRO_HORDE_1         = 44,
-    EVENT_OUTRO_HORDE_2         = 45,
     EVENT_OUTRO_HORDE_3         = 46,
     EVENT_OUTRO_HORDE_4         = 47,
-    EVENT_OUTRO_HORDE_5         = 48,
-    EVENT_OUTRO_HORDE_6         = 49,
-    EVENT_OUTRO_HORDE_7         = 50,
-    EVENT_OUTRO_HORDE_8         = 51,
+    EVENT_OUTRO_HORDE_GUARDS_KNEEL = 49,
+    EVENT_OUTRO_HORDE_PICKUP    = 50,
+    EVENT_OUTRO_HORDE_LEAVE     = 51,
+    EVENT_OUTRO_A_GUARDS_KNEEL  = 52,
+    EVENT_OUTRO_A_SAURFANG_NOD  = 53,
+    EVENT_OUTRO_A_JAINA_SMILE   = 54,
+    EVENT_OUTRO_A_SAURFANG_LEAVE = 55,
+    EVENT_OUTRO_A_DISMISS       = 56,
+    EVENT_OUTRO_A_ROYALS        = 57,
+    EVENT_OUTRO_A_PORTAL_CLOSE  = 58,
+    EVENT_OUTRO_A_SAURFANG_ADVANCE = 59,
+    EVENT_OUTRO_A_ZEPPELIN_RELEASE = 60,
 };
 
 enum SaurfangPhases
@@ -201,6 +212,12 @@ enum SaurfangActions
     ACTION_DESPAWN                      = -3781304,
     ACTION_INTERRUPT_INTRO              = -3781305,
     ACTION_MARK_OF_THE_FALLEN_CHAMPION  = -72293,
+    ACTION_READY_WEAPONS                = -3781308,
+    ACTION_OUTRO_DESCEND                = -3781309,
+    ACTION_OUTRO_KNEEL                  = -3781310,
+    ACTION_OUTRO_RETREAT                = -3781311,
+    ACTION_OUTRO_FALL_IN                = -3781312,
+    ACTION_OUTRO_STAND_DOWN             = -3781313,
 };
 
 enum SaurfangMisc
@@ -222,6 +239,15 @@ enum SaurfangPoints
     POINT_CORPSE            = 3781304,
     POINT_FINAL             = 3781305,
     POINT_EXIT              = 5,        // waypoint id
+    POINT_TRANSPORTER       = 3781306,
+    POINT_RETREAT           = 3781307,
+    POINT_A_MURADIN_STAND   = 3781308,
+    POINT_A_SAURFANG_MEET   = 3781309,
+    POINT_A_CORPSE          = 3781310,
+    POINT_A_VARIAN          = 3781311,
+    POINT_A_EXIT            = 3781312,
+    POINT_A_STAND_DOWN      = 3781313,
+    POINT_A_MURADIN_HOME    = 3781314,
 };
 
 Position const deathbringerPos = {-496.3542f, 2211.33f, 541.1138f, 0.0f};
@@ -237,17 +263,36 @@ Position const chargePos[6] =
     {-509.0040f, 2211.743f, 539.2870f, 0.0f}  // back right
 };
 
+// Grip of Agony hangs the whole group at one height, 12 yards over the floor at 539.287.
 Position const chokePos[6] =
 {
-    {-514.4834f, 2211.334f, 549.2887f, 0.0f}, // High Overlord Saurfang/Muradin Bronzebeard
-    {-510.1081f, 2211.592f, 546.3773f, 0.0f}, // front left
+    {-514.4834f, 2211.334f, 551.2882f, 0.0f}, // High Overlord Saurfang/Muradin Bronzebeard
+    {-510.1081f, 2211.592f, 551.2882f, 0.0f}, // front left
     {-513.3210f, 2211.396f, 551.2882f, 0.0f}, // front right
-    {-507.3684f, 2210.353f, 545.7497f, 0.0f}, // back middle
-    {-507.0486f, 2212.999f, 545.5512f, 0.0f}, // back left
-    {-510.7041f, 2211.069f, 546.5298f, 0.0f}  // back right
+    {-507.3684f, 2210.353f, 551.2882f, 0.0f}, // back middle
+    {-507.0486f, 2212.999f, 551.2882f, 0.0f}, // back left
+    {-510.7041f, 2211.069f, 551.2882f, 0.0f}  // back right
 };
 
+//Position const finalPos = {-563.7552f, 2211.328f, 538.7848f, 0.0f};
 Position const finalPos = {-563.7552f, 2211.328f, 538.7848f, 0.0f};
+Position const transporterPos = {-549.0735f, 2211.289f, 539.2917f, 3.1415927f};
+
+Position const allianceSaurfangPos = {-521.8657f, 2250.3455f, 539.29240f, 5.2911840f};
+Position const allianceMuradinPos  = {-518.2308f, 2232.5356f, 539.29095f, 1.8000813f};
+Position const allianceVarianPos   = {-521.0001f, 2238.3192f, 539.29095f, 5.6681833f};
+Position const allianceJainaPos    = {-522.2058f, 2236.3171f, 539.29095f, 5.7388660f};
+Position const allianceSaurfangMeetPos = {-519.0500f, 2236.4000f, 539.29095f, 1.8000813f + 3.1415927f};
+Position const allianceVarianMeetPos   = {-518.5498f, 2236.5883f, 539.29095f, 2.5265906f};
+float const allianceGuardOffset[6][2] =
+{
+    { 0.0f,  0.0f},
+    { 2.6f, -1.4f},
+    { 3.4f,  1.2f},
+    { 0.8f, -3.2f},
+    {-1.6f, -2.4f},
+    {-2.2f,  1.0f}
+};
 
 // 37813 - Deathbringer Saurfang
 struct boss_deathbringer_saurfang : public BossAI
@@ -262,10 +307,14 @@ struct boss_deathbringer_saurfang : public BossAI
     {
         if (_dead)
             return;
+
         _Reset();
+        me->SetImmuneToAll(true);
         events.SetPhase(PHASE_COMBAT);
         _frenzied = false;
         _dead = false;
+        _introDone = false;
+        _outroStarted = false;
         me->SetPower(POWER_ENERGY, 0);
         DoCastSelf(SPELL_ZERO_POWER, true);
         DoCastSelf(SPELL_BLOOD_LINK, true);
@@ -330,9 +379,16 @@ struct boss_deathbringer_saurfang : public BossAI
 
     void EnterEvadeMode(EvadeReason why) override
     {
+        // The outro revives the corpse to carry it, so evading here would roll DONE back to FAIL.
+        if (_outroStarted)
+            return;
+
         ScriptedAI::EnterEvadeMode(why);
-        if (_introDone)
-            me->SetImmuneToPC(false);
+        if (Creature* creature = ObjectAccessor::GetCreature(*me, instance->GetGuidData(DATA_SAURFANG_EVENT_NPC)))
+            creature->AI()->DoAction(ACTION_INTERRUPT_INTRO);
+
+        me->SetUnitFlag(UNIT_FLAG_UNINTERACTIBLE);
+        instance->HandleGameObject(instance->GetGuidData(GO_SAURFANG_S_DOOR), true);
     }
 
     void JustReachedHome() override
@@ -366,8 +422,8 @@ struct boss_deathbringer_saurfang : public BossAI
         if (!_dead && me->GetHealth()-damage < FightWonValue)
         {
             _dead = true;
+            _outroStarted = true;
             _JustDied();
-            _EnterEvadeMode();
             me->SetUnitFlag(UNIT_FLAG_UNINTERACTIBLE);
             me->SetImmuneToPC(true);
             me->RemoveAurasOnEvade();
@@ -376,6 +432,15 @@ struct boss_deathbringer_saurfang : public BossAI
             Talk(SAY_DEATH);
             DoCastSelf(SPELL_REPUTATION_BOSS_KILL, true);
             DoCastSelf(SPELL_PERMANENT_FEIGN_DEATH);
+
+            me->AddUnitState(UNIT_STATE_EVADE);
+            me->ClearComboPointHolders();
+            me->CombatStop(true);
+            me->SetCannotReachTarget(false);
+            me->DoNotReacquireSpellFocusTarget();
+            me->SetTarget(ObjectGuid::Empty);
+            EngagementOver();
+
             if (Creature* creature = ObjectAccessor::GetCreature(*me, instance->GetGuidData(DATA_SAURFANG_EVENT_NPC)))
                 creature->AI()->DoAction(ACTION_START_OUTRO);
         }
@@ -493,6 +558,8 @@ struct boss_deathbringer_saurfang : public BossAI
                     events.SetPhase(PHASE_COMBAT);
                     _introDone = true;
                     me->SetImmuneToPC(false);
+                    if (Player* target = me->SelectNearestPlayer(100.0f))
+                        AttackStart(target);
                     break;
                 case EVENT_SUMMON_BLOOD_BEAST:
                     for (uint32 i10 = 0; i10 < 2; ++i10)
@@ -559,13 +626,14 @@ struct boss_deathbringer_saurfang : public BossAI
                 // controls what events will execute
                 events.SetPhase(uint32(action));
 
-                me->SetHomePosition(deathbringerPos.GetPositionX(), deathbringerPos.GetPositionY(), deathbringerPos.GetPositionZ(), me->GetOrientation());
                 me->GetMotionMaster()->MovePoint(POINT_SAURFANG, deathbringerPos.GetPositionX(), deathbringerPos.GetPositionY(), deathbringerPos.GetPositionZ());
 
                 events.ScheduleEvent(EVENT_INTRO_ALLIANCE_2, 2500ms, 0, PHASE_INTRO_A);
                 events.ScheduleEvent(EVENT_INTRO_ALLIANCE_3, 20s, 0, PHASE_INTRO_A);
 
                 events.ScheduleEvent(EVENT_INTRO_HORDE_2, 5s, 0, PHASE_INTRO_H);
+
+                me->RemoveUnitFlag(UNIT_FLAG_UNINTERACTIBLE);
                 break;
             }
             case ACTION_CONTINUE_INTRO:
@@ -574,11 +642,11 @@ struct boss_deathbringer_saurfang : public BossAI
                     return;
 
                 events.ScheduleEvent(EVENT_INTRO_ALLIANCE_6, 7s, 0, PHASE_INTRO_A);
-                events.ScheduleEvent(EVENT_INTRO_FINISH, 8s, 0, PHASE_INTRO_A);
+                events.ScheduleEvent(EVENT_INTRO_FINISH, 14s, 0, PHASE_INTRO_A);
 
                 events.ScheduleEvent(EVENT_INTRO_HORDE_4, 6500ms, 0, PHASE_INTRO_H);
                 events.ScheduleEvent(EVENT_INTRO_HORDE_9, 48200ms, 0, PHASE_INTRO_H);
-                events.ScheduleEvent(EVENT_INTRO_FINISH,  55700ms, 0, PHASE_INTRO_H);
+                events.ScheduleEvent(EVENT_INTRO_FINISH, 58s, 0, PHASE_INTRO_H);
                 break;
             }
             case ACTION_MARK_OF_THE_FALLEN_CHAMPION:
@@ -611,6 +679,7 @@ struct boss_deathbringer_saurfang : public BossAI
 private:
     uint32 _fallenChampionCastCount;
     bool _introDone;
+    bool _outroStarted;
     bool _frenzied;   // faster than iterating all auras to find Frenzy
     bool _dead;
 };
@@ -629,6 +698,8 @@ struct npc_high_overlord_saurfang_icc : public ScriptedAI
     void Reset() override
     {
         _events.Reset();
+        me->SetNpcFlag(UNIT_NPC_FLAG_GOSSIP);
+        me->SetReactState(REACT_PASSIVE);
     }
 
     bool OnGossipSelect(Player* player, uint32 menuId, uint32 /*gossipListId*/) override
@@ -671,6 +742,13 @@ struct npc_high_overlord_saurfang_icc : public ScriptedAI
                 _events.SetPhase(PHASE_INTRO_H);
                 _events.ScheduleEvent(EVENT_INTRO_HORDE_3, 18500ms, 0, PHASE_INTRO_H);
                 _instance->HandleGameObject(_instance->GetGuidData(GO_SAURFANG_S_DOOR), true);
+
+                if (GameObject* tp = me->FindNearestGameObject(GO_SCOURGE_TRANSPORTER_DEATHBRINGER, 100.f))
+                {
+                    tp->SetFlag(GO_FLAG_NOT_SELECTABLE);
+                    tp->SetGoState(GO_STATE_READY);
+                }
+
                 if (Creature* deathbringer = ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_DEATHBRINGER_SAURFANG)))
                     deathbringer->AI()->DoAction(PHASE_INTRO_H);
                 break;
@@ -679,25 +757,48 @@ struct npc_high_overlord_saurfang_icc : public ScriptedAI
             {
                 me->RemoveAurasDueToSpell(SPELL_GRIP_OF_AGONY);
                 Talk(SAY_OUTRO_HORDE_1);
-                _events.ScheduleEvent(EVENT_OUTRO_HORDE_2, 10s);   // say
-                _events.ScheduleEvent(EVENT_OUTRO_HORDE_3, 18s);   // say
-                _events.ScheduleEvent(EVENT_OUTRO_HORDE_4, 24s);   // cast
-                _events.ScheduleEvent(EVENT_OUTRO_HORDE_5, 30s);   // move
                 me->SetDisableGravity(false);
                 me->GetMotionMaster()->MoveFall();
                 GuardBroadcast([](Creature* guard)
                 {
-                    guard->AI()->DoAction(ACTION_DESPAWN);
+                    guard->AI()->DoAction(ACTION_OUTRO_DESCEND);
                 });
+                _instance->SetData(DATA_SAURFANG_CAMP, IN_PROGRESS);
+                _events.ScheduleEvent(EVENT_OUTRO_HORDE_GUARDS_KNEEL, 2s + 500ms);
+                _events.ScheduleEvent(EVENT_OUTRO_HORDE_1, 10s);
+                _events.ScheduleEvent(EVENT_OUTRO_HORDE_3, 18s);
+
+                if (GameObject* tp = me->FindNearestGameObject(GO_SCOURGE_TRANSPORTER_DEATHBRINGER, 100.f))
+                {
+                    tp->RemoveFlag(GO_FLAG_NOT_SELECTABLE);
+                    tp->SetGoState(GO_STATE_ACTIVE);
+                }
                 break;
             }
             case ACTION_INTERRUPT_INTRO:
             {
                 _events.Reset();
+                me->GetMotionMaster()->Clear();
+                me->Relocate(me->GetHomePosition());
+                me->ClearUnitState(UNIT_STATE_MOVING);
+                me->m_movementInfo.RemoveMovementFlag(MovementFlags(MOVEMENTFLAG_SPLINE_ENABLED | MOVEMENTFLAG_FORWARD));
+                me->movespline->_Interrupt();
+                Movement::MoveSplineInit init(me);
+                init.MoveTo(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ());
+                init.SetFacing(me->GetOrientation());
+                init.Launch();
+                me->SetDisableGravity(false);
+                EnterEvadeMode();
                 GuardBroadcast([](Creature* guard)
                 {
                     guard->AI()->DoAction(ACTION_DESPAWN);
                 });
+
+                if (GameObject* tp = me->FindNearestGameObject(GO_SCOURGE_TRANSPORTER_DEATHBRINGER, 100.f))
+                {
+                    tp->RemoveFlag(GO_FLAG_NOT_SELECTABLE);
+                    tp->SetGoState(GO_STATE_ACTIVE);
+                }
                 break;
             }
             default:
@@ -732,20 +833,28 @@ struct npc_high_overlord_saurfang_icc : public ScriptedAI
                     break;
                 case POINT_CORPSE:
                     if (Creature* deathbringer = ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_DEATHBRINGER_SAURFANG)))
-                    {
-                        deathbringer->CastSpell(me, SPELL_RIDE_VEHICLE, true);  // for the packet logs.
-                        deathbringer->SetUnitFlag(UNIT_FLAG_UNINTERACTIBLE);
-                        deathbringer->SetUnitFlag2(UNIT_FLAG2_PLAY_DEATH_ANIM);
-                        deathbringer->SetEmoteState(EMOTE_STATE_DROWNED);
-                    }
-                    _events.ScheduleEvent(EVENT_OUTRO_HORDE_5, 1s);    // move
-                    _events.ScheduleEvent(EVENT_OUTRO_HORDE_6, 4s);    // say
+                        me->SetFacingToObject(deathbringer);
+                    me->SetStandState(UNIT_STAND_STATE_KNEEL);
+                    Talk(SAY_OUTRO_HORDE_3);
+                    _events.ScheduleEvent(EVENT_OUTRO_HORDE_PICKUP, 6s);
+                    break;
+                case POINT_TRANSPORTER:
+                    me->SetFacingTo(0.0f);
+                    Talk(SAY_OUTRO_HORDE_4);
+                    _events.ScheduleEvent(EVENT_OUTRO_HORDE_LEAVE, 8s);
                     break;
                 case POINT_FINAL:
+                {
                     if (Creature* deathbringer = ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_DEATHBRINGER_SAURFANG)))
                         deathbringer->DespawnOrUnsummon();
-                    me->DespawnOrUnsummon();
-                    break;
+
+                    float x, y, z, o;
+                    me->GetHomePosition(x, y, z, o);
+                    me->SetVisible(false);
+                    me->NearTeleportTo(x, y, z, o);
+                    _instance->SetData(DATA_SAURFANG_CAMP, DONE);
+                }
+                break;
                 default:
                     break;
             }
@@ -764,6 +873,10 @@ struct npc_high_overlord_saurfang_icc : public ScriptedAI
             switch (eventId)
             {
                 case EVENT_INTRO_HORDE_3:
+                    GuardBroadcast([](Creature* guard)
+                        {
+                            guard->AI()->DoAction(ACTION_READY_WEAPONS);
+                        });
                     me->SetWalk(true);
                     me->GetMotionMaster()->MovePoint(POINT_FIRST_STEP, firstStepPos.GetPositionX(), firstStepPos.GetPositionY(), firstStepPos.GetPositionZ());
                     break;
@@ -784,28 +897,48 @@ struct npc_high_overlord_saurfang_icc : public ScriptedAI
                     });
                     me->GetMotionMaster()->MoveCharge(chargePos[0].GetPositionX(), chargePos[0].GetPositionY(), chargePos[0].GetPositionZ(), 8.5f, POINT_CHARGE);
                     break;
-                case EVENT_OUTRO_HORDE_2:   // say
+                case EVENT_OUTRO_HORDE_1:
                     if (Creature* deathbringer = ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_DEATHBRINGER_SAURFANG)))
                         me->SetFacingToObject(deathbringer);
                     Talk(SAY_OUTRO_HORDE_2);
                     break;
-                case EVENT_OUTRO_HORDE_3:   // say
-                    Talk(SAY_OUTRO_HORDE_3);
+                case EVENT_OUTRO_HORDE_GUARDS_KNEEL:
+                    GuardBroadcast([](Creature* guard)
+                        {
+                            guard->AI()->DoAction(ACTION_OUTRO_KNEEL);
+                        });
                     break;
-                case EVENT_OUTRO_HORDE_4:   // move
+                case EVENT_OUTRO_HORDE_3:
                     if (Creature* deathbringer = ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_DEATHBRINGER_SAURFANG)))
                     {
                         float x, y, z;
-                        deathbringer->GetClosePoint(x, y, z, deathbringer->GetCombatReach());
+                        deathbringer->GetClosePoint(x, y, z, deathbringer->GetObjectScale());//GetObjectSize());
                         me->SetWalk(true);
                         me->GetMotionMaster()->MovePoint(POINT_CORPSE, x, y, z);
                     }
                     break;
-                case EVENT_OUTRO_HORDE_5:   // move
-                    me->GetMotionMaster()->MovePoint(POINT_FINAL, finalPos);
+                case EVENT_OUTRO_HORDE_PICKUP:
+                    if (Creature* deathbringer = ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_DEATHBRINGER_SAURFANG)))
+                    {
+                        deathbringer->SetUnitFlag(UNIT_FLAG_UNINTERACTIBLE);
+                        deathbringer->CastSpell(me, SPELL_RIDE_VEHICLE, true);
+                        deathbringer->SetUnitFlag2(UNIT_FLAG2_PLAY_DEATH_ANIM);
+                        deathbringer->SetEmoteState(EMOTE_STATE_DROWNED);
+                    }
+                    GuardBroadcast([](Creature* guard)
+                        {
+                            guard->AI()->DoAction(ACTION_OUTRO_RETREAT);
+                        });
+                    _events.ScheduleEvent(EVENT_OUTRO_HORDE_4, 3s);
                     break;
-                case EVENT_OUTRO_HORDE_6:   // say
-                    Talk(SAY_OUTRO_HORDE_4);
+                case EVENT_OUTRO_HORDE_4:
+                    me->SetStandState(UNIT_STAND_STATE_STAND);
+                    me->SetWalk(true);
+                    me->GetMotionMaster()->MovePoint(POINT_TRANSPORTER, transporterPos);
+                    break;
+                case EVENT_OUTRO_HORDE_LEAVE:
+                    me->SetWalk(true);
+                    me->GetMotionMaster()->MovePoint(POINT_FINAL, finalPos);
                     break;
             }
         }
@@ -822,11 +955,15 @@ struct npc_muradin_bronzebeard_icc : public ScriptedAI
     npc_muradin_bronzebeard_icc(Creature* creature) : ScriptedAI(creature)
     {
         _instance = me->GetInstanceScript();
+        _outroZeppelinWait = 0;
     }
 
     void Reset() override
     {
         _events.Reset();
+        _outroZeppelinWait = 0;
+        me->SetNpcFlag(UNIT_NPC_FLAG_GOSSIP);
+        me->SetReactState(REACT_PASSIVE);
     }
 
     bool OnGossipSelect(Player* player, uint32 menuId, uint32 /*gossipListId*/) override
@@ -867,8 +1004,16 @@ struct npc_muradin_bronzebeard_icc : public ScriptedAI
 
                 me->RemoveNpcFlag(UNIT_NPC_FLAG_GOSSIP);
                 Talk(SAY_INTRO_ALLIANCE_1);
+                _outroZeppelinWait = 0;
                 _events.ScheduleEvent(EVENT_INTRO_ALLIANCE_4, 29500ms, 0, PHASE_INTRO_A);
                 _instance->HandleGameObject(_instance->GetGuidData(GO_SAURFANG_S_DOOR), true);
+
+                if (GameObject* tp = me->FindNearestGameObject(GO_SCOURGE_TRANSPORTER_DEATHBRINGER, 100.f))
+                {
+                    tp->SetFlag(GO_FLAG_NOT_SELECTABLE);
+                    tp->SetGoState(GO_STATE_READY);
+                }
+
                 if (Creature* deathbringer = ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_DEATHBRINGER_SAURFANG)))
                     deathbringer->AI()->DoAction(PHASE_INTRO_A);
                 break;
@@ -879,22 +1024,49 @@ struct npc_muradin_bronzebeard_icc : public ScriptedAI
                 Talk(SAY_OUTRO_ALLIANCE_1);
                 me->SetDisableGravity(false);
                 me->GetMotionMaster()->MoveFall();
+
                 GuardBroadcast([](Creature* guard)
                 {
-                    guard->AI()->DoAction(ACTION_DESPAWN);
+                    guard->AI()->DoAction(ACTION_OUTRO_DESCEND);
                 });
 
-                // temp until outro fully done - to put deathbringer on respawn timer (until next reset)
-                if (Creature* deathbringer = ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_DEATHBRINGER_SAURFANG)))
-                    deathbringer->DespawnOrUnsummon(5s);
+                _instance->SetData(DATA_SAURFANG_CAMP, IN_PROGRESS);
+                Talk(SAY_OUTRO_ALLIANCE_1);
+                _events.ScheduleEvent(EVENT_OUTRO_A_GUARDS_KNEEL, 2s + 500ms);
+                _events.ScheduleEvent(EVENT_OUTRO_ALLIANCE_1, 3s);
+                _events.ScheduleEvent(EVENT_OUTRO_ALLIANCE_2, 18s);
+                _events.ScheduleEvent(EVENT_OUTRO_ALLIANCE_3, 24s);
+                _events.ScheduleEvent(EVENT_OUTRO_ALLIANCE_4, 30s);
+                _events.ScheduleEvent(EVENT_OUTRO_ALLIANCE_5, 49s);
                 break;
             }
             case ACTION_INTERRUPT_INTRO:
+            {
                 _events.Reset();
+                me->GetMotionMaster()->Clear();
+                me->Relocate(me->GetHomePosition());
+                me->ClearUnitState(UNIT_STATE_MOVING);
+                me->m_movementInfo.RemoveMovementFlag(MovementFlags(MOVEMENTFLAG_SPLINE_ENABLED | MOVEMENTFLAG_FORWARD));
+                me->movespline->_Interrupt();
+                Movement::MoveSplineInit init(me);
+                init.MoveTo(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ());
+                init.SetFacing(me->GetOrientation());
+                init.Launch();
+                me->SetDisableGravity(false);
+                EnterEvadeMode();
                 GuardBroadcast([](Creature* guard)
+                    {
+                        guard->AI()->DoAction(ACTION_DESPAWN);
+                    });
+
+                if (GameObject* tp = me->FindNearestGameObject(GO_SCOURGE_TRANSPORTER_DEATHBRINGER, 100.f))
                 {
-                    guard->AI()->DoAction(ACTION_DESPAWN);
-                });
+                    tp->RemoveFlag(GO_FLAG_NOT_SELECTABLE);
+                    tp->SetGoState(GO_STATE_ACTIVE);
+                }
+                break;
+            }
+            default:
                 break;
         }
     }
@@ -918,6 +1090,14 @@ struct npc_muradin_bronzebeard_icc : public ScriptedAI
             if (Creature* deathbringer = ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_DEATHBRINGER_SAURFANG)))
                 deathbringer->AI()->DoAction(ACTION_CONTINUE_INTRO);
         }
+        else if (id == POINT_A_MURADIN_HOME)
+        {
+            float x, y, z, o;
+            me->GetHomePosition(x, y, z, o);
+            me->SetFacingTo(o);
+            me->SetSheath(SHEATH_STATE_UNARMED);
+            _instance->SetData(DATA_SAURFANG_CAMP, DONE);
+        }
         else if (type == WAYPOINT_MOTION_TYPE && id == POINT_EXIT)
         {
             me->GetMap()->SpawnGroupDespawn(SPAWN_GROUP_ENTRANCE_THE_DAMNED_EVENT);
@@ -932,6 +1112,10 @@ struct npc_muradin_bronzebeard_icc : public ScriptedAI
             switch (eventId)
             {
                 case EVENT_INTRO_ALLIANCE_4:
+                    GuardBroadcast([](Creature* guard)
+                        {
+                            guard->AI()->DoAction(ACTION_READY_WEAPONS);
+                        });
                     me->SetWalk(true);
                     me->GetMotionMaster()->MovePoint(POINT_FIRST_STEP, firstStepPos.GetPositionX(), firstStepPos.GetPositionY(), firstStepPos.GetPositionZ());
                     break;
@@ -943,6 +1127,250 @@ struct npc_muradin_bronzebeard_icc : public ScriptedAI
                     });
                     me->GetMotionMaster()->MoveCharge(chargePos[0].GetPositionX(), chargePos[0].GetPositionY(), chargePos[0].GetPositionZ(), 8.5f, POINT_CHARGE);
                     break;
+                case EVENT_OUTRO_A_GUARDS_KNEEL:
+                    GuardBroadcast([](Creature* guard)
+                        {
+                            guard->AI()->DoAction(ACTION_OUTRO_KNEEL);
+                        });
+                    break;
+                case EVENT_OUTRO_ALLIANCE_1:
+                    Talk(SAY_OUTRO_ALLIANCE_2);
+                    break;
+                case EVENT_OUTRO_ALLIANCE_2:
+                    Talk(SAY_OUTRO_ALLIANCE_3);
+                    break;
+                case EVENT_OUTRO_ALLIANCE_3:
+                    Talk(SAY_OUTRO_ALLIANCE_4);
+                    _instance->SetData(DATA_SAURFANG_OUTRO_ZEPPELIN, IN_PROGRESS);
+                    break;
+                case EVENT_OUTRO_ALLIANCE_4:
+                    Talk(SAY_OUTRO_ALLIANCE_5);
+                    me->SetWalk(false);
+                    me->GetMotionMaster()->MovePoint(POINT_A_MURADIN_STAND, allianceMuradinPos);
+                    me->SetSheath(SHEATH_STATE_MELEE);
+                    me->SetEmoteState(EMOTE_STATE_READY1H);
+                    GuardBroadcast([](Creature* guard)
+                        {
+                            guard->AI()->DoAction(ACTION_OUTRO_FALL_IN);
+                        });
+                    break;
+                case EVENT_OUTRO_ALLIANCE_5:
+                    if (_instance->GetData(DATA_SAURFANG_OUTRO_ZEPPELIN) != DONE)
+                    {
+                        // Bounded wait for the ship to dock, so a taxi path that never arrives cannot hang the scene.
+                        if (++_outroZeppelinWait <= 60)
+                        {
+                            _events.ScheduleEvent(EVENT_OUTRO_ALLIANCE_5, 1s);
+                            break;
+                        }
+                    }
+
+                    Talk(SAY_OUTRO_ALLIANCE_6);
+                    if (Creature* saurfang = me->SummonCreature(NPC_SE_HIGH_OVERLORD_SAURFANG, allianceSaurfangPos))
+                    {
+                        _outroSaurfangGUID = saurfang->GetGUID();
+                        saurfang->SetReactState(REACT_PASSIVE);
+                        saurfang->SetSheath(SHEATH_STATE_MELEE);
+                        saurfang->SetEmoteState(EMOTE_STATE_READY1H);
+                        // He shares npc_high_overlord_saurfangAI, whose Reset() flags him for gossip.
+                        saurfang->RemoveNpcFlag(UNIT_NPC_FLAG_GOSSIP);
+                    }
+                    _events.ScheduleEvent(EVENT_OUTRO_A_SAURFANG_ADVANCE, 3s);
+                    _events.ScheduleEvent(EVENT_OUTRO_ALLIANCE_6, 10s);
+                    break;
+                case EVENT_OUTRO_A_SAURFANG_ADVANCE:
+                    if (Creature* saurfang = ObjectAccessor::GetCreature(*me, _outroSaurfangGUID))
+                    {
+                        saurfang->SetWalk(true);
+                        saurfang->GetMotionMaster()->MovePoint(POINT_A_SAURFANG_MEET, allianceSaurfangMeetPos);
+                    }
+                    break;
+                case EVENT_OUTRO_ALLIANCE_6:
+                    Talk(SAY_OUTRO_ALLIANCE_7);
+                    _events.ScheduleEvent(EVENT_OUTRO_ALLIANCE_7, 5s);
+                    break;
+                case EVENT_OUTRO_ALLIANCE_7:
+                    if (Creature* saurfang = ObjectAccessor::GetCreature(*me, _outroSaurfangGUID))
+                        saurfang->AI()->Talk(SAY_OUTRO_ALLIANCE_8);
+                    _events.ScheduleEvent(EVENT_OUTRO_ALLIANCE_8, 7s);
+                    break;
+                case EVENT_OUTRO_ALLIANCE_8:
+                    Talk(SAY_OUTRO_ALLIANCE_9);
+                    _events.ScheduleEvent(EVENT_OUTRO_ALLIANCE_9, 15s);
+                    break;
+                case EVENT_OUTRO_ALLIANCE_9:
+                    Talk(SAY_OUTRO_ALLIANCE_10);
+                    _instance->SetData(DATA_SAURFANG_OUTRO_PORTAL, IN_PROGRESS);
+                    _events.ScheduleEvent(EVENT_OUTRO_A_ROYALS, 3s);
+                    _events.ScheduleEvent(EVENT_OUTRO_A_PORTAL_CLOSE, 9s);
+                    break;
+                case EVENT_OUTRO_A_ROYALS:
+                    if (Creature* varian = me->SummonCreature(NPC_SE_KING_VARIAN_WRYNN, allianceVarianPos))
+                    {
+                        _outroVarianGUID = varian->GetGUID();
+                        varian->SetReactState(REACT_PASSIVE);
+                        varian->CastSpell(varian, SPELL_OUTRO_TELEPORT_VISUAL, true);
+                    }
+                    if (Creature* jaina = me->SummonCreature(NPC_SE_JAINA_PROUDMOORE, allianceJainaPos))
+                    {
+                        _outroJainaGUID = jaina->GetGUID();
+                        jaina->SetReactState(REACT_PASSIVE);
+                        jaina->CastSpell(jaina, SPELL_OUTRO_TELEPORT_VISUAL, true);
+                    }
+                    _events.ScheduleEvent(EVENT_OUTRO_ALLIANCE_10, 5s);
+                    break;
+                case EVENT_OUTRO_A_PORTAL_CLOSE:
+                    _instance->SetData(DATA_SAURFANG_OUTRO_PORTAL, DONE);
+                    break;
+                case EVENT_OUTRO_ALLIANCE_10:
+                    if (Creature* varian = ObjectAccessor::GetCreature(*me, _outroVarianGUID))
+                        varian->AI()->Talk(SAY_OUTRO_ALLIANCE_11);
+                    _events.ScheduleEvent(EVENT_OUTRO_ALLIANCE_11, 6s);
+                    break;
+                case EVENT_OUTRO_ALLIANCE_11:
+                {
+                    // He carries the rest of the scene; without him, skip to the cleanup.
+                    Creature* saurfang = ObjectAccessor::GetCreature(*me, _outroSaurfangGUID);
+                    if (!saurfang)
+                    {
+                        _events.ScheduleEvent(EVENT_OUTRO_A_DISMISS, 1s);
+                        break;
+                    }
+
+                    saurfang->AI()->Talk(SAY_OUTRO_ALLIANCE_12);
+                    saurfang->SetEmoteState(EMOTE_ONESHOT_NONE);
+                    saurfang->SetSheath(SHEATH_STATE_UNARMED);
+                    if (Creature* deathbringer = ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_DEATHBRINGER_SAURFANG)))
+                    {
+                        float x, y, z;
+                        deathbringer->GetClosePoint(x, y, z, deathbringer->GetObjectScale());//GetObjectSize());
+                        saurfang->SetWalk(true);
+                        saurfang->GetMotionMaster()->MovePoint(POINT_A_CORPSE, x, y, z);
+                    }
+                    _events.ScheduleEvent(EVENT_OUTRO_ALLIANCE_12, 14s);
+                    break;
+                }
+                case EVENT_OUTRO_ALLIANCE_12:
+                    if (Creature* saurfang = ObjectAccessor::GetCreature(*me, _outroSaurfangGUID))
+                    {
+                        if (Creature* deathbringer = ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_DEATHBRINGER_SAURFANG)))
+                            saurfang->SetFacingToObject(deathbringer);
+                        saurfang->SetStandState(UNIT_STAND_STATE_KNEEL);
+                        saurfang->AI()->Talk(SAY_OUTRO_ALLIANCE_13);
+                    }
+                    _events.ScheduleEvent(EVENT_OUTRO_ALLIANCE_13, 8s);
+                    break;
+                case EVENT_OUTRO_ALLIANCE_13:
+                    if (Creature* saurfang = ObjectAccessor::GetCreature(*me, _outroSaurfangGUID))
+                    {
+                        saurfang->AI()->Talk(SAY_OUTRO_ALLIANCE_14);
+                        if (Creature* deathbringer = ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_DEATHBRINGER_SAURFANG)))
+                        {
+                            deathbringer->SetUnitFlag(UNIT_FLAG_UNINTERACTIBLE);
+                            deathbringer->CastSpell(saurfang, SPELL_RIDE_VEHICLE, true);
+                            deathbringer->SetUnitFlag2(UNIT_FLAG2_PLAY_DEATH_ANIM);
+                            deathbringer->SetEmoteState(EMOTE_STATE_DROWNED);
+                        }
+                        saurfang->SetStandState(UNIT_STAND_STATE_STAND);
+                        saurfang->SetWalk(true);
+                        saurfang->GetMotionMaster()->MovePoint(POINT_A_VARIAN, allianceVarianMeetPos, false, allianceVarianMeetPos.GetOrientation());
+                    }
+                    _events.ScheduleEvent(EVENT_OUTRO_ALLIANCE_14, 18s);
+                    break;
+                case EVENT_OUTRO_ALLIANCE_14:
+                    if (Creature* saurfang = ObjectAccessor::GetCreature(*me, _outroSaurfangGUID))
+                        saurfang->AI()->Talk(SAY_OUTRO_ALLIANCE_15);
+                    _events.ScheduleEvent(EVENT_OUTRO_A_ZEPPELIN_RELEASE, 6s);
+                    _events.ScheduleEvent(EVENT_OUTRO_ALLIANCE_15, 9s);
+                    break;
+                case EVENT_OUTRO_A_ZEPPELIN_RELEASE:
+                    // The transport only pulls away ~24s after release, timed to lift off as he boards.
+                    _instance->SetData(DATA_SAURFANG_OUTRO_ZEPPELIN, DONE);
+                    break;
+                case EVENT_OUTRO_ALLIANCE_15:
+                    if (Creature* varian = ObjectAccessor::GetCreature(*me, _outroVarianGUID))
+                        varian->AI()->Talk(SAY_OUTRO_ALLIANCE_16);
+                    _events.ScheduleEvent(EVENT_OUTRO_A_SAURFANG_NOD, 6s);
+                    _events.ScheduleEvent(EVENT_OUTRO_A_SAURFANG_LEAVE, 18s);
+                    break;
+                case EVENT_OUTRO_A_SAURFANG_NOD:
+                    if (Creature* saurfang = ObjectAccessor::GetCreature(*me, _outroSaurfangGUID))
+                        saurfang->AI()->Talk(SAY_OUTRO_ALLIANCE_SAURFANG_NOD);
+                    break;
+                case EVENT_OUTRO_ALLIANCE_16:
+                    if (Creature* jaina = ObjectAccessor::GetCreature(*me, _outroJainaGUID))
+                        jaina->AI()->Talk(SAY_OUTRO_ALLIANCE_17);
+                    _events.ScheduleEvent(EVENT_OUTRO_ALLIANCE_17, 4s);
+                    break;
+                case EVENT_OUTRO_ALLIANCE_17:
+                    if (Creature* varian = ObjectAccessor::GetCreature(*me, _outroVarianGUID))
+                        varian->AI()->Talk(SAY_OUTRO_ALLIANCE_18);
+                    _events.ScheduleEvent(EVENT_OUTRO_A_JAINA_SMILE, 4s);
+                    break;
+                case EVENT_OUTRO_A_JAINA_SMILE:
+                    if (Creature* jaina = ObjectAccessor::GetCreature(*me, _outroJainaGUID))
+                        jaina->AI()->Talk(SAY_OUTRO_ALLIANCE_JAINA_SMILE);
+                    _events.ScheduleEvent(EVENT_OUTRO_ALLIANCE_18, 4s);
+                    break;
+                case EVENT_OUTRO_ALLIANCE_18:
+                    if (Creature* jaina = ObjectAccessor::GetCreature(*me, _outroJainaGUID))
+                        jaina->AI()->Talk(SAY_OUTRO_ALLIANCE_19);
+                    _events.ScheduleEvent(EVENT_OUTRO_ALLIANCE_19, 6s);
+                    break;
+                case EVENT_OUTRO_A_SAURFANG_LEAVE:
+                    if (Creature* saurfang = ObjectAccessor::GetCreature(*me, _outroSaurfangGUID))
+                    {
+                        // The body goes with him: despawned later it would drop a revived Deathbringer on the rise.
+                        if (Creature* deathbringer = ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_DEATHBRINGER_SAURFANG)))
+                            deathbringer->DespawnOrUnsummon(6800ms);
+
+                        saurfang->SetWalk(true);
+                        saurfang->GetMotionMaster()->MovePoint(POINT_A_EXIT, allianceSaurfangPos);
+                        saurfang->DespawnOrUnsummon(7s);
+                    }
+                    _events.ScheduleEvent(EVENT_OUTRO_ALLIANCE_16, 6s);
+                    break;
+                case EVENT_OUTRO_ALLIANCE_19:
+                    if (Creature* varian = ObjectAccessor::GetCreature(*me, _outroVarianGUID))
+                        varian->AI()->Talk(SAY_OUTRO_ALLIANCE_20);
+                    _events.ScheduleEvent(EVENT_OUTRO_ALLIANCE_20, 10s);
+                    break;
+                case EVENT_OUTRO_ALLIANCE_20:
+                    Talk(SAY_OUTRO_ALLIANCE_21);
+                    GuardBroadcast([](Creature* guard)
+                        {
+                            guard->AI()->DoAction(ACTION_OUTRO_STAND_DOWN);
+                        });
+                    _events.ScheduleEvent(EVENT_OUTRO_A_DISMISS, 8s);
+                    break;
+                case EVENT_OUTRO_A_DISMISS:
+                {
+                    if (Creature* deathbringer = ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_DEATHBRINGER_SAURFANG)))
+                        deathbringer->DespawnOrUnsummon();
+                    if (Creature* varian = ObjectAccessor::GetCreature(*me, _outroVarianGUID))
+                    {
+                        varian->CastSpell(varian, SPELL_OUTRO_TELEPORT_VISUAL, true);
+                        varian->DespawnOrUnsummon(1s);
+                    }
+                    if (Creature* jaina = ObjectAccessor::GetCreature(*me, _outroJainaGUID))
+                    {
+                        jaina->CastSpell(jaina, SPELL_OUTRO_TELEPORT_VISUAL, true);
+                        jaina->DespawnOrUnsummon(1s);
+                    }
+                    _instance->SetData(DATA_SAURFANG_OUTRO_PORTAL, DONE);
+                    _instance->SetData(DATA_SAURFANG_OUTRO_ZEPPELIN, DONE);
+                    _outroSaurfangGUID.Clear();
+                    _outroVarianGUID.Clear();
+                    _outroJainaGUID.Clear();
+
+                    float x, y, z, o;
+                    me->GetHomePosition(x, y, z, o);
+                    me->SetWalk(false);
+                    me->SetStandState(UNIT_STAND_STATE_STAND);
+                    me->SetEmoteState(EMOTE_ONESHOT_NONE);
+                    me->GetMotionMaster()->MovePoint(POINT_A_MURADIN_HOME, x, y, z);
+                }
+                break;
             }
         }
     }
@@ -950,6 +1378,10 @@ struct npc_muradin_bronzebeard_icc : public ScriptedAI
 private:
     EventMap _events;
     InstanceScript* _instance;
+    ObjectGuid _outroSaurfangGUID;
+    ObjectGuid _outroVarianGUID;
+    ObjectGuid _outroJainaGUID;
+    uint8 _outroZeppelinWait;
 };
 
 // 37830 - Skybreaker Marine
@@ -959,6 +1391,15 @@ struct npc_saurfang_event : public ScriptedAI
     npc_saurfang_event(Creature* creature) : ScriptedAI(creature)
     {
         _index = 0;
+        me->SetReactState(REACT_PASSIVE);
+    }
+
+    // The intro draws their weapons, so every reset path has to put them away again.
+    // _index is left alone: it is their identity, not encounter state.
+    void Reset() override
+    {
+        me->SetSheath(SHEATH_STATE_UNARMED);
+        me->SetEmoteState(EMOTE_ONESHOT_NONE);
     }
 
     void SetData(uint32 type, uint32 data) override
@@ -977,12 +1418,83 @@ struct npc_saurfang_event : public ScriptedAI
         }
     }
 
+    void MovementInform(uint32 type, uint32 id) override
+    {
+        if (type != POINT_MOTION_TYPE)
+            return;
+
+        if (id == POINT_RETREAT)
+        {
+            me->SetSheath(SHEATH_STATE_UNARMED);
+            me->SetVisible(false);
+        }
+        else if (id == POINT_A_STAND_DOWN)
+        {
+            float x, y, z, o;
+            me->GetHomePosition(x, y, z, o);
+            me->SetFacingTo(o);
+            me->SetSheath(SHEATH_STATE_UNARMED);
+        }
+    }
+
     void DoAction(int32 action) override
     {
         if (action == ACTION_CHARGE && _index)
+        {
+            // Drop the guard stance, otherwise the looping emote overrides the run animation.
+            me->SetEmoteState(EMOTE_ONESHOT_NONE);
             me->GetMotionMaster()->MoveCharge(chargePos[_index].GetPositionX(), chargePos[_index].GetPositionY(), chargePos[_index].GetPositionZ(), 13.0f, POINT_CHARGE);
+        }
         else if (action == ACTION_DESPAWN)
-            me->DespawnOrUnsummon();
+        {
+            me->GetMotionMaster()->Clear();
+            me->Relocate(me->GetHomePosition());
+            me->ClearUnitState(UNIT_STATE_MOVING);
+            me->m_movementInfo.RemoveMovementFlag(MovementFlags(MOVEMENTFLAG_SPLINE_ENABLED | MOVEMENTFLAG_FORWARD));
+            me->movespline->_Interrupt();
+            Movement::MoveSplineInit init(me);
+            init.MoveTo(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ());
+            init.SetFacing(me->GetOrientation());
+            init.Launch();
+            me->SetDisableGravity(false);
+            EnterEvadeMode();
+        }
+        else if (action == ACTION_READY_WEAPONS)
+        {
+            me->SetSheath(SHEATH_STATE_MELEE);
+            me->SetEmoteState(EMOTE_STATE_READY1H);
+        }
+        else if (action == ACTION_OUTRO_DESCEND)
+        {
+            me->RemoveAurasDueToSpell(SPELL_GRIP_OF_AGONY);
+            me->SetDisableGravity(false);
+            me->GetMotionMaster()->MoveFall();
+            me->SetEmoteState(EMOTE_STATE_READY1H);
+        }
+        else if (action == ACTION_OUTRO_FALL_IN)
+        {
+            me->SetStandState(UNIT_STAND_STATE_STAND);
+            me->SetSheath(SHEATH_STATE_MELEE);
+            me->SetEmoteState(EMOTE_STATE_READY1H);
+            me->SetWalk(false);
+            me->GetMotionMaster()->MovePoint(POINT_A_MURADIN_STAND, allianceMuradinPos.GetPositionX() + allianceGuardOffset[_index][0],
+                allianceMuradinPos.GetPositionY() + allianceGuardOffset[_index][1], allianceMuradinPos.GetPositionZ());
+        }
+        else if (action == ACTION_OUTRO_KNEEL)
+        {
+            // Kneeling is a stand state; the combat-ready emote would override it.
+            me->SetEmoteState(EMOTE_ONESHOT_NONE);
+            me->SetStandState(UNIT_STAND_STATE_KNEEL);
+        }
+        else if (action == ACTION_OUTRO_RETREAT || action == ACTION_OUTRO_STAND_DOWN)
+        {
+            me->SetStandState(UNIT_STAND_STATE_STAND);
+            me->SetEmoteState(EMOTE_ONESHOT_NONE);
+            me->SetWalk(false);
+            float x, y, z, o;
+            me->GetHomePosition(x, y, z, o);
+            me->GetMotionMaster()->MovePoint(action == ACTION_OUTRO_RETREAT ? POINT_RETREAT : POINT_A_STAND_DOWN, x, y, z);
+        }
     }
 
 private:

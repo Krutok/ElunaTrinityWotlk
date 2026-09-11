@@ -566,6 +566,12 @@ struct boss_professor_putricide : public BossAI
 
     void UpdateAI(uint32 diff) override
     {
+        if (instance->GetData(DATA_PUTRICIDE_TRAP_STATE) == DONE)
+        {
+            me->RemoveUnitFlag(UNIT_FLAG_UNINTERACTIBLE);
+            me->SetImmuneToPC(false);
+        }
+
         if (!(events.IsInPhase(PHASE_ROTFACE) || events.IsInPhase(PHASE_FESTERGUT)) && !UpdateVictim())
             return;
 

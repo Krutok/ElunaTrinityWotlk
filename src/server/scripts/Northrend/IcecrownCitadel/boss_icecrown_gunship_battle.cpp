@@ -947,6 +947,7 @@ struct npc_high_overlord_saurfang_igb : public ScriptedAI
                 init.DisableTransportPathTransformations();
                 init.MovebyPath(path, 0);
             };
+            me->SetWalk(true);
             me->GetMotionMaster()->LaunchMoveSpline(std::move(initializer), 0, MOTION_PRIORITY_NORMAL, POINT_MOTION_TYPE);
 
             me->DespawnOrUnsummon(18s);
@@ -1203,6 +1204,7 @@ struct npc_muradin_bronzebeard_igb : public ScriptedAI
                 init.DisableTransportPathTransformations();
                 init.MovebyPath(path, 0);
             };
+            me->SetWalk(true);
             me->GetMotionMaster()->LaunchMoveSpline(std::move(initializer), 0, MOTION_PRIORITY_NORMAL, POINT_MOTION_TYPE);
 
             me->DespawnOrUnsummon(18s);
