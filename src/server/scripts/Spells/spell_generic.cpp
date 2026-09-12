@@ -2308,19 +2308,19 @@ enum Mounts
     SPELL_BUNNY_150                	    = 80931,
     SPELL_BUNNY_310                	    = 80932,
 
-    // Blauer PhÃ¶nix
+    // Blauer Phönix
     SPELL_PHOENIX_A_60                  = 80986,
     SPELL_PHOENIX_A_100                 = 80987,
     SPELL_PHOENIX_A_150                 = 80988,
     SPELL_PHOENIX_A_310                 = 80989,
 
-    // Oranger PhÃ¶nix
+    // Oranger Phönix
     SPELL_PHOENIX_B_60                  = 80991,
     SPELL_PHOENIX_B_100                 = 80992,
     SPELL_PHOENIX_B_150                 = 80993,
     SPELL_PHOENIX_B_310                 = 80994,
 
-    // Katzenmount PhÃ¶nix
+    // Katzenmount Phönix
     SPELL_CATMOUNT_60                   = 80996,
     SPELL_CATMOUNT_100                  = 80997,
     SPELL_CATMOUNT_150                  = 80998,
@@ -2358,17 +2358,17 @@ enum Mounts
     SPELL_PALA_YELLOW_150               = 81220,
     SPELL_PALA_YELLOW_280               = 81221,
 
-    // JÃ¤ger Klassenmount Blau
+    // Jäger Klassenmount Blau
     SPELL_HUNTER_BLUE_100               = 81222,
     SPELL_HUNTER_BLUE_150               = 81223,
     SPELL_HUNTER_BLUE_280               = 81224,
 
-    // JÃ¤ger Klassenmount GrÃ¼n
+    // Jäger Klassenmount Grün
     SPELL_HUNTER_GREEN_100              = 81225,
     SPELL_HUNTER_GREEN_150              = 81226,
     SPELL_HUNTER_GREEN_280              = 81227,
 
-    // JÃ¤ger Klassenmount Orange
+    // Jäger Klassenmount Orange
     SPELL_HUNTER_ORANGE_100             = 81228,
     SPELL_HUNTER_ORANGE_150             = 81229,
     SPELL_HUNTER_ORANGE_280             = 81230,
@@ -2388,7 +2388,7 @@ enum Mounts
     SPELL_PRIEST_SHADOW_150             = 81238,
     SPELL_PRIEST_SHADOW_280             = 81239,
 
-    // Hexenmeister Klassenmount GrÃ¼n
+    // Hexenmeister Klassenmount Grün
     SPELL_WARLOCK_GREEN_100             = 81240,
     SPELL_WARLOCK_GREEN_150             = 81241,
     SPELL_WARLOCK_GREEN_280             = 81242,
