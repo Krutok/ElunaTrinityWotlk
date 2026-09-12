@@ -3316,11 +3316,6 @@ int32 SpellInfo::CalcPowerCost(WorldObject const* caster, SpellSchoolMask school
                 powerCost *= casterScaler->Data / spellScaler->Data;
         }
     }
-
-    //npcbot - apply bot spell cost mods
-    if (powerCost > 0 && caster->IsNPCBot())
-        caster->ToCreature()->ApplyCreatureSpellCostMods(this, powerCost);
-    //end npcbot
     
     // PCT mod from user auras by spell school and power type
     Unit::AuraEffectList const& aurasPct = unitCaster->GetAuraEffectsByType(SPELL_AURA_MOD_POWER_COST_SCHOOL_PCT);
