@@ -291,7 +291,7 @@ public:
                     {
                         if (Unit* unit = ObjectAccessor::GetUnit(*me, uiPlayerGUID))
                         {
-                            if (GameObject* go = unit->FindNearestGameObject(GO_CARCASS, 500.0f))
+                            if (GameObject* go = unit->FindNearestGameObject(GO_CARCASS, 10))
                             {
                                 me->GetMotionMaster()->MoveIdle();
                                 me->StopMoving();
@@ -305,20 +305,17 @@ public:
                     {
                         DoCast(me, SPELL_JUST_EATEN);
                         Talk(SAY_JUST_EATEN);
-                        me->HandleEmoteCommand(EMOTE_ONESHOT_ATTACK_UNARMED);
 
                         if (Player* player = ObjectAccessor::GetPlayer(*me, uiPlayerGUID))
                         {
                             player->KilledMonsterCredit(NPC_EVENT_PINGER);
 
-                            if (GameObject* go = player->FindNearestGameObject(GO_CARCASS, 20.0f))
+                            if (GameObject* go = player->FindNearestGameObject(GO_CARCASS, 10))
                                 go->Delete();
                         }
 
                         Reset();
                         me->GetMotionMaster()->Clear();
-                        if (uint32 pathId = me->GetWaypointPath())
-                            me->GetMotionMaster()->MovePath(pathId, true);
                     }
                 }
                 else
@@ -494,9 +491,7 @@ enum Earthmender
     SPELL_HEALING_WAVE          = 12491,
 
     QUEST_ESCAPE_COILSCAR       = 10451,
-    NPC_COILSKAR_ASSASSIN       = 21044,
-
-    PATH_ESCORT_WILDA           = 168218,
+    NPC_COILSKAR_ASSASSIN       = 21044
 };
 
 class npc_earthmender_wilda : public CreatureScript
@@ -641,7 +636,6 @@ public:
                 Talk(SAY_WIL_START, player);
                 me->SetFaction(FACTION_EARTHEN_RING);
 
-                LoadPath(PATH_ESCORT_WILDA);
                 Start(false, player->GetGUID(), quest);
             }
         }
@@ -674,6 +668,34 @@ struct TorlothCinematic
 {
     uint32 creature, Timer;
 };
+
+enum IllidanTexts
+{
+        SAY_WAVE_1 = 7,
+        SAY_WAVE_2 = 8,
+        SAY_WAVE_3 = 9,
+        SAY_WAVE_4 = 10,
+        
+        SAY_TORLOTH_1 = 0,
+        SAY_TORLOTH_2 = 1,
+        
+        SAY_MARCUS_AURALION_0 = 0
+};
+
+enum IllidanCreatures
+{
+    NPC_MARCUS_AURALION = 22073
+};
+
+enum IllidanActions
+{
+    ACTION_RESET_EVENT = 1
+};
+
+enum CrystalQuestObjects
+ {
+    GO_CRYSTAL_PRISON = 185126
+ };
 
 // Creature 0 - Torloth, 1 - Illidan
 static TorlothCinematic TorlothAnim[]=
@@ -790,6 +812,7 @@ public:
             me->AddUnitState(UNIT_STATE_ROOT);
             me->SetUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
             me->SetTarget(ObjectGuid::Empty);
+            me->setActive(true);
         }
 
         void JustEngagedWith(Unit* /*who*/) override { }
@@ -814,6 +837,7 @@ public:
                 me->SetStandState(UNIT_STAND_STATE_KNEEL);
                 break;
             case 3:
+                Talk(SAY_TORLOTH_1);
                 me->SetStandState(UNIT_STAND_STATE_STAND);
                 break;
             case 5:
@@ -827,12 +851,15 @@ public:
             case 6:
                 if (Player* AggroTarget = ObjectAccessor::GetPlayer(*me, AggroTargetGUID))
                 {
+                    Talk(SAY_TORLOTH_2);
                     me->RemoveUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
                     me->ClearUnitState(UNIT_STATE_ROOT);
 
-                    float x, y, z;
-                    AggroTarget->GetPosition(x, y, z);
-                    me->GetMotionMaster()->MovePoint(0, x, y, z);
+                    if (Player* AggroTarget = ObjectAccessor::GetPlayer(*me, AggroTargetGUID))
+                    {
+                        AddThreat(AggroTarget, 1);
+                        AttackStart(AggroTarget);
+                     }
                 }
                 break;
             }
@@ -905,160 +932,173 @@ public:
             }
 
             if (Creature* LordIllidan = (ObjectAccessor::GetCreature(*me, LordIllidanGUID)))
+        {
                 LordIllidan->AI()->EnterEvadeMode();
+                LordIllidan->AI()->DoAction(ACTION_RESET_EVENT);
+            }
         }
-    };
-};
+     };
+ };
 
 /*#####
 # npc_lord_illidan_stormrage
 #####*/
 
-class npc_lord_illidan_stormrage : public CreatureScript
-{
-public:
-    npc_lord_illidan_stormrage() : CreatureScript("npc_lord_illidan_stormrage") { }
+ class npc_lord_illidan_stormrage : public CreatureScript
+ {
+ public:
+     npc_lord_illidan_stormrage() : CreatureScript("npc_lord_illidan_stormrage") {}
 
-    CreatureAI* GetAI(Creature* c) const override
-    {
-        return new npc_lord_illidan_stormrageAI(c);
-    }
+     CreatureAI* GetAI(Creature* creature) const override
+     {
+         return new npc_lord_illidan_stormrageAI(creature);
+     }
 
-    struct npc_lord_illidan_stormrageAI : public ScriptedAI
-    {
-        npc_lord_illidan_stormrageAI(Creature* creature) : ScriptedAI(creature)
-        {
-            Initialize();
-        }
+     struct npc_lord_illidan_stormrageAI : public ScriptedAI
+     {
+         npc_lord_illidan_stormrageAI(Creature* creature) : ScriptedAI(creature)
+         {
+             Initialize();
+         }
 
-        void Initialize()
-        {
-            PlayerGUID.Clear();
+         void Initialize()
+         {
+             PlayerGUID.Clear();
+             WaveTimer = 10000;
+             AnnounceTimer = 7000;
+             LiveCount = 0;
+             WaveCount = 0;
+             EventStarted = false;
+             Announced = false;
+             Failed = false;
+         }
 
-            WaveTimer = 10000;
-            AnnounceTimer = 7000;
-            LiveCount = 0;
-            WaveCount = 0;
+         ObjectGuid PlayerGUID;
+         uint32 WaveTimer;
+         uint32 AnnounceTimer;
+         int8 LiveCount;
+         uint8 WaveCount;
+         bool EventStarted;
+         bool Announced;
+         bool Failed;
 
-            EventStarted = false;
-            Announced = false;
-            Failed = false;
-        }
+         void Reset() override
+         {
+             Initialize();
+             me->SetVisible(false);
+         }
 
-        ObjectGuid PlayerGUID;
+         void DoAction(int32 actionId) override
+         {
+             if (actionId == ACTION_RESET_EVENT)
+             {
+                 Initialize();
 
-        uint32 WaveTimer;
-        uint32 AnnounceTimer;
+                 if (GameObject* crystal = me->FindNearestGameObject(GO_CRYSTAL_PRISON, 200.0f))
+                 {
+                     crystal->RemoveFlag(GO_FLAG_INTERACT_COND | GO_FLAG_NOT_SELECTABLE);
+                 }
+             }
+         }
 
-        int8 LiveCount;
-        uint8 WaveCount;
+         void JustEngagedWith(Unit* /*who*/) override {}
+         void MoveInLineOfSight(Unit* /*who*/) override {}
+         void AttackStart(Unit* /*who*/) override {}
 
-        bool EventStarted;
-        bool Announced;
-        bool Failed;
+         void SummonNextWave(); // ? Deklaration vorhanden
 
-        void Reset() override
-        {
-            Initialize();
+         void CheckEventFail()
+         {
+             Player* player = ObjectAccessor::GetPlayer(*me, PlayerGUID);
+             if (!player)
+                 return;
 
-            me->SetVisible(false);
-        }
+             if (Group* group = player->GetGroup())
+             {
+                 uint8 groupCount = 0;
+                 uint8 deadCount = 0;
+                 uint8 failCount = 0;
 
-        void JustEngagedWith(Unit* /*who*/) override { }
-        void MoveInLineOfSight(Unit* /*who*/) override { }
+                 for (const auto& member : group->GetMemberSlots())
+                 {
+                     Player* memberPlayer = ObjectAccessor::GetPlayer(*me, member.guid);
+                     if (!memberPlayer)
+                         continue;
 
-        void AttackStart(Unit* /*who*/) override { }
+                     if (!memberPlayer->IsWithinDistInMap(me, EVENT_AREA_RADIUS) &&
+                         memberPlayer->GetQuestStatus(QUEST_BATTLE_OF_THE_CRIMSON_WATCH) == QUEST_STATUS_INCOMPLETE)
+                     {
+                         memberPlayer->FailQuest(QUEST_BATTLE_OF_THE_CRIMSON_WATCH);
+                         ++failCount;
+                     }
 
-        void SummonNextWave();
+                     ++groupCount;
 
-        void CheckEventFail()
-        {
-            Player* player = ObjectAccessor::GetPlayer(*me, PlayerGUID);
+                     if (memberPlayer->isDead() || !memberPlayer->IsWithinDistInMap(me, EVENT_AREA_RADIUS))
+                         ++deadCount;
+                 }
 
-            if (!player)
-                return;
+                 if (groupCount == failCount || groupCount == deadCount)
+                     Failed = true;
+             }
+             else if (player->isDead() || !player->IsWithinDistInMap(me, EVENT_AREA_RADIUS))
+             {
+                 player->FailQuest(QUEST_BATTLE_OF_THE_CRIMSON_WATCH);
+                 Failed = true;
+             }
+         }
 
-            if (Group* EventGroup = player->GetGroup())
-            {
-                uint8 GroupMemberCount = 0;
-                uint8 DeadMemberCount = 0;
-                uint8 FailedMemberCount = 0;
+         void LiveCounter()
+         {
+             --LiveCount;
+             if (LiveCount <= 0)
+                 Announced = false;
+         }
 
-                Group::MemberSlotList const& members = EventGroup->GetMemberSlots();
+         void UpdateAI(uint32 diff) override
+         {
+             if (!PlayerGUID || !EventStarted)
+                 return;
 
-                for (Group::member_citerator itr = members.begin(); itr!= members.end(); ++itr)
-                {
-                    Player* GroupMember = ObjectAccessor::GetPlayer(*me, itr->guid);
-                    if (!GroupMember)
-                        continue;
-                    if (!GroupMember->IsWithinDistInMap(me, EVENT_AREA_RADIUS) && GroupMember->GetQuestStatus(QUEST_BATTLE_OF_THE_CRIMSON_WATCH) == QUEST_STATUS_INCOMPLETE)
-                    {
-                        GroupMember->FailQuest(QUEST_BATTLE_OF_THE_CRIMSON_WATCH);
-                        ++FailedMemberCount;
-                    }
-                    ++GroupMemberCount;
+             if (!LiveCount && WaveCount < 4)
+             {
+                 if (!Announced && AnnounceTimer <= diff)
+                 {
+                     Announced = true;
+                 }
+                 else
+                 {
+                     AnnounceTimer -= diff;
+                 }
 
-                    if (GroupMember->isDead())
-                        ++DeadMemberCount;
-                }
+                 if (WaveTimer <= diff)
+                 {
+                     switch (WaveCount)
+                     {
+                     case 0: Talk(SAY_WAVE_1); break;
+                     case 1: Talk(SAY_WAVE_2); break;
+                     case 2: Talk(SAY_WAVE_3); break;
+                     case 3: Talk(SAY_WAVE_4); break;
+                     }
 
-                if (GroupMemberCount == FailedMemberCount)
-                {
-                    Failed = true;
-                }
+                     SummonNextWave();
+                 }
+                 else
+                 {
+                     WaveTimer -= diff;
+                 }
+             }
 
-                if (GroupMemberCount == DeadMemberCount)
-                {
-                    for (Group::member_citerator itr = members.begin(); itr!= members.end(); ++itr)
-                    {
-                        if (Player* groupMember = ObjectAccessor::GetPlayer(*me, itr->guid))
-                            if (groupMember->GetQuestStatus(QUEST_BATTLE_OF_THE_CRIMSON_WATCH) == QUEST_STATUS_INCOMPLETE)
-                                groupMember->FailQuest(QUEST_BATTLE_OF_THE_CRIMSON_WATCH);
-                    }
-                    Failed = true;
-                }
-            } else if (player->isDead() || !player->IsWithinDistInMap(me, EVENT_AREA_RADIUS))
-            {
-                player->FailQuest(QUEST_BATTLE_OF_THE_CRIMSON_WATCH);
-                Failed = true;
-            }
-        }
+             CheckEventFail();
 
-        void LiveCounter()
-        {
-            --LiveCount;
-            if (!LiveCount)
-                Announced = false;
-        }
-
-        void UpdateAI(uint32 diff) override
-        {
-            if (!PlayerGUID || !EventStarted)
-                return;
-
-            if (!LiveCount && WaveCount < 4)
-            {
-                if (!Announced && AnnounceTimer <= diff)
-                {
-                    Announced = true;
-                }
-                else
-                    AnnounceTimer -= diff;
-
-                if (WaveTimer <= diff)
-                {
-                    SummonNextWave();
-                }
-                else
-                    WaveTimer -= diff;
-            }
-            CheckEventFail();
-
-            if (Failed)
-                EnterEvadeMode();
-        }
-    };
-};
+             if (Failed)
+             {
+                 EnterEvadeMode();
+                 DoAction(ACTION_RESET_EVENT);
+             }
+         }
+     };
+ };
 
 /*######
 # npc_illidari_spawn
@@ -1271,13 +1311,21 @@ public:
         {
             if (quest->GetQuestId() == QUEST_BATTLE_OF_THE_CRIMSON_WATCH)
             {
-                Creature* illidan = player->FindNearestCreature(22083, 50);
-                if (illidan && !ENSURE_AI(npc_lord_illidan_stormrage::npc_lord_illidan_stormrageAI, illidan->AI())->EventStarted)
-                {
-                    ENSURE_AI(npc_lord_illidan_stormrage::npc_lord_illidan_stormrageAI, illidan->AI())->PlayerGUID = player->GetGUID();
-                    ENSURE_AI(npc_lord_illidan_stormrage::npc_lord_illidan_stormrageAI, illidan->AI())->LiveCount = 0;
-                    ENSURE_AI(npc_lord_illidan_stormrage::npc_lord_illidan_stormrageAI, illidan->AI())->EventStarted = true;
-                }
+                    if (Creature* auralion = player->FindNearestCreature(NPC_MARCUS_AURALION, 50.0f))
+                    auralion->AI()->Talk(SAY_MARCUS_AURALION_0);
+                
+                    if (Creature* illidan = player->FindNearestCreature(22083, 50.0f))
+            {
+                    if (illidan && !ENSURE_AI(npc_lord_illidan_stormrage::npc_lord_illidan_stormrageAI, illidan->AI())->EventStarted)
+                    {
+                        ENSURE_AI(npc_lord_illidan_stormrage::npc_lord_illidan_stormrageAI, illidan->AI())->PlayerGUID = player->GetGUID();
+                        ENSURE_AI(npc_lord_illidan_stormrage::npc_lord_illidan_stormrageAI, illidan->AI())->LiveCount = 0;
+                        ENSURE_AI(npc_lord_illidan_stormrage::npc_lord_illidan_stormrageAI, illidan->AI())->EventStarted = true;
+                        }
+                    }
+                
+                    // Make object not interactable for other player during the event
+                    me->SetFlag(GO_FLAG_INTERACT_COND | GO_FLAG_NOT_SELECTABLE);
             }
         }
     };
