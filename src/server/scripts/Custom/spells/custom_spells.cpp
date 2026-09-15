@@ -1419,6 +1419,49 @@ class spell_summon_jade_master : public SpellScript
     }
 };
 
+enum HexOfMendingSpells
+{
+    SPELL_HEX_OF_MENDING = 67534,
+    SPELL_HEX_OF_MENDING_HEAL = 67535
+};
+
+class spell_hex_of_mending : public AuraScript
+{
+    PrepareAuraScript(spell_hex_of_mending);
+
+    bool CheckProc(ProcEventInfo& eventInfo)
+    {
+        return eventInfo.GetHealInfo() != nullptr;
+    }
+
+    void HandleProc(const AuraEffect* aurEff, ProcEventInfo& eventInfo)
+    {
+        HealInfo* healInfo = eventInfo.GetHealInfo();
+
+        if (!healInfo)
+            return;
+
+        uint32 healAmount = healInfo->GetHeal();
+
+        if (!healAmount)
+            return;
+
+        healInfo->SetEffectiveHeal(0);
+
+        GetTarget()->CastSpell(GetTarget(), SPELL_HEX_OF_MENDING_HEAL, aurEff);
+    }
+
+    void Register() override
+    {
+        DoCheckProc += AuraCheckProcFn(spell_hex_of_mending::CheckProc);
+
+        OnEffectProc += AuraEffectProcFn(
+            spell_hex_of_mending::HandleProc,
+            EFFECT_0,
+            SPELL_AURA_DUMMY);
+    }
+};
+
 void AddSC_custom_spells()
 {
     RegisterSpellScript(spell_item_with_mount_speed);
@@ -1453,6 +1496,7 @@ void AddSC_custom_spells()
     RegisterSpellScript(spell_kerkermeister_summon_into_air);
     RegisterSpellScript(spell_fokussierte_explosion);
     RegisterSpellScript(spell_summon_jade_master);
+    RegisterSpellScript(spell_hex_of_mending);
     new spell_spawn_add_periodic();
     new spell_set_ng_5_charge();
     new spell_remote_detonator();
