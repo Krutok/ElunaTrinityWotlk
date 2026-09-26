@@ -5060,6 +5060,38 @@ void SpellMgr::LoadSpellInfoCorrections()
         spellInfo->_GetEffect(EFFECT_1).TriggerSpell    = 24870;
     });
 
+     // Empowered Blizzard, Frost Bomb
+        ApplySpellFix({ 70131, 70521 }, [](SpellInfo* spellInfo)
+        {
+        spellInfo->_GetEffect(EFFECT_0).TargetA = SpellImplicitTargetInfo(TARGET_DEST_DEST);
+        });
+    
+     // Ice Lance Volley
+        ApplySpellFix({ 70464 }, [](SpellInfo* spellInfo)
+        {
+        spellInfo->_GetEffect(EFFECT_0).TargetA = SpellImplicitTargetInfo(TARGET_SRC_CASTER);
+        spellInfo->_GetEffect(EFFECT_0).TargetB = SpellImplicitTargetInfo(TARGET_UNIT_SRC_AREA_ENEMY);
+        spellInfo->_GetEffect(EFFECT_0).RadiusEntry = sSpellRadiusStore.LookupEntry(EFFECT_RADIUS_70_YARDS);
+        });
+    
+        ApplySpellFix({
+        70513,   // Multi-Shot
+        59514    // Shriek of the Highborne
+         }, [](SpellInfo* spellInfo)
+        {
+        spellInfo->_GetEffect(EFFECT_0).TargetA = SpellImplicitTargetInfo(TARGET_UNIT_CONE_ENTRY);
+        spellInfo->_GetEffect(EFFECT_0).TargetB = SpellImplicitTargetInfo();
+        });
+    
+        ApplySpellFix({ 70525, 70639 }, [](SpellInfo* spellInfo)
+        {
+        spellInfo->_GetEffect(EFFECT_0).Effect = SPELL_EFFECT_NONE;
+     //spellInfo->_GetEffect(EFFECT_1).Effect = SPELL_EFFECT_NONE;
+        spellInfo->_GetEffect(EFFECT_2).TargetA = SpellImplicitTargetInfo(TARGET_SRC_CASTER);
+        spellInfo->_GetEffect(EFFECT_2).TargetB = SpellImplicitTargetInfo(TARGET_UNIT_SRC_AREA_ALLY);
+        spellInfo->_GetEffect(EFFECT_2).RadiusEntry = sSpellRadiusStore.LookupEntry(EFFECT_RADIUS_500_YARDS); // 500yd
+        });
+
     // CUSTOM: DK BOSS SCOURGE AURA
     ApplySpellFix({ 60023 }, [](SpellInfo* spellInfo)
         {
