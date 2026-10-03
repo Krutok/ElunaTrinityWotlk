@@ -19,18 +19,24 @@
 #include "ScriptedCreature.h"
 #include "SpellScript.h"
 #include "vault_of_archavon.h"
+#include "InstanceScript.h"
 
 enum KoralonSpells
 {
-    SPELL_BURNING_BREATH                        = 66665,
-    SPELL_BURNING_FURY                          = 66721,
-    SPELL_FLAME_CINDER_A                        = 66684,
-    SPELL_FLAME_CINDER_B                        = 66681, // don't know the real relation to SPELL_FLAME_CINDER_A atm.
-    SPELL_METEOR_FISTS                          = 66725,
-    SPELL_METEOR_FISTS_DAMAGE                   = 66765,
+    SPELL_BURNING_BREATH = 66665,
+    SPELL_BURNING_FURY = 66721,
+
+    SPELL_FLAME_CINDER = 66681,
+    SPELL_FLAMING_CINDER_DUMMY = 66690,
+
+    SPELL_FLAMING_CINDER_MISSILE_10 = 66684,
+    SPELL_FLAMING_CINDER_MISSILE_25 = 67332,
+
+    SPELL_METEOR_FISTS = 66725,
+    SPELL_METEOR_FISTS_DAMAGE = 66765,
 
     // Flame Warder
-    SPELL_FW_METEOR_FISTS_DAMAGE                = 66809
+    SPELL_FW_METEOR_FISTS_DAMAGE = 66809
 };
 
 enum KoralonEvents
@@ -41,9 +47,9 @@ enum KoralonEvents
     EVENT_METEOR_FISTS
 };
 
-struct boss_koralon : public BossAI
+struct boss_koralon : public VaultOfArchavonBossAI
 {
-    boss_koralon(Creature* creature) : BossAI(creature, DATA_KORALON) { }
+    boss_koralon(Creature* creature) : VaultOfArchavonBossAI(creature, DATA_KORALON) {}
 
     void JustEngagedWith(Unit* who) override
     {
@@ -71,24 +77,24 @@ struct boss_koralon : public BossAI
         {
             switch (eventId)
             {
-                case EVENT_BURNING_FURY:
-                    DoCast(me, SPELL_BURNING_FURY);
-                    events.ScheduleEvent(EVENT_BURNING_FURY, 20s);
-                    break;
-                case EVENT_BURNING_BREATH:
-                    DoCast(me, SPELL_BURNING_BREATH);
-                    events.ScheduleEvent(EVENT_BURNING_BREATH, 45s);
-                    break;
-                case EVENT_METEOR_FISTS:
-                    DoCast(me, SPELL_METEOR_FISTS);
-                    events.ScheduleEvent(EVENT_METEOR_FISTS, 45s);
-                    break;
-                case EVENT_FLAME_CINDER:
-                    DoCast(me, SPELL_FLAME_CINDER_A);
-                    events.ScheduleEvent(EVENT_FLAME_CINDER, 30s);
-                    break;
-                default:
-                    break;
+            case EVENT_BURNING_FURY:
+                DoCast(me, SPELL_BURNING_FURY);
+                events.ScheduleEvent(EVENT_BURNING_FURY, 20s);
+                break;
+            case EVENT_BURNING_BREATH:
+                DoCast(me, SPELL_BURNING_BREATH);
+                events.ScheduleEvent(EVENT_BURNING_BREATH, 45s);
+                break;
+            case EVENT_METEOR_FISTS:
+                DoCast(me, SPELL_METEOR_FISTS);
+                events.ScheduleEvent(EVENT_METEOR_FISTS, 45s);
+                break;
+            case EVENT_FLAME_CINDER:
+                DoCast(me, SPELL_FLAME_CINDER);
+                events.ScheduleEvent(EVENT_FLAME_CINDER, 30s);
+                break;
+            default:
+                break;
             }
 
             if (me->HasUnitState(UNIT_STATE_CASTING))
@@ -96,6 +102,38 @@ struct boss_koralon : public BossAI
         }
 
         DoMeleeAttackIfReady();
+    }
+};
+
+class spell_voa_flaming_cinder : public SpellScript
+{
+    PrepareSpellScript(spell_voa_flaming_cinder);
+
+    bool Validate(SpellInfo const* /*spellInfo*/) override
+    {
+        return ValidateSpellInfo(
+            {
+                SPELL_FLAMING_CINDER_MISSILE_10,
+                SPELL_FLAMING_CINDER_MISSILE_25
+            });
+    }
+
+    void HandleDummy(SpellEffIndex /*effIndex*/)
+    {
+        if (Unit* target = GetHitUnit())
+        {
+            uint32 missileSpell =
+                GetCaster()->GetMap()->GetSpawnMode() & 1
+                ? SPELL_FLAMING_CINDER_MISSILE_25
+                : SPELL_FLAMING_CINDER_MISSILE_10;
+
+            GetCaster()->CastSpell(target->GetPosition(), missileSpell, true);
+        }
+    }
+
+    void Register() override
+    {
+        OnEffectHitTarget += SpellEffectFn(spell_voa_flaming_cinder::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
     }
 };
 
@@ -180,6 +218,7 @@ class spell_flame_warder_meteor_fists : public AuraScript
 void AddSC_boss_koralon()
 {
     RegisterVaultOfArchavonCreatureAI(boss_koralon);
+    RegisterSpellScript(spell_voa_flaming_cinder);
     RegisterSpellScript(spell_koralon_meteor_fists);
     RegisterSpellScript(spell_koralon_meteor_fists_damage);
     RegisterSpellScript(spell_flame_warder_meteor_fists);

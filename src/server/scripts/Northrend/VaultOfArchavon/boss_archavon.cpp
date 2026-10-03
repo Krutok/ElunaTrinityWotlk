@@ -28,15 +28,20 @@ enum ArchavonTexts
 
 enum ArchavonSpells
 {
-    SPELL_ROCK_SHARDS           = 58678,
-    SPELL_ROCK_SHARDS_VISUAL_L  = 58689,
-    SPELL_ROCK_SHARDS_VISUAL_R  = 58692,
-    SPELL_ROCK_SHARDS_DAMAGE_L  = 58695,
-    SPELL_ROCK_SHARDS_DAMAGE_R  = 58696,
-    SPELL_CRUSHING_LEAP         = 58960,
-    SPELL_STOMP                 = 58663,
-    SPELL_IMPALE                = 58666,
-    SPELL_BERSERK               = 47008
+    SPELL_ROCK_SHARDS = 58678,
+    SPELL_ROCK_SHARDS_VISUAL_L = 58689,
+    SPELL_ROCK_SHARDS_VISUAL_R = 58692,
+    SPELL_ROCK_SHARDS_DAMAGE_L = 58695,
+    SPELL_ROCK_SHARDS_DAMAGE_R = 58696,
+
+    SPELL_CRUSHING_LEAP_10 = 58960,
+    SPELL_CRUSHING_LEAP_25 = 60894,
+
+    SPELL_STOMP_10 = 58663,
+    SPELL_STOMP_25 = 60880,
+
+    SPELL_IMPALE = 58666,
+    SPELL_BERSERK = 47008
 };
 
 enum ArchavonEvents
@@ -48,9 +53,9 @@ enum ArchavonEvents
     EVENT_BERSERK                   // 300s cd
 };
 
-struct boss_archavon : public BossAI
+struct boss_archavon : public VaultOfArchavonBossAI
 {
-    boss_archavon(Creature* creature) : BossAI(creature, DATA_ARCHAVON) { }
+    boss_archavon(Creature* creature) : VaultOfArchavonBossAI(creature, DATA_ARCHAVON) {}
 
     void JustEngagedWith(Unit* who) override
     {
@@ -85,16 +90,30 @@ struct boss_archavon : public BossAI
                 case EVENT_CHOKING_CLOUD:
                     if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, -10.0f, true))
                     {
-                        DoCast(target, SPELL_CRUSHING_LEAP, true); // 10y~80y, ignore range
+                        uint32 spell =
+                            me->GetMap()->GetSpawnMode() & 1
+                            ? SPELL_CRUSHING_LEAP_25
+                            : SPELL_CRUSHING_LEAP_10;
+
+                        DoCast(target, spell, true);
                         Talk(EMOTE_LEAP, target);
                     }
+
                     events.ScheduleEvent(EVENT_CHOKING_CLOUD, 30s);
                     break;
                 case EVENT_STOMP:
-                    DoCastVictim(SPELL_STOMP);
+                {
+                    uint32 spell =
+                        me->GetMap()->GetSpawnMode() & 1
+                        ? SPELL_STOMP_25
+                        : SPELL_STOMP_10;
+
+                    DoCastVictim(spell);
+
                     events.ScheduleEvent(EVENT_IMPALE, 3s);
                     events.ScheduleEvent(EVENT_STOMP, 45s);
                     break;
+                }
                 case EVENT_IMPALE:
                     DoCastVictim(SPELL_IMPALE);
                     break;

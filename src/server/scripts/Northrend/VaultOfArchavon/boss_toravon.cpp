@@ -24,30 +24,35 @@
 enum ToravonSpells
 {
     // Toravon
-    SPELL_FREEZING_GROUND   = 72090,
-    SPELL_FROZEN_ORB        = 72091,
-    SPELL_WHITEOUT          = 72034,
-    SPELL_FROZEN_MALLET     = 71993,
+    SPELL_FREEZING_GROUND = 72090,
+    SPELL_FROZEN_ORB = 72091,
+    SPELL_WHITEOUT = 72034,
+    SPELL_WHITEOUT_VISUAL = 72036,
+    SPELL_FROZEN_MALLET = 71993,
 
     // Frozen Orb
-    SPELL_FROZEN_ORB_DMG    = 72081,
-    SPELL_FROZEN_ORB_AURA   = 72067,
-    SPELL_RANDOM_AGGRO      = 72084,
+    SPELL_FROZEN_ORB_DMG = 72081,
+    SPELL_FROZEN_ORB_AURA = 72067,
+    SPELL_RANDOM_AGGRO = 72084,
 
     // Frozen Orb Stalker
-    FROZEN_ORB_STALKER_AURA = 72094
+    FROZEN_ORB_STALKER_AURA = 72094,
+
+    // Whiteout GroundEffect NPC
+    NPC_WHITEOUT_GROUND_EFFECT = 38440
 };
 
 enum ToravonEvents
 {
     EVENT_FREEZING_GROUND = 1,
     EVENT_FROZEN_ORB,
-    EVENT_WHITEOUT
+    EVENT_WHITEOUT,
+    EVENT_CAST_WHITEOUT_GROUND_EFFECT
 };
 
-struct boss_toravon : public BossAI
+struct boss_toravon : public VaultOfArchavonBossAI
 {
-    boss_toravon(Creature* creature) : BossAI(creature, DATA_TORAVON) { }
+    boss_toravon(Creature* creature) : VaultOfArchavonBossAI(creature, DATA_TORAVON) {}
 
     void JustEngagedWith(Unit* who) override
     {
@@ -74,23 +79,30 @@ struct boss_toravon : public BossAI
         {
             switch (eventId)
             {
-                case EVENT_FROZEN_ORB:
+            case EVENT_FROZEN_ORB:
+            {
+                me->CastSpell(me, SPELL_FROZEN_ORB, CastSpellExtraArgs().AddSpellMod(SPELLVALUE_MAX_TARGETS, RAID_MODE(1, 3)));
+                events.Repeat(32s);
+                break;
+            }
+            case EVENT_WHITEOUT:
+                DoCastSelf(SPELL_WHITEOUT);
+                events.ScheduleEvent(EVENT_CAST_WHITEOUT_GROUND_EFFECT, 1s);
+                events.Repeat(38s);
+                break;
+            case EVENT_CAST_WHITEOUT_GROUND_EFFECT:
+                if (Creature* whiteOutGround = me->SummonCreature(NPC_WHITEOUT_GROUND_EFFECT, -43.3316f, -288.708f, 92.2511f, 1.58825f, TEMPSUMMON_TIMED_DESPAWN, 4s))
                 {
-                    me->CastSpell(me, SPELL_FROZEN_ORB, CastSpellExtraArgs().AddSpellMod(SPELLVALUE_MAX_TARGETS, RAID_MODE(1, 3)));
-                    events.Repeat(32s);
-                    break;
+                    whiteOutGround->CastSpell(whiteOutGround, SPELL_WHITEOUT_VISUAL, false);
                 }
-                case EVENT_WHITEOUT:
-                    DoCastSelf(SPELL_WHITEOUT);
-                    events.Repeat(38s);
-                    break;
-                case EVENT_FREEZING_GROUND:
-                    if (Unit* target = SelectTarget(SelectTargetMethod::Random, 1))
-                        DoCast(target, SPELL_FREEZING_GROUND);
-                    events.Repeat(38s);
-                    break;
-                default:
-                    break;
+                break;
+            case EVENT_FREEZING_GROUND:
+                if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0))
+                    DoCast(target, SPELL_FREEZING_GROUND);
+                events.Repeat(38s);
+                break;
+            default:
+                break;
             }
 
             if (me->HasUnitState(UNIT_STATE_CASTING))
@@ -103,7 +115,7 @@ struct boss_toravon : public BossAI
 
 struct npc_frozen_orb_stalker : public ScriptedAI
 {
-    npc_frozen_orb_stalker(Creature* creature) : ScriptedAI(creature) { }
+    npc_frozen_orb_stalker(Creature* creature) : ScriptedAI(creature) {}
 
     void Reset() override
     {
@@ -113,7 +125,7 @@ struct npc_frozen_orb_stalker : public ScriptedAI
 
 struct npc_frozen_orb : public ScriptedAI
 {
-    npc_frozen_orb(Creature* creature) : ScriptedAI(creature) { }
+    npc_frozen_orb(Creature* creature) : ScriptedAI(creature) {}
 
     void IsSummonedBy(WorldObject* /*summoner*/) override
     {

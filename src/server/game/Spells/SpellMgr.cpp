@@ -5097,6 +5097,15 @@ void SpellMgr::LoadSpellInfoCorrections()
         {
             spellInfo->AttributesEx &= ~SPELL_ATTR1_CANT_TARGET_SELF;
     });
+
+    // Fix Koralon Flamme Thunder
+    ApplySpellFix({ 66690 }, [](SpellInfo* spellInfo)
+        {
+            spellInfo->_GetEffect(EFFECT_0).RadiusEntry =
+                sSpellRadiusStore.LookupEntry(EFFECT_RADIUS_100_YARDS);
+
+            spellInfo->MaxAffectedTargets = 1;
+        });
     
     for (uint32 i = 0; i < GetSpellInfoStoreSize(); ++i)
     {

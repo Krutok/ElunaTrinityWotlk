@@ -22,71 +22,72 @@
 #include "GridNotifiersImpl.h"
 #include "InstanceScript.h"
 #include "PassiveAI.h"
+#include "Player.h"
 #include "ScriptedCreature.h"
 #include "SpellAuraEffects.h"
 #include "SpellScript.h"
 
 enum CouncilTexts
 {
-    SAY_COUNCIL_AGRO     = 0,
-    SAY_COUNCIL_ENRAGE   = 1,
-    SAY_COUNCIL_SPECIAL  = 2,
-    SAY_COUNCIL_SLAY     = 3,
-    SAY_COUNCIL_COMNT    = 4,
-    SAY_COUNCIL_DEATH    = 5
+    SAY_COUNCIL_AGRO = 0,
+    SAY_COUNCIL_ENRAGE = 1,
+    SAY_COUNCIL_SPECIAL = 2,
+    SAY_COUNCIL_SLAY = 3,
+    SAY_COUNCIL_COMNT = 4,
+    SAY_COUNCIL_DEATH = 5
 };
 
 enum CouncilSpells
 {
     // Illidari Council (Trigger)
-    SPELL_EMPYREAL_BALANCE         = 41499,
-    SPELL_EMPYREAL_EQUIVALENCY     = 41333,
+    SPELL_EMPYREAL_BALANCE = 41499,
+    SPELL_EMPYREAL_EQUIVALENCY = 41333,
 
     // Generic
-    SPELL_SHARED_RULE              = 41342,
-    SPELL_BERSERK                  = 45078,
-    SPELL_BALANCE_OF_POWER         = 41341,
-    SPELL_QUIET_SUICIDE            = 3617,
+    SPELL_SHARED_RULE = 41342,
+    SPELL_BERSERK = 45078,
+    SPELL_BALANCE_OF_POWER = 41341,
+    SPELL_QUIET_SUICIDE = 3617,
 
     // High Nethermancer Zerevor's
-    SPELL_FLAMESTRIKE              = 41481,
-    SPELL_BLIZZARD                 = 41482,
-    SPELL_ARCANE_BOLT              = 41483,
-    SPELL_ARCANE_EXPLOSION         = 41524,
-    SPELL_DAMPEN_MAGIC             = 41478,
+    SPELL_FLAMESTRIKE = 41481,
+    SPELL_BLIZZARD = 41482,
+    SPELL_ARCANE_BOLT = 41483,
+    SPELL_ARCANE_EXPLOSION = 41524,
+    SPELL_DAMPEN_MAGIC = 41478,
 
     // Lady Malande's
-    SPELL_EMPOWERED_SMITE          = 41471,
-    SPELL_CIRCLE_OF_HEALING        = 41455,
-    SPELL_REFLECTIVE_SHIELD        = 41475,
+    SPELL_EMPOWERED_SMITE = 41471,
+    SPELL_CIRCLE_OF_HEALING = 41455,
+    SPELL_REFLECTIVE_SHIELD = 41475,
     SPELL_REFLECTIVE_SHIELD_DAMAGE = 33619,
-    SPELL_DIVINE_WRATH             = 41472,
+    SPELL_DIVINE_WRATH = 41472,
 
     // Gathios the Shatterer's
-    SPELL_BLESS_PROTECTION         = 41450,
-    SPELL_BLESS_SPELL_WARDING      = 41451,
-    SPELL_CONSECRATION             = 41541,
-    SPELL_HAMMER_OF_JUSTICE        = 41468,
-    SPELL_SEAL_OF_COMMAND          = 41469,
-    SPELL_SEAL_OF_BLOOD            = 41459,
-    SPELL_CHROMATIC_AURA           = 41453,
-    SPELL_DEVOTION_AURA            = 41452,
-    SPELL_JUDGEMENT_PRIMER         = 41473,
-    SPELL_JUDGEMENT                = 41467,
-    SPELL_JUDGEMENT_OF_COMMAND     = 41470,
-    SPELL_JUDGEMENT_OF_BLOOD       = 41461,
+    SPELL_BLESS_PROTECTION = 41450,
+    SPELL_BLESS_SPELL_WARDING = 41451,
+    SPELL_CONSECRATION = 41541,
+    SPELL_HAMMER_OF_JUSTICE = 41468,
+    SPELL_SEAL_OF_COMMAND = 41469,
+    SPELL_SEAL_OF_BLOOD = 41459,
+    SPELL_CHROMATIC_AURA = 41453,
+    SPELL_DEVOTION_AURA = 41452,
+    SPELL_JUDGEMENT_PRIMER = 41473,
+    SPELL_JUDGEMENT = 41467,
+    SPELL_JUDGEMENT_OF_COMMAND = 41470,
+    SPELL_JUDGEMENT_OF_BLOOD = 41461,
 
     // Veras Darkshadow's
-    SPELL_DEADLY_STRIKE             = 41480,
-    SPELL_DEADLY_POISON             = 41485,
-    SPELL_ENVENOM                   = 41487,
-    SPELL_ENVENOM_VISUAL            = 41509,
-    SPELL_VANISH                    = 41476,
-    SPELL_VANISH_TELEPORT           = 41479,
+    SPELL_DEADLY_STRIKE = 41480,
+    SPELL_DEADLY_POISON = 41485,
+    SPELL_ENVENOM = 41487,
+    SPELL_ENVENOM_VISUAL = 41509,
+    SPELL_VANISH = 41476,
+    SPELL_VANISH_TELEPORT = 41479,
 
     // Veras Vanish Effect
-    SPELL_BIRTH                     = 40031,
-    SPELL_ENVENOM_DUMMY             = 41510
+    SPELL_BIRTH = 40031,
+    SPELL_ENVENOM_DUMMY = 41510
 };
 
 enum CouncilEvents
@@ -136,7 +137,7 @@ static uint32 GetRandomBossExcept(uint32 exception)
 // 23426 - The Illidari Council
 struct boss_illidari_council : public BossAI
 {
-    boss_illidari_council(Creature* creature) : BossAI(creature, DATA_ILLIDARI_COUNCIL), _inCombat(false) { }
+    boss_illidari_council(Creature* creature) : BossAI(creature, DATA_ILLIDARI_COUNCIL), _inCombat(false) {}
 
     void Reset() override
     {
@@ -181,14 +182,12 @@ struct boss_illidari_council : public BossAI
         instance->SetBossState(DATA_ILLIDARI_COUNCIL, DONE);
 
         for (uint32 bossData : CouncilData)
-        {
             if (Creature* council = instance->GetCreature(bossData))
             {
-                // Allow loot
                 council->LowerPlayerDamageReq(council->GetMaxHealth());
-                council->CastSpell(council, SPELL_QUIET_SUICIDE, true);
+                if (council->IsAlive())
+                    council->CastSpell(council, SPELL_QUIET_SUICIDE, true);
             }
-        }
     }
 
     void UpdateAI(uint32 diff) override
@@ -205,22 +204,22 @@ struct boss_illidari_council : public BossAI
         {
             switch (eventId)
             {
-                case EVENT_EMPYREAL_EQUIVALENCY:
-                    DoCastSelf(SPELL_EMPYREAL_EQUIVALENCY, true);
-                    events.Repeat(2s);
-                    break;
-                case EVENT_BERSERK:
-                    for (uint32 bossData : CouncilData)
+            case EVENT_EMPYREAL_EQUIVALENCY:
+                DoCastSelf(SPELL_EMPYREAL_EQUIVALENCY, true);
+                events.Repeat(2s);
+                break;
+            case EVENT_BERSERK:
+                for (uint32 bossData : CouncilData)
+                {
+                    if (Creature* council = instance->GetCreature(bossData))
                     {
-                        if (Creature* council = instance->GetCreature(bossData))
-                        {
-                            council->CastSpell(council, SPELL_BERSERK, true);
-                            council->AI()->Talk(SAY_COUNCIL_ENRAGE);
-                        }
+                        council->CastSpell(council, SPELL_BERSERK, true);
+                        council->AI()->Talk(SAY_COUNCIL_ENRAGE);
                     }
-                    break;
-                default:
-                    break;
+                }
+                break;
+            default:
+                break;
             }
 
             if (me->HasUnitState(UNIT_STATE_CASTING))
@@ -260,6 +259,22 @@ struct IllidariCouncilBossAI : public BossAI
     void JustDied(Unit* /*killer*/) override
     {
         Talk(SAY_COUNCIL_DEATH);
+
+        if (instance->GetBossState(DATA_ILLIDARI_COUNCIL) != DONE)
+        {
+            instance->SetBossState(DATA_ILLIDARI_COUNCIL, DONE);
+
+            if (Creature* controller = instance->GetCreature(DATA_ILLIDARI_COUNCIL))
+                controller->CastSpell(controller, SPELL_QUIET_SUICIDE, true);
+
+            for (uint32 bossData : CouncilData)
+                if (Creature* council = instance->GetCreature(bossData))
+                    if (council != me && council->IsAlive())
+                    {
+                        council->LowerPlayerDamageReq(council->GetMaxHealth());
+                        council->CastSpell(council, SPELL_QUIET_SUICIDE, true);
+                    }
+        }
     }
 
     void EnterEvadeMode(EvadeReason why) override
@@ -270,8 +285,17 @@ struct IllidariCouncilBossAI : public BossAI
 
     void DamageTaken(Unit* who, uint32& damage, DamageEffectType /*damageType*/, SpellInfo const* /*spellInfo = nullptr*/) override
     {
-        if (damage >= me->GetHealth() && (!who || who->GetGUID() != me->GetGUID()))
-            damage = me->GetHealth() - 1;
+        if (Player* player = who ? who->GetCharmerOrOwnerPlayerOrPlayerItself() : nullptr)
+            me->SetLootRecipient(player);
+
+        if (damage >= me->GetHealth())
+        {
+            me->LowerPlayerDamageReq(me->GetMaxHealth());
+            return;
+        }
+
+        if (Creature* council = instance->GetCreature(DATA_ILLIDARI_COUNCIL))
+            me->CastSpell(council, SPELL_SHARED_RULE, CastSpellExtraArgs(TRIGGERED_FULL_MASK).AddSpellBP0(damage));
     }
 
     void KilledUnit(Unit* victim) override
@@ -291,7 +315,7 @@ private:
 class HammerTargetSelector
 {
 public:
-    HammerTargetSelector(Unit const* unit) : _me(unit) { }
+    HammerTargetSelector(Unit const* unit) : _me(unit) {}
 
     bool operator()(Unit* unit) const
     {
@@ -305,7 +329,7 @@ private:
 // 22949 - Gathios the Shatterer
 struct boss_gathios_the_shatterer : public IllidariCouncilBossAI
 {
-    boss_gathios_the_shatterer(Creature* creature) : IllidariCouncilBossAI(creature, DATA_GATHIOS_THE_SHATTERER) { }
+    boss_gathios_the_shatterer(Creature* creature) : IllidariCouncilBossAI(creature, DATA_GATHIOS_THE_SHATTERER) {}
 
     void ScheduleEvents() override
     {
@@ -321,40 +345,40 @@ struct boss_gathios_the_shatterer : public IllidariCouncilBossAI
     {
         switch (eventId)
         {
-            case EVENT_BLESS:
-            {
-                std::list<Unit*> TargetList;
-                Trinity::AnyFriendlyUnitInObjectRangeCheck checker(me, me, 100.0f);
-                Trinity::UnitListSearcher<Trinity::AnyFriendlyUnitInObjectRangeCheck> searcher(me, TargetList, checker);
-                Cell::VisitAllObjects(me, searcher, 100.0f);
+        case EVENT_BLESS:
+        {
+            std::list<Unit*> TargetList;
+            Trinity::AnyFriendlyUnitInObjectRangeCheck checker(me, me, 100.0f);
+            Trinity::UnitListSearcher<Trinity::AnyFriendlyUnitInObjectRangeCheck> searcher(me, TargetList, checker);
+            Cell::VisitAllObjects(me, searcher, 100.0f);
 
-                if (!TargetList.empty())
-                {
-                    Unit* target = Trinity::Containers::SelectRandomContainerElement(TargetList);
-                    DoCast(target, RAND(SPELL_BLESS_PROTECTION, SPELL_BLESS_SPELL_WARDING));
-                }
-                events.Repeat(30s, 45s);
-                break;
+            if (!TargetList.empty())
+            {
+                Unit* target = Trinity::Containers::SelectRandomContainerElement(TargetList);
+                DoCast(target, RAND(SPELL_BLESS_PROTECTION, SPELL_BLESS_SPELL_WARDING));
             }
-            case EVENT_AURA:
-                DoCastSelf(RAND(SPELL_CHROMATIC_AURA, SPELL_DEVOTION_AURA));
-                events.Repeat(30s);
-                break;
-            case EVENT_HAMMER_OF_JUSTICE:
-                if (Unit* target = SelectTarget(SelectTargetMethod::Random, 1, HammerTargetSelector(me)))
-                    DoCast(target, SPELL_HAMMER_OF_JUSTICE);
-                events.Repeat(20s);
-                break;
-            case EVENT_JUDGEMENT:
-                DoCastVictim(SPELL_JUDGEMENT);
-                events.Repeat(15s);
-                break;
-            case EVENT_CONSECRATION:
-                DoCastSelf(SPELL_CONSECRATION);
-                events.Repeat(30s, 35s);
-                break;
-            default:
-                break;
+            events.Repeat(30s, 45s);
+            break;
+        }
+        case EVENT_AURA:
+            DoCastSelf(RAND(SPELL_CHROMATIC_AURA, SPELL_DEVOTION_AURA));
+            events.Repeat(30s);
+            break;
+        case EVENT_HAMMER_OF_JUSTICE:
+            if (Unit* target = SelectTarget(SelectTargetMethod::Random, 1, HammerTargetSelector(me)))
+                DoCast(target, SPELL_HAMMER_OF_JUSTICE);
+            events.Repeat(20s);
+            break;
+        case EVENT_JUDGEMENT:
+            DoCastVictim(SPELL_JUDGEMENT);
+            events.Repeat(15s);
+            break;
+        case EVENT_CONSECRATION:
+            DoCastSelf(SPELL_CONSECRATION);
+            events.Repeat(30s, 35s);
+            break;
+        default:
+            break;
         }
     }
 };
@@ -362,7 +386,7 @@ struct boss_gathios_the_shatterer : public IllidariCouncilBossAI
 // 22950 - High Nethermancer Zerevor
 struct boss_high_nethermancer_zerevor : public IllidariCouncilBossAI
 {
-    boss_high_nethermancer_zerevor(Creature* creature) : IllidariCouncilBossAI(creature, DATA_HIGH_NETHERMANCER_ZEREVOR), _canUseArcaneExplosion(true) { }
+    boss_high_nethermancer_zerevor(Creature* creature) : IllidariCouncilBossAI(creature, DATA_HIGH_NETHERMANCER_ZEREVOR), _canUseArcaneExplosion(true) {}
 
     void Reset() override
     {
@@ -389,34 +413,34 @@ struct boss_high_nethermancer_zerevor : public IllidariCouncilBossAI
     {
         switch (eventId)
         {
-            case EVENT_FLAMESTRIKE:
-                if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0))
-                    DoCast(target, SPELL_FLAMESTRIKE);
-                Talk(SAY_COUNCIL_SPECIAL);
-                events.Repeat(40s);
-                break;
-            case EVENT_BLIZZARD:
-                if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0))
-                    DoCast(target, SPELL_BLIZZARD);
-                events.Repeat(15s, 40s);
-                break;
-            case EVENT_ARCANE_EXPLOSION_CHECK:
-                _canUseArcaneExplosion = true;
-                break;
-            case EVENT_ARCANE_EXPLOSION:
-                if (_canUseArcaneExplosion && SelectTarget(SelectTargetMethod::Random, 0, 10.0f))
-                {
-                    DoCastSelf(SPELL_ARCANE_EXPLOSION);
-                    _canUseArcaneExplosion = false;
-                    events.ScheduleEvent(EVENT_ARCANE_EXPLOSION_CHECK, 5s);
-                }
-                events.Repeat(1s);
-                break;
-            case EVENT_DAMPEN_MAGIC:
-                DoCastSelf(SPELL_DAMPEN_MAGIC);
-                break;
-            default:
-                break;
+        case EVENT_FLAMESTRIKE:
+            if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0))
+                DoCast(target, SPELL_FLAMESTRIKE);
+            Talk(SAY_COUNCIL_SPECIAL);
+            events.Repeat(40s);
+            break;
+        case EVENT_BLIZZARD:
+            if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0))
+                DoCast(target, SPELL_BLIZZARD);
+            events.Repeat(15s, 40s);
+            break;
+        case EVENT_ARCANE_EXPLOSION_CHECK:
+            _canUseArcaneExplosion = true;
+            break;
+        case EVENT_ARCANE_EXPLOSION:
+            if (_canUseArcaneExplosion && SelectTarget(SelectTargetMethod::Random, 0, 10.0f))
+            {
+                DoCastSelf(SPELL_ARCANE_EXPLOSION);
+                _canUseArcaneExplosion = false;
+                events.ScheduleEvent(EVENT_ARCANE_EXPLOSION_CHECK, 5s);
+            }
+            events.Repeat(1s);
+            break;
+        case EVENT_DAMPEN_MAGIC:
+            DoCastSelf(SPELL_DAMPEN_MAGIC);
+            break;
+        default:
+            break;
         }
     }
 
@@ -447,7 +471,7 @@ private:
 // 22951 - Lady Malande
 struct boss_lady_malande : public IllidariCouncilBossAI
 {
-    boss_lady_malande(Creature* creature) : IllidariCouncilBossAI(creature, DATA_LADY_MALANDE) { }
+    boss_lady_malande(Creature* creature) : IllidariCouncilBossAI(creature, DATA_LADY_MALANDE) {}
 
     void ScheduleEvents() override
     {
@@ -466,21 +490,21 @@ struct boss_lady_malande : public IllidariCouncilBossAI
     {
         switch (eventId)
         {
-            case EVENT_CIRCLE_OF_HEALING:
-                DoCastSelf(SPELL_CIRCLE_OF_HEALING);
-                events.Repeat(20s, 35s);
-                break;
-            case EVENT_REFLECTIVE_SHIELD:
-                DoCastSelf(SPELL_REFLECTIVE_SHIELD);
-                Talk(SAY_COUNCIL_SPECIAL);
-                events.Repeat(40s);
-                break;
-            case EVENT_DIVINE_WRATH:
-                DoCastVictim(SPELL_DIVINE_WRATH);
-                events.Repeat(20s);
-                break;
-            default:
-                break;
+        case EVENT_CIRCLE_OF_HEALING:
+            DoCastSelf(SPELL_CIRCLE_OF_HEALING);
+            events.Repeat(20s, 35s);
+            break;
+        case EVENT_REFLECTIVE_SHIELD:
+            DoCastSelf(SPELL_REFLECTIVE_SHIELD);
+            Talk(SAY_COUNCIL_SPECIAL);
+            events.Repeat(40s);
+            break;
+        case EVENT_DIVINE_WRATH:
+            DoCastVictim(SPELL_DIVINE_WRATH);
+            events.Repeat(20s);
+            break;
+        default:
+            break;
         }
     }
 
@@ -508,7 +532,7 @@ struct boss_lady_malande : public IllidariCouncilBossAI
 // 22952 - Veras Darkshadow
 struct boss_veras_darkshadow : public IllidariCouncilBossAI
 {
-    boss_veras_darkshadow(Creature* creature) : IllidariCouncilBossAI(creature, DATA_VERAS_DARKSHADOW) { }
+    boss_veras_darkshadow(Creature* creature) : IllidariCouncilBossAI(creature, DATA_VERAS_DARKSHADOW) {}
 
     void ScheduleEvents() override
     {
@@ -524,14 +548,14 @@ struct boss_veras_darkshadow : public IllidariCouncilBossAI
     {
         switch (eventId)
         {
-            case EVENT_VANISH:
-                Talk(SAY_COUNCIL_SPECIAL);
-                DoCastSelf(SPELL_VANISH);
-                DoCastSelf(SPELL_DEADLY_STRIKE);
-                events.Repeat(60s);
-                break;
-            default:
-                break;
+        case EVENT_VANISH:
+            Talk(SAY_COUNCIL_SPECIAL);
+            DoCastSelf(SPELL_VANISH);
+            DoCastSelf(SPELL_DEADLY_STRIKE);
+            events.Repeat(60s);
+            break;
+        default:
+            break;
         }
     }
 };
@@ -539,15 +563,15 @@ struct boss_veras_darkshadow : public IllidariCouncilBossAI
 // 23451 - Veras Vanish Effect
 struct npc_veras_vanish_effect : public PassiveAI
 {
-    npc_veras_vanish_effect(Creature* creature) : PassiveAI(creature) { }
+    npc_veras_vanish_effect(Creature* creature) : PassiveAI(creature) {}
 
     void Reset() override
     {
         DoCastSelf(SPELL_BIRTH, true);
         _scheduler.Schedule(1s, [this](TaskContext /*context*/)
-        {
-            DoCastSelf(SPELL_ENVENOM_DUMMY, true);
-        });
+            {
+                DoCastSelf(SPELL_ENVENOM_DUMMY, true);
+            });
     }
 
     void UpdateAI(uint32 diff) override
@@ -599,20 +623,14 @@ class spell_illidari_council_balance_of_power : public AuraScript
 {
     PrepareAuraScript(spell_illidari_council_balance_of_power);
 
-    bool Validate(SpellInfo const* /*spell*/) override
+    void CalculateAmount(AuraEffect const* /*aurEff*/, int32& amount, bool& /*canBeRecalculated*/)
     {
-        return ValidateSpellInfo({ SPELL_SHARED_RULE });
-    }
-
-    void Absorb(AuraEffect* aurEff, DamageInfo& dmgInfo, uint32& /*absorbAmount*/)
-    {
-        PreventDefaultAction();
-        GetTarget()->CastSpell(nullptr, SPELL_SHARED_RULE, CastSpellExtraArgs(aurEff).AddSpellBP0(dmgInfo.GetDamage()));
+        amount = -1;
     }
 
     void Register() override
     {
-        OnEffectAbsorb += AuraEffectAbsorbFn(spell_illidari_council_balance_of_power::Absorb, EFFECT_0);
+        DoEffectCalcAmount += AuraEffectCalcAmountFn(spell_illidari_council_balance_of_power::CalculateAmount, EFFECT_0, SPELL_AURA_SCHOOL_ABSORB);
     }
 };
 
@@ -703,7 +721,7 @@ class spell_illidari_council_reflective_shield : public AuraScript
         if (dmgInfo.GetAttacker() == target)
             return;
 
-        target->CastSpell(dmgInfo.GetAttacker(), SPELL_REFLECTIVE_SHIELD_DAMAGE, CastSpellExtraArgs(aurEff).AddSpellBP0(absorbAmount/2));
+        target->CastSpell(dmgInfo.GetAttacker(), SPELL_REFLECTIVE_SHIELD_DAMAGE, CastSpellExtraArgs(aurEff).AddSpellBP0(absorbAmount / 2));
     }
 
     void Register() override
@@ -720,11 +738,11 @@ class spell_illidari_council_judgement : public SpellScript
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
         return ValidateSpellInfo(
-        {
-            SPELL_JUDGEMENT_OF_BLOOD,
-            SPELL_JUDGEMENT_OF_COMMAND,
-            SPELL_JUDGEMENT_PRIMER
-        });
+            {
+                SPELL_JUDGEMENT_OF_BLOOD,
+                SPELL_JUDGEMENT_OF_COMMAND,
+                SPELL_JUDGEMENT_PRIMER
+            });
     }
 
     void HandleScript(SpellEffIndex /*effIndex*/)
@@ -758,10 +776,10 @@ class spell_illidari_council_seal : public AuraScript
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
         return ValidateSpellInfo(
-        {
-            SPELL_SEAL_OF_COMMAND,
-            SPELL_SEAL_OF_BLOOD
-        });
+            {
+                SPELL_SEAL_OF_COMMAND,
+                SPELL_SEAL_OF_BLOOD
+            });
     }
 
     void OnRemove(AuraEffect const* aurEff, AuraEffectHandleModes /*mode*/)

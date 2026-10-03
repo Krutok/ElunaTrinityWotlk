@@ -658,6 +658,7 @@ void BattlefieldWG::OnBattleEnd(bool endByTimer)
     // change collision wall state closed
     for (BfWGGameObjectBuilding* building : BuildingsInZone)
     {
+        building->Rebuild();
         building->RebuildGate();
     }
 

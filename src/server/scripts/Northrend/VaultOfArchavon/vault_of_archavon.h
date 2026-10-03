@@ -27,18 +27,19 @@ uint32 const EncounterCount = 4;
 
 enum VAData
 {
-    DATA_ARCHAVON       = 0,
-    DATA_EMALON         = 1,
-    DATA_KORALON        = 2,
-    DATA_TORAVON        = 3
+    DATA_ARCHAVON = 0,
+    DATA_EMALON = 1,
+    DATA_KORALON = 2,
+    DATA_TORAVON = 3,
+    DATA_VOA_TRIGGER = 4,
 };
 
 enum VACreatureIds
 {
-    NPC_ARCHAVON        = 31125,
-    NPC_EMALON          = 33993,
-    NPC_KORALON         = 35013,
-    NPC_TORAVON         = 38433
+    NPC_ARCHAVON = 31125,
+    NPC_EMALON = 33993,
+    NPC_KORALON = 35013,
+    NPC_TORAVON = 38433
 };
 
 enum VAAchievementCriteriaIds
@@ -50,6 +51,59 @@ enum VAAchievementCriteriaIds
 enum VAAchievementSpells
 {
     SPELL_EARTH_WIND_FIRE_ACHIEVEMENT_CHECK = 68308
+};
+
+enum VASpells
+{
+    SPELL_VA_STONE_FORM = 70733,
+    SPELL_VA_STONE_FORM_1 = 34712
+};
+
+struct VaultOfArchavonBossAI : public BossAI
+{
+    VaultOfArchavonBossAI(Creature* creature, uint32 bossId) : BossAI(creature, bossId), _closeEncounterPending(false) {}
+
+    virtual void CloseEncounter()
+    {
+
+        events.Reset();
+
+        me->InterruptNonMeleeSpells(true);
+        me->AttackStop();
+        me->SetReactState(REACT_PASSIVE);
+
+        _closeEncounterPending = true;
+
+        if (!me->IsInEvadeMode())
+        {
+            if (!_EnterEvadeMode(EVADE_REASON_OTHER))
+            {
+                _closeEncounterPending = false;
+                return;
+            }
+        }
+
+        me->AddUnitState(UNIT_STATE_EVADE);
+        me->GetMotionMaster()->MoveTargetedHome();
+    }
+
+    void JustReachedHome() override
+    {
+        BossAI::JustReachedHome();
+
+        if (!_closeEncounterPending)
+            return;
+
+        _closeEncounterPending = false;
+
+        me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC);
+        me->CastSpell(me, 65124, true);
+        me->CastSpell(me, SPELL_VA_STONE_FORM, true);
+        me->CastSpell(me, SPELL_VA_STONE_FORM_1, true);
+    }
+
+private:
+    bool _closeEncounterPending;
 };
 
 template <class AI, class T>
